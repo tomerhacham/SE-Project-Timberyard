@@ -15,12 +15,14 @@ namespace ETL
         private string _newLogsDirectory;
         private string _handeledLogsDirectory;
         private string _faultLogsDirectory;
+        private readonly ILogger _logger;
 
-        public FileManager(Directories directories)
+        public FileManager(Directories directories,ILogger logger)
         {
             _newLogsDirectory = directories.NewLogsDirectory;
             _handeledLogsDirectory = directories.HandeledLogsDirectory;
             _faultLogsDirectory = directories.FaultLogsDirectory;
+            _logger = logger;
         }
 
 

@@ -22,7 +22,7 @@ namespace ETL.Repository
         private readonly DatabaseSettings _databaseSettings;
         private readonly ILogger _logger;
 
-        public Repository(DatabaseSettings databaseSettings, ILogger logger=null)
+        public Repository(DatabaseSettings databaseSettings, ILogger logger)
         {
             _databaseSettings = databaseSettings;
             _logger = logger;

@@ -13,9 +13,11 @@ namespace ETL
     public class Deserializer
     {
         List<JsonConverter> JsonConverters { get; }
-        public Deserializer()
+        private readonly ILogger _logger;
+        public Deserializer(ILogger logger)
         {
             JsonConverters = new List<JsonConverter>() { new DatetimeJsonConverter() };
+            _logger = logger;
         }
         public Result<Log> Deserialize(string data)
         {
