@@ -1,5 +1,6 @@
 ﻿using ETL.Utils;
 using ETL.Utils.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,11 @@ namespace ETL
         private string _faultLogsDirectory;
         private readonly ILogger _logger;
 
-        public FileManager(Directories directories,ILogger logger)
+        public FileManager(IOptions<Directories> directories,ILogger logger)
         {
-            _newLogsDirectory = directories.NewLogsDirectory;
-            _handeledLogsDirectory = directories.HandeledLogsDirectory;
-            _faultLogsDirectory = directories.FaultLogsDirectory;
+            _newLogsDirectory = directories.Value.NewLogsDirectory;
+            _handeledLogsDirectory = directories.Value.HandeledLogsDirectory;
+            _faultLogsDirectory = directories.Value.FaultLogsDirectory;
             _logger = logger;
         }
 
@@ -35,10 +36,12 @@ namespace ETL
             try
             {
                 var files = Directory.GetFiles(_newLogsDirectory, "*.json", searchOption: SearchOption.AllDirectories);
+                _logger.Info($"{files.Length} new logs have been found", new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string[]>(true,files);
             }
             catch (Exception e)
             {
+                _logger.Warning("Error raised while pulling new logs",e,new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string[]>(false, null, e.Message);
             }
         }
@@ -51,6 +54,7 @@ namespace ETL
             }
             catch(Exception e)
             {
+                _logger.Warning($"Error raise while reading {filePath}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string>(false, null, e.Message);
             }
 
@@ -74,6 +78,7 @@ namespace ETL
             }
             catch (Exception e)
             {
+                _logger.Warning($"Error raise while moving {srcFileName} to {dstFileName}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, e.Message);
             }
         }

@@ -9,13 +9,11 @@ namespace ETL
     {
         static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("ETL").Build();
-            var directories = config.GetSection("Directories").Get<Directories>();
-            var databaseSettings = config.GetSection("DatabaseSettings").Get<DatabaseSettings>();
-            var logger = new Logger("ETL-process");
-            var repository = new Repository.Repository(databaseSettings,logger);
-            var fileManager = new FileManager(directories,logger);
-            var deserializer = new Deserializer(logger);
+
+            var serviceProvier = ConfigureServices();
+            var repository = serviceProvier.GetService<Repository.Repository>();
+            var fileManager = serviceProvier.GetService<FileManager>();
+            var deserializer = serviceProvier.GetService<Deserializer>();
 
             #region Continuation Passing Style
             fileManager.GetNewLogs().ContinueWith((string[] files) =>
@@ -38,6 +36,21 @@ namespace ETL
                 }
             }); 
             #endregion
+        }
+
+        private static ServiceProvider ConfigureServices()
+        {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("ETL").Build();
+            var serviceProvier = new ServiceCollection()
+                .Configure<Directories>(config.GetSection("Directories"))
+                .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+
+                .AddSingleton<ILogger>(sp => new Logger("ETL-process"))
+                .AddSingleton<FileManager>()
+                .AddSingleton<Deserializer>()
+                .AddSingleton<Repository.Repository>()
+                .BuildServiceProvider();
+            return serviceProvier;
         }
     }
 }

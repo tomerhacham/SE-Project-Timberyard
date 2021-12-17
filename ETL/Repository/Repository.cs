@@ -3,6 +3,7 @@ using ETL.DataObjects;
 using ETL.Repository.DTO;
 using ETL.Utils;
 using ETL.Utils.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -22,9 +23,9 @@ namespace ETL.Repository
         private readonly DatabaseSettings _databaseSettings;
         private readonly ILogger _logger;
 
-        public Repository(DatabaseSettings databaseSettings, ILogger logger)
+        public Repository(IOptions<DatabaseSettings> databaseSettings, ILogger logger)
         {
-            _databaseSettings = databaseSettings;
+            _databaseSettings = databaseSettings.Value;
             _logger = logger;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(_databaseSettings.ConnectionString)
             {

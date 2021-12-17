@@ -12,7 +12,7 @@ namespace ETL.Utils
     {
         private readonly NLog.Logger _logger=null;
 
-        private Logger(string loggerName)
+        public Logger(string loggerName)
         {
             _logger = LogManager.GetLogger(loggerName);
         }
