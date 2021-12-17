@@ -17,6 +17,11 @@ namespace ETL.Utils
             Data = data;
         }
 
+        /// <summary>
+        /// Implementation of CPS for cleaner program flow
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="fail"></param>
        public void ContinueWith(Action<T> success, Action<T> fail=null)
         {
             if (Status)

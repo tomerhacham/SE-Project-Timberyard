@@ -19,6 +19,11 @@ namespace ETL
             JsonConverters = new List<JsonConverter>() { new DatetimeJsonConverter() };
             _logger = logger;
         }
+        /// <summary>
+        /// Deserializing string from json format to populate an Log instance
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public Result<Log> Deserialize(string data)
         {
             try 
@@ -33,6 +38,7 @@ namespace ETL
             }
             catch (Exception e) 
             {
+                _logger.Warning($"Error raise in deserializetion", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Log>(false, null, e.Message);
             }
 

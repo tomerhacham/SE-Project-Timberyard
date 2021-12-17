@@ -45,6 +45,11 @@ namespace ETL
                 return new Result<string[]>(false, null, e.Message);
             }
         }
+        /// <summary>
+        /// Reading data from given file and return as string
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public Result<string> ReadFromFile(string filePath)
         {
             try
@@ -74,6 +79,7 @@ namespace ETL
             try
             {
                 File.Move(srcFileName, dstFileName);
+                _logger.Info($"{Path.GetFileName(srcFileName)} moved to {Path.GetDirectoryName(dstFileName)}", new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(true, true);
             }
             catch (Exception e)

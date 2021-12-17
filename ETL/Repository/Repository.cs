@@ -36,6 +36,11 @@ namespace ETL.Repository
             _databaseSettings.ConnectionString = builder.ToString();
         }
 
+        /// <summary>
+        /// Insert log in transaction. Preform rollback in case an error has been occurred
+        /// </summary>
+        /// <param name="log"></param>
+        /// <returns></returns>
         public  Result<bool> InsertLog(Log log)
         {
             try
@@ -58,12 +63,12 @@ namespace ETL.Repository
                 catch (Exception e) 
                 {
                     transaction.Rollback();
-                    Console.WriteLine(e.Message);
+                    _logger.Warning($"Error raise in transaction - preforming rollback", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                     return new Result<bool>(false, false,e.Message);
                 }
             }
             catch (Exception e) {
-                Console.WriteLine(e.Message);
+                _logger.Warning($"Error communication with DB", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, e.Message);
             }
         }

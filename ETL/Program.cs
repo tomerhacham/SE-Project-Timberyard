@@ -27,17 +27,20 @@ namespace ETL
                                 success: (Log log) =>
                                 {
                                     var res = repository.InsertLog(log);
-                                    res.ContinueWith((bool insertSucceed) => { fileManager.MoveToHandeledLogsDirectory(file); });
+                                    res.ContinueWith((bool insertSucceed) => {
+                                        fileManager.MoveToHandeledLogsDirectory(file); });
                                 }, fail: (Log log) => { fileManager.MoveToFaultLogsDirectory(file); }
 
-                        );
-
+                                );
                         });
                 }
             }); 
             #endregion
         }
-
+        /// <summary>
+        /// Utility function to build service provider for dependency injection
+        /// </summary>
+        /// <returns></returns>
         private static ServiceProvider ConfigureServices()
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("ETL").Build();
