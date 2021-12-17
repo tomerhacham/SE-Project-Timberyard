@@ -30,7 +30,6 @@ namespace ETL.Utils
             }
             else
             {
-                Console.WriteLine(Message);
                 if (!(fail is null))
                 {
                     fail.DynamicInvoke(Data);
