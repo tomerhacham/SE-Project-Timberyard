@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebService</name>
+    </assembly>
+    <members>
+        <member name="T:WebService.API.Swagger.Example.WeatherForecastController.ToDoRequestExample">
+            <summary>
+            Example for valid request from client to API
+            </summary>
+        </member>
+        <member name="T:WebService.API.Swagger.Example.WeatherForecastController.ToDoResponseExample">
+            <summary>
+            Example for valid response from the API to the client
+            </summary>
+        </member>
+    </members>
+</doc>
