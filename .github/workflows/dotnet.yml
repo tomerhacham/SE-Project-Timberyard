@@ -18,10 +18,11 @@ jobs:
         dotnet-version: 3.1.x
     - name: Install formater
       run: dotnet tool install --global dotnet-format
-    - name: Install formater
+    - name: Run formater
       run: dotnet-format --check --verbosity diagnostic
 
   build:
+    needs: linter
     name:  Build
     runs-on: windows-latest
     steps:
