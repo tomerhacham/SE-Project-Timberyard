@@ -109,3 +109,6 @@ csharp_preferred_modifier_order = public,private,static,readonly,async:suggestio
 dotnet_style_qualification_for_field = false:suggestion
 #prefer properties not to be prefaced with this. or Me. in Visual Basic
 dotnet_style_qualification_for_property = false:suggestion
+
+# CS1998: Async method lacks 'await' operators and will run synchronously
+dotnet_diagnostic.CS1998.severity = warning
