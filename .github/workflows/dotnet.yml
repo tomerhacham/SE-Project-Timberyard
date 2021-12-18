@@ -18,6 +18,7 @@ jobs:
         dotnet-version: 3.1.x
     - name: Install formater
       run: dotnet tool install --global dotnet-format
+           PATH=$HOME/.dotnet/tools:$PATH
     - name: Run formater
       run: dotnet-format --check --verbosity diagnostic
 
