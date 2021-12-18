@@ -19,14 +19,14 @@ namespace WebService
 
         public string Summary { get; set; }
 
-        [Route("SimpleGet")]
-        [HttpGet]
+        [Route("SimplePost")]
+        [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ToDoRequestExample))]
         [ProducesResponseType(typeof(ToDoResponseExample), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ToDoBadResponseExample), StatusCodes.Status400BadRequest)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(ToDoResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(ToDoBadResponseExample))]
-        public async Task<object> SimpleGet(object model)
+        public async Task<object> SimplePost(object model)
         {
             return new { Attribute = "simpleGet" };
         }
