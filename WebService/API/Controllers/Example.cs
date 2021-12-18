@@ -7,9 +7,9 @@ using WebService.API.Swagger.Example.WeatherForecastController;
 
 namespace WebService
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecast
+    public class Example
     {
         public DateTime Date { get; set; }
 
