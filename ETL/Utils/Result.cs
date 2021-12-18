@@ -10,7 +10,7 @@ namespace ETL.Utils
         public string Message { get; }
         public T Data { get; }
 
-        public Result(bool status, T data, string message="")
+        public Result(bool status, T data, string message = "")
         {
             Status = status;
             Message = message;
@@ -22,7 +22,7 @@ namespace ETL.Utils
         /// </summary>
         /// <param name="success"></param>
         /// <param name="fail"></param>
-       public void ContinueWith(Action<T> success, Action<T> fail=null)
+        public void ContinueWith(Action<T> success, Action<T> fail = null)
         {
             if (Status)
             {

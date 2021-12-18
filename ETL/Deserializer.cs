@@ -26,17 +26,17 @@ namespace ETL
         /// <returns></returns>
         public Result<Log> Deserialize(string data)
         {
-            try 
+            try
             {
-                
+
                 var log = JsonConvert.DeserializeObject<Log>(data, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
                     Converters = JsonConverters.ToArray()
-                }) ;
-                return new Result<Log>(true,log);
+                });
+                return new Result<Log>(true, log);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 _logger.Warning($"Error raise in deserializetion", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Log>(false, null, e.Message);

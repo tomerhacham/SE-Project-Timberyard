@@ -10,7 +10,7 @@ namespace ETL.Utils
 {
     public class Logger : ILogger
     {
-        private readonly NLog.Logger _logger=null;
+        private readonly NLog.Logger _logger = null;
 
         public Logger(string loggerName)
         {

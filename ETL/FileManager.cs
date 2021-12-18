@@ -18,7 +18,7 @@ namespace ETL
         private string _faultLogsDirectory;
         private readonly ILogger _logger;
 
-        public FileManager(IOptions<Directories> directories,ILogger logger)
+        public FileManager(IOptions<Directories> directories, ILogger logger)
         {
             _newLogsDirectory = directories.Value.NewLogsDirectory;
             _handeledLogsDirectory = directories.Value.HandeledLogsDirectory;
@@ -37,11 +37,11 @@ namespace ETL
             {
                 var files = Directory.GetFiles(_newLogsDirectory, "*.json", searchOption: SearchOption.AllDirectories);
                 _logger.Info($"{files.Length} new logs have been found", new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
-                return new Result<string[]>(true,files);
+                return new Result<string[]>(true, files);
             }
             catch (Exception e)
             {
-                _logger.Warning("Error raised while pulling new logs",e,new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                _logger.Warning("Error raised while pulling new logs", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string[]>(false, null, e.Message);
             }
         }
@@ -55,9 +55,9 @@ namespace ETL
             try
             {
                 var data = File.ReadAllText(filePath);
-                return new Result<string>(true,data);
+                return new Result<string>(true, data);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Warning($"Error raise while reading {filePath}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string>(false, null, e.Message);
@@ -74,7 +74,7 @@ namespace ETL
             var dst = Path.Combine(_faultLogsDirectory, Path.GetFileName(filePath));
             return MoveFileToDirectory(filePath, dst);
         }
-        private Result<bool> MoveFileToDirectory(string srcFileName,string dstFileName)
+        private Result<bool> MoveFileToDirectory(string srcFileName, string dstFileName)
         {
             try
             {

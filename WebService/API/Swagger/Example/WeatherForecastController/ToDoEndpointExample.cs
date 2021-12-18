@@ -31,7 +31,7 @@ namespace WebService.API.Swagger.Example.WeatherForecastController
     {
         public object GetExamples()
         {
-            return new {Attribute ="This is bad response" };
+            return new { Attribute = "This is bad response" };
         }
     }
 }

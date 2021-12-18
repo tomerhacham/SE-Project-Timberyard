@@ -35,7 +35,7 @@ namespace WebService
                 .SetBasePath(System.AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
-                .Build(); 
+                .Build();
             #endregion
 
             services.AddControllers();
@@ -62,8 +62,8 @@ namespace WebService
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
 
-            } 
-            #endregion
+        }
+        #endregion
 
 
 

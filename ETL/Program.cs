@@ -27,14 +27,16 @@ namespace ETL
                                 success: (Log log) =>
                                 {
                                     var res = repository.InsertLog(log);
-                                    res.ContinueWith((bool insertSucceed) => {
-                                        fileManager.MoveToHandeledLogsDirectory(file); });
+                                    res.ContinueWith((bool insertSucceed) =>
+                                    {
+                                        fileManager.MoveToHandeledLogsDirectory(file);
+                                    });
                                 }, fail: (Log log) => { fileManager.MoveToFaultLogsDirectory(file); }
 
                                 );
                         });
                 }
-            }); 
+            });
             #endregion
         }
         /// <summary>

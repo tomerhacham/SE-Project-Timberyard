@@ -41,33 +41,34 @@ namespace ETL.Repository
         /// </summary>
         /// <param name="log"></param>
         /// <returns></returns>
-        public  Result<bool> InsertLog(Log log)
+        public Result<bool> InsertLog(Log log)
         {
             try
             {
-                using DbConnection connection = new SqlConnection(_databaseSettings.ConnectionString);      
+                using DbConnection connection = new SqlConnection(_databaseSettings.ConnectionString);
                 connection.Open();
                 using DbTransaction transaction = connection.BeginTransaction();
                 var logDTO = log.GetDTO();
                 try
                 {
                     var id = connection.InsertAsync(logDTO, transaction: transaction).Result;
-                    var testsDTOs = log.TESTS.Select(t => { var dto = t.GetDTO();dto.LogId = id;return dto; });
+                    var testsDTOs = log.TESTS.Select(t => { var dto = t.GetDTO(); dto.LogId = id; return dto; });
                     connection.Insert(testsDTOs, transaction: transaction);
-                    
+
                     transaction.Commit();
                     return new Result<bool>(id > 0, id > 0);
                 }
 
                 //In case transaction needs to be rolled back
-                catch (Exception e) 
+                catch (Exception e)
                 {
                     transaction.Rollback();
                     _logger.Warning($"Error raise in transaction - preforming rollback", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
-                    return new Result<bool>(false, false,e.Message);
+                    return new Result<bool>(false, false, e.Message);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 _logger.Warning($"Error communication with DB", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, e.Message);
             }
