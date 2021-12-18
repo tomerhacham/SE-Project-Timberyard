@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Threading.Tasks;
 using WebService.API.Swagger.Example.WeatherForecastController;
+using WebService.Domain.Interface;
 
 namespace WebService
 {
@@ -11,13 +12,12 @@ namespace WebService
     [ApiController]
     public class Example
     {
-        public DateTime Date { get; set; }
+        SystemInterface SystemInterface { get; }
 
-        public int TemperatureC { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public string Summary { get; set; }
+        public Example(SystemInterface systemInterface)
+        {
+            SystemInterface = systemInterface;
+        }
 
         [Route("SimplePost")]
         [HttpPost]
