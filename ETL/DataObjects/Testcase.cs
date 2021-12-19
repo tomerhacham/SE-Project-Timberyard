@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ETL.DataObjects
 {
+
     public class Testcase
     {
         public string Task { get; set; }
@@ -30,7 +31,7 @@ namespace ETL.DataObjects
                 Max = Max,
                 Min = Min,
                 Result = Result,
-                TestName = TestName,
+                TestName = TestName.Trim(),
                 DrationNet = DrationNet,
                 DurationGross = DurationGross
             };
@@ -38,7 +39,22 @@ namespace ETL.DataObjects
 
         private string GetTestType()
         {
-            return "someType";
+            if (String.IsNullOrEmpty(Received) && String.IsNullOrEmpty(Expected) && Max == null && Min == null)
+            {
+                return "General";
+            }
+            else if (!String.IsNullOrEmpty(Received) && !String.IsNullOrEmpty(Expected) && Max == null && Min == null)
+            {
+                return "Expected";
+            }
+            else if (!String.IsNullOrEmpty(Received) && String.IsNullOrEmpty(Expected) && Max != null && Min != null)
+            {
+                return "Boundaries";
+            }
+            else
+            {
+                return "Unknown";
+            }
         }
     }
 }
