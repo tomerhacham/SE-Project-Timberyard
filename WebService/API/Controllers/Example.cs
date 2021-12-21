@@ -28,6 +28,7 @@ namespace WebService
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(ToDoBadResponseExample))]
         public async Task<object> SimplePost(object model)
         {
+            return await SystemInterface.QueriesController.LogsAndTestsRepository.DynamicReturnTypeExampleQuery();
             return new { Attribute = "simpleGet" };
         }
     }

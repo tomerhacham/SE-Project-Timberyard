@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Dapper;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -27,6 +28,22 @@ namespace WebService.Domain.DataAccess
                 UserID = DatabaseSettings.DbUsername
             };
             DatabaseSettings.ConnectionString = builder.ToString();
+        }
+
+        public async Task<List<dynamic>> DynamicReturnTypeExampleQuery()
+        {
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var sqlCommand = @"SELECT CardRev, CardName, SwRev From Logs WHERE Catalog=@Catalog";
+                var objects = await connection.QueryAsync<dynamic>(sqlCommand, new { Catalog = "X56868" });
+                return objects.AsList();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

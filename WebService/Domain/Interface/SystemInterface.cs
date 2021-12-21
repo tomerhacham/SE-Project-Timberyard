@@ -10,7 +10,7 @@ namespace WebService.Domain.Interface
 {
     public class SystemInterface
     {
-        QueriesController QueriesController { get; }
+        public QueriesController QueriesController { get; }
 
         public SystemInterface(QueriesController queriesController)
         {

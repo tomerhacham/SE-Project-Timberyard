@@ -7,5 +7,6 @@ namespace WebService.Domain.DataAccess
 {
     public interface ILogsAndTestsRepository
     {
+        Task<List<dynamic>> DynamicReturnTypeExampleQuery();
     }
 }
