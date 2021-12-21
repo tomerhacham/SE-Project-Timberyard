@@ -4,30 +4,31 @@ using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Threading.Tasks;
 using WebService.API.Swagger.Example.WeatherForecastController;
+using WebService.Domain.Interface;
 
 namespace WebService
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecast
+    public class Example
     {
-        public DateTime Date { get; set; }
+        SystemInterface SystemInterface { get; }
 
-        public int TemperatureC { get; set; }
+        public Example(SystemInterface systemInterface)
+        {
+            SystemInterface = systemInterface;
+        }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public string Summary { get; set; }
-
-        [Route("SimpleGet")]
-        [HttpGet]
+        [Route("SimplePost")]
+        [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ToDoRequestExample))]
         [ProducesResponseType(typeof(ToDoResponseExample), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ToDoBadResponseExample), StatusCodes.Status400BadRequest)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(ToDoResponseExample))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(ToDoBadResponseExample))]
-        public async Task<object> SimpleGet(object model)
+        public async Task<object> SimplePost(object model)
         {
+            return await SystemInterface.QueriesController.LogsAndTestsRepository.DynamicReturnTypeExampleQuery();
             return new { Attribute = "simpleGet" };
         }
     }

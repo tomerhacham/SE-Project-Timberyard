@@ -14,6 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using WebService.Domain.Business.Queries;
+using WebService.Domain.DataAccess;
+using WebService.Domain.Interface;
+using WebService.Utils;
+using WebService.Utils.Models;
 
 namespace WebService
 {
@@ -37,6 +42,12 @@ namespace WebService
                 .AddEnvironmentVariables()
                 .Build();
             #endregion
+
+            //Dependency injection
+            services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                    .AddSingleton<Utils.ILogger>(sp => new Logger("Timberyard-service"))
+                    .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
+                    .AddSingleton<QueriesController>().AddSingleton<SystemInterface>();
 
             services.AddControllers();
 
