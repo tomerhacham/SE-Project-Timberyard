@@ -7,7 +7,19 @@ namespace WebService.Domain.Business.Queries
 {
     public class QueryResult
     {
-        public List<string> ColumnNames { get; set; }
-        public List<object> Records { get; set; }
+        public string[] ColumnNames { get; set; }
+        public List<dynamic> Records { get; set; }
+
+        public QueryResult(List<dynamic> records)
+        {
+            ColumnNames = ((IDictionary<string, object>)records.FirstOrDefault()).Keys.ToArray();
+            Records = records;
+        }
+        public QueryResult(string[] columnNames, List<object> record)
+        {
+            ColumnNames = columnNames;
+            Records = record;
+        }
+
     }
 }

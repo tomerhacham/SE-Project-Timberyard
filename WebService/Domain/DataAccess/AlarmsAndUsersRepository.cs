@@ -9,7 +9,7 @@ using WebService.Utils.Models;
 
 namespace WebService.Domain.DataAccess
 {
-    public class AlarmsAndUsersRepository : IAlarmsAndUsersRepository
+    public class AlarmsAndUsersRepository
     {
         //Properties
         DatabaseSettings DatabaseSettings { get; }
