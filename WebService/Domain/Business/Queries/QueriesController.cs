@@ -15,6 +15,12 @@ namespace WebService.Domain.Business.Queries
         {
             LogsAndTestsRepository = logsAndTestsRepository;
             Logger = logger;
+            QueriesPrototypes = new Dictionary<Type, IQuery>(){ {typeof(Boundaries),new Boundaries()}};
+        }
+
+        internal Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

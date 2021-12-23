@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
+using WebService.Utils;
 
 namespace WebService.Domain.Interface
 {
@@ -15,6 +16,11 @@ namespace WebService.Domain.Interface
         public SystemFacade(QueriesController queriesController)
         {
             QueriesController = queriesController;
+        }
+
+        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateBoundaries(catalog, startDate, endDate);
         }
     }
 }
