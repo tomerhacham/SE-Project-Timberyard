@@ -14,7 +14,20 @@
             Example for valid response from the API to the client
             </summary>
         </member>
-        <member name="M:WebService.Utils.Result`1.ContinueWith(System.Action{`0},System.Action{`0})">
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.CardYield)">
+            <summary>
+            Execute Card Yield Query 
+            </summary>
+            <param name="cardYield">
+                Catalog:string
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Catalog, CardName, NumberSuccessedTests(%)]        
+            </returns>
+        </member>
+        <member name="M:WebService.Utils.Result`1.ContinueWith``1(System.Action{`0},System.Action{``0})">
             <summary>
             Implementation of CPS for cleaner program flow
             </summary>
