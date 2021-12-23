@@ -59,7 +59,7 @@ namespace WebService.Domain.DataAccess
         /// <returns>
         ///     [Catalog, CardName, NumberSuccessedTests(%)]        
         /// </returns>
-        public async Task<List<dynamic>> ExecuteQuery(CardYield cardYield)
+        public async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
             try
             {
@@ -84,11 +84,11 @@ namespace WebService.Domain.DataAccess
                 ) ";
                 var objects = await connection.QueryAsync<dynamic>(sqlCommand,
                     new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate });
-                return objects.AsList();
+                return new Result<List<dynamic>>(true, objects.AsList());                
             }
             catch (Exception e)
             {
-                return null;
+                return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
             }
 
         }
