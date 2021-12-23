@@ -17,14 +17,15 @@ namespace WebService.Domain.Business.Queries
             Logger = logger;
         }
 
-        internal Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             throw new NotImplementedException();
         }
 
-        internal Task<object> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
+        public Task<QueryResult> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
         {
-            return new
+            var query =  new CardYield(catalog, startDate, endDate);
+            return query.Execute();
         }
     }
 }
