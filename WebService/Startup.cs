@@ -47,7 +47,7 @@ namespace WebService
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                     .AddSingleton<Utils.ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
-                    .AddSingleton<QueriesController>().AddSingleton<SystemInterface>();
+                    .AddSingleton<QueriesController>().AddSingleton<SystemFacade>();
 
             services.AddControllers();
 

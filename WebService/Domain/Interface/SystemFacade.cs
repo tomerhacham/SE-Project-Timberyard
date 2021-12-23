@@ -8,11 +8,11 @@ using WebService.Domain.Business.Queries;
 
 namespace WebService.Domain.Interface
 {
-    public class SystemInterface
+    public class SystemFacade
     {
         public QueriesController QueriesController { get; }
 
-        public SystemInterface(QueriesController queriesController)
+        public SystemFacade(QueriesController queriesController)
         {
             QueriesController = queriesController;
         }

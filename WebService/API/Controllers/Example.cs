@@ -12,9 +12,9 @@ namespace WebService
     [ApiController]
     public class Example
     {
-        SystemInterface SystemInterface { get; }
+        SystemFacade SystemInterface { get; }
 
-        public Example(SystemInterface systemInterface)
+        public Example(SystemFacade systemInterface)
         {
             SystemInterface = systemInterface;
         }
