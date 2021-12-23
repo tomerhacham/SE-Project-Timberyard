@@ -22,20 +22,12 @@ namespace WebService.Domain.Business.Queries
 
         public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
         {
-            Result<QueryResult>? result = default;
             var sqlResult = await LogsAndTestsRepository.ExecuteQuery(this);
-            sqlResult.ContinueWith(
-                success: (List<dynamic> data) =>
-                     {
-                         var columnNames = ((IDictionary<string, object>)data.FirstOrDefault()).Keys.ToArray();
-                         var queryResult = new QueryResult(columnNames, data);
-                         result = new Result<QueryResult>(true, queryResult, "");
-                     },
-                fail: (string message) =>
-                    {
-                        result = new Result<QueryResult>(false, null, message);
-                    });
-            return result;
+            if (sqlResult.Status)
+            {
+                return new Result<QueryResult>(true, new QueryResult(sqlResult.Data), "");
+            }
+            return new Result<QueryResult>(false, null, sqlResult.Message);
         }
     }
 }
