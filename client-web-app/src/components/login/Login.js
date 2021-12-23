@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, CssBaseline, TextField, Link, 
-         Paper, Box, Grid, Typography  } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, Paper, Box, Grid, Typography  } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -116,17 +115,14 @@ const Login = () => {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                            <Link component="button" variant="body2" onClick={() => setAdminWindow(!adminWindow)}>
-                                {adminWindow ? "I'm a User" : "I'm an Admin"}
-                            </Link>
+                                <Button variant="body2" onClick={(e) => {
+                                    e.preventDefault();  
+                                    setAdminWindow(!adminWindow)
+                                }}>
+                                    {adminWindow ? "I'm a User" : "I'm an Admin"}
+                                </Button>
                             </Grid>
-                            {/* <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                            </Grid> */}
                         </Grid>
-                        {/* <Copyright sx={{ mt: 5 }} /> */}
                     </Box>
                 </Box>
             </Grid>

@@ -14,7 +14,7 @@ const DashboardApp = () => {
           <Container maxWidth={false}>
             <Grid container spacing={3}>
               <Grid item lg={8} sm={12} xl={9} xs={12}>
-                <QueryTable />
+                {/* <QueryTable /> */}
               </Grid>
             </Grid>
           </Container>
