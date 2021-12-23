@@ -68,8 +68,7 @@ namespace WebService
                 {
                     policy.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin()
-                        .AllowCredentials();
+                        .AllowAnyOrigin();
                 });
             });
             services.AddCors();
