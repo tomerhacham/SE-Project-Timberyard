@@ -5,7 +5,7 @@ import SdCardIcon from '@mui/icons-material/SdCard';
 
 const CardYield = () => {
     const [data, setData] = useState({
-        catalogNumber: '',
+        catalog: '',
         startDate: '',
         endDate: ''
     })
@@ -47,7 +47,7 @@ const CardYield = () => {
                             label="Catalog #"
                             type="text"
                             autoFocus
-                            onChange={(e) => setData({ ...data, catalogNumber: e.target.value })}
+                            onChange={(e) => setData({ ...data, catalog: e.target.value })}
                         />
                         <TextField
                             id="cardyield-start-date"
@@ -75,7 +75,7 @@ const CardYield = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            disabled={data.catalogNumber === '' || data.startDate === '' || data.endDate === ''}
+                            disabled={data.catalog === '' || data.startDate === '' || data.endDate === ''}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             OK
@@ -105,7 +105,7 @@ const CardYield = () => {
         //                 label="Catalog #"
         //                 type="text"
         //                 autoFocus
-        //                 onChange={(e) => setData({ ...data, catalogNumber: e.target.value })}
+        //                 onChange={(e) => setData({ ...data, catalog: e.target.value })}
         //             />
         //             <TextField
         //                 id="cardyield-start-date"

@@ -15,6 +15,8 @@ const Login = () => {
     })
     const [errorMessage, setErrorMessage] = useState('');
     const [loginError, setLoginError] = useState(false);
+    // TODO: Implement correctly, change to false, fix width...
+    const [adminWindow, setAdminWindow] = useState(true);
     
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -85,8 +87,9 @@ const Login = () => {
                             onChange={(e) => setUserInput({ ...userInput, email: e.target.value })}
                             error={loginError}
                         />
-                        <TextField
-                            id="login-user-password"
+                        {adminWindow && (
+                            <TextField
+                            id="login-admin-password"
                             name="password"
                             margin="normal"
                             required
@@ -96,7 +99,8 @@ const Login = () => {
                             autoComplete="current-password"
                             onChange={(e) => setUserInput({ ...userInput, password: e.target.value })}
                             error={loginError}
-                        />
+                            />
+                        )}
                         {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
@@ -112,8 +116,8 @@ const Login = () => {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                            <Link href="#" variant="body2">
-                                I'm an Admin
+                            <Link component="button" variant="body2" onClick={() => setAdminWindow(!adminWindow)}>
+                                {adminWindow ? "I'm a User" : "I'm an Admin"}
                             </Link>
                             </Grid>
                             {/* <Grid item>
