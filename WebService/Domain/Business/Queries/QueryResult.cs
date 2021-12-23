@@ -12,7 +12,7 @@ namespace WebService.Domain.Business.Queries
 
         public QueryResult(List<dynamic> records)
         {
-            ColumnNames = ((IDictionary<string, object>)records.FirstOrDefault()).Keys.ToArray();
+            ColumnNames = (records.Count() > 0) ? ((IDictionary<string, object>)records.FirstOrDefault()).Keys.ToArray() : new string[0];
             Records = records;
         }
         public QueryResult(string[] columnNames, List<object> record)
