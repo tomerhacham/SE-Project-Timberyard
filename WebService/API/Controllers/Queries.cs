@@ -32,8 +32,7 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<object> CardYield([FromBody] CardYieldModel model)
         {
-            return await SystemInterface.QueriesController.LogsAndTestsRepository.DynamicReturnTypeExampleQuery();
-            return new { Attribute = "simpleGet" };
+            return await SystemInterface.CalculateCardYield(model.StartDate, model.EndDate, model.Catalog);
         }
 
     }

@@ -21,5 +21,10 @@ namespace WebService.Domain.Business.Queries
         {
             throw new NotImplementedException();
         }
+
+        internal Task<object> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
+        {
+            return new
+        }
     }
 }
