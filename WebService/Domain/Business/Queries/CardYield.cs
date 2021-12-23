@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebService.Domain.DataAccess;
+using WebService.Utils;
 
 namespace WebService.Domain.Business.Queries
 {
@@ -18,9 +20,14 @@ namespace WebService.Domain.Business.Queries
             EndDate = endDate;
         }
 
-        public Task<QueryResult> Execute()
+        public async Result<QueryResult> Execute(LogsAndTestsRepository LogsAndTestsRepository)
         {
-            throw new NotImplementedException();
+            var sql_result = await LogsAndTestsRepository.ExecuteQuery(this);
+            if (sql_result.Count>0)
+            {
+                return new Result<QueryResult>(false, new QueryResult(), 
+            }
+            else { }
         }
     }
 }
