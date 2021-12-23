@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using WebService.Domain.Business.Queries;
 using WebService.Utils;
 using WebService.Utils.Models;
 
@@ -44,6 +45,38 @@ namespace WebService.Domain.DataAccess
             {
                 return null;
             }
+        }
+
+
+        /// <summary>
+        /// Execute Card Yield Query 
+        /// </summary>
+        /// <param name="cardYield">
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Catalog, CardName, NumberSuccessedTests(%)]        
+        /// </returns>
+        public async Task<List<dynamic>> ExecuteQuery(CardYield cardYield)
+        {
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var sqlCommand = @"SELECT Catalog, CardName, Id 
+                                    From Logs WHERE
+                                    Catalog=@Catalog AND StartDate=@StartDate AND EndDate=@EndDate ";
+                var objects = await connection.QueryAsync<dynamic>(sqlCommand,
+                    new { Catalog = cardYield.Catalog });
+                return objects.AsList();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
         }
     }
 }
