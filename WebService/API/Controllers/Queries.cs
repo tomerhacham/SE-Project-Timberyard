@@ -30,9 +30,17 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
         [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<object> CardYield([FromBody] CardYieldModel model)
+        public async Task<IActionResult> CardYield([FromBody] CardYieldModel model)
         {
-            return await SystemInterface.CalculateCardYield(model.StartDate, model.EndDate, model.Catalog);
+            var response = await SystemInterface.CalculateCardYield(model.StartDate, model.EndDate, model.Catalog);
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                return BadRequest(response.Message);
+            }
         }
 
     }

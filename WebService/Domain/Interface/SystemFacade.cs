@@ -23,7 +23,7 @@ namespace WebService.Domain.Interface
             return QueriesController.CalculateBoundaries(catalog, startDate, endDate);
         }
 
-        internal Task<QueryResult> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
+        public Task<Result<QueryResult>> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
         {
             return QueriesController.CalculateCardYield(startDate, endDate, catalog);
         }

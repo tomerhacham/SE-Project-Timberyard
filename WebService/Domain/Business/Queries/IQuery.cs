@@ -9,6 +9,6 @@ namespace WebService.Domain.Business.Queries
 {
     public interface IQuery
     {
-        public Result<QueryResult> Execute(LogsAndTestsRepository LogsAndTestsRepository);
+        public Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository);
     }
 }

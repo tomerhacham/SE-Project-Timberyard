@@ -49,7 +49,7 @@ namespace WebService
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                     .AddSingleton<Utils.ILogger>(sp => new Logger("Timberyard-service"))
-                    .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
+                    .AddSingleton<LogsAndTestsRepository>()
                     .AddSingleton<QueriesController>().AddSingleton<SystemFacade>();
 
             services.AddControllers().AddJsonOptions(options =>

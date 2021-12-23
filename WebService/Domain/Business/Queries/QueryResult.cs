@@ -7,7 +7,14 @@ namespace WebService.Domain.Business.Queries
 {
     public class QueryResult
     {
-        public List<string> ColumnNames { get; set; }
+        public string[] ColumnNames { get; set; }
         public List<object> Records { get; set; }
+
+        public QueryResult(string[] columnNames, List<object> records)
+        {
+            ColumnNames = columnNames;
+            Records = records;
+        }
+
     }
 }

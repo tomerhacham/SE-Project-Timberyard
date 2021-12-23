@@ -20,14 +20,22 @@ namespace WebService.Domain.Business.Queries
             EndDate = endDate;
         }
 
-        public async Result<QueryResult> Execute(LogsAndTestsRepository LogsAndTestsRepository)
+        public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
         {
-            var sql_result = await LogsAndTestsRepository.ExecuteQuery(this);
-            if (sql_result.Count>0)
-            {
-                return new Result<QueryResult>(false, new QueryResult(), 
-            }
-            else { }
+            Result<QueryResult>? result = default;
+            var sqlResult = await LogsAndTestsRepository.ExecuteQuery(this);
+            sqlResult.ContinueWith(
+                success: (List<dynamic> data) =>
+                     {
+                         var columnNames = ((IDictionary<string, object>)data.FirstOrDefault()).Keys.ToArray();
+                         var queryResult = new QueryResult(columnNames, data);
+                         result = new Result<QueryResult>(true, queryResult, "");
+                     },
+                fail: (string message) =>
+                    {
+                        result = new Result<QueryResult>(false, null, message);
+                    });
+            return result;
         }
     }
 }
