@@ -65,11 +65,25 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var sqlCommand = @"SELECT Catalog, CardName, Id 
-                                    From Logs WHERE
-                                    Catalog=@Catalog AND StartDate=@StartDate AND EndDate=@EndDate ";
+                var sqlCommand =
+                @"
+                SELECT T1.Catalog, T1.CardName, CAST(((SuccessTests * 100.0) / (SuccessTests + FailedTests)) AS FLOAT) AS SuccessRatio
+                FROM (
+	                (SELECT Catalog, CardName, COUNT(*) as SuccessTests
+                    From Logs
+                    WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'PASS'
+                    GROUP BY Catalog, CardName 
+                    ) as T1 
+                INNER JOIN
+                    (SELECT Catalog, CardName, COUNT(*) as FailedTests
+                    From Logs
+                    WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'FAIL'
+                    GROUP BY Catalog, CardName
+                    ) as T2
+	            ON T1.CardName = T2.CardName
+                ) ";
                 var objects = await connection.QueryAsync<dynamic>(sqlCommand,
-                    new { Catalog = cardYield.Catalog });
+                    new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate });
                 return objects.AsList();
             }
             catch (Exception e)
