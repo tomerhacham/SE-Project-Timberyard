@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebService.Domain.Business.Queries
 {
-    interface IQuery
+    public interface IQuery
     {
+        public Task<QueryResult> Execute();
     }
 }

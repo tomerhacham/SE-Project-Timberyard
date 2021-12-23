@@ -16,5 +16,10 @@ namespace WebService.Domain.Business.Queries
             LogsAndTestsRepository = logsAndTestsRepository;
             Logger = logger;
         }
+
+        internal Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
