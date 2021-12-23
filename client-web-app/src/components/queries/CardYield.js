@@ -34,10 +34,11 @@ const CardYield = () => {
         // console.log(userInput);
 
         setLoading(true);
-        
+
         api.CardYield(userInput).then(res => res.json())
         .then(
             (result) => {
+                console.log(result);
                 setQueryData(result);
                 dataToTable(result);
                 setLoading(false);
@@ -45,6 +46,7 @@ const CardYield = () => {
             (error) => {
                 // TODO: do some functionality
                 console.log(error);
+                setLoading(false);
             }
         );
     };
@@ -70,66 +72,66 @@ const CardYield = () => {
     }, [navigate.pathname])
 
     const inputFields = (
-                <Box
-                    sx={{
-                        my: 0,
-                        mx: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
+        <Box
+            sx={{
+                my: 0,
+                mx: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <Avatar sx={{ m: 0, bgcolor: 'secondary.main' }}>
+                <SdCardIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+                Card Yield
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                    id="cardyield-catalog-num"
+                    required
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="Catalog #"
+                    type="text"
+                    autoFocus
+                    onChange={(e) => setUserInput({ ...userInput, catalog: e.target.value })}
+                />
+                <TextField
+                    id="cardyield-start-date"
+                    required
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="Start Date"
+                    type="date"
+                    onChange={(e) => setUserInput({ ...userInput, startDate: e.target.value })}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    id="cardyield-end-date"
+                    required
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="End Date"
+                    type="date"
+                    onChange={(e) => setUserInput({ ...userInput, endDate: e.target.value })}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={userInput.catalog === '' || userInput.startDate === '' || userInput.endDate === ''}
+                    sx={{ mt: 3, mb: 2 }}
                 >
-                    <Avatar sx={{ m: 0, bgcolor: 'secondary.main' }}>
-                        <SdCardIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Card Yield
-                    </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
-                            id="cardyield-catalog-num"
-                            required
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            label="Catalog #"
-                            type="text"
-                            autoFocus
-                            onChange={(e) => setUserInput({ ...userInput, catalog: e.target.value })}
-                        />
-                        <TextField
-                            id="cardyield-start-date"
-                            required
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            label="Start Date"
-                            type="date"
-                            onChange={(e) => setUserInput({ ...userInput, startDate: e.target.value })}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                            id="cardyield-end-date"
-                            required
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            label="End Date"
-                            type="date"
-                            onChange={(e) => setUserInput({ ...userInput, endDate: e.target.value })}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            disabled={userInput.catalog === '' || userInput.startDate === '' || userInput.endDate === ''}
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            OK
-                        </Button>
-                    </Box>
-                </Box>
+                    OK
+                </Button>
+            </Box>
+        </Box>
     )
 
     return (
@@ -154,7 +156,7 @@ const CardYield = () => {
                                 <QueryTable rows={tableData.rows} columns={tableData.columns} />
                             </Grid>
                             <Grid item lg={8} md={12} xl={9} xs={12}>
-                                {queryData && <BarChart data={queryData} />}
+                                {queryData && tableData.rows.length > 0 && <BarChart data={queryData} />}
                             </Grid>
                         </>
                     )}
