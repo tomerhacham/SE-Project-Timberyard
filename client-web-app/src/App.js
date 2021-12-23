@@ -9,6 +9,7 @@ import DashboardLayout from './components/dashboard/DashboardLayout';
 import Dashboard from './components/dashboard/Dashboard';
 import Login from './components/login/Login';
 import Settings from './components/settings/Settings';
+import CardYield from './components/queries/CardYield';
 
 const App = () => {
   return (
@@ -21,6 +22,9 @@ const App = () => {
               <Route path='' element={<DashboardLayout />}>
                 <Route exact path='/settings' element={<PrivateRoute />}>
                   <Route path='' element={<Settings />} />
+                </Route>
+                <Route exact path='/cardyield' element={<PrivateRoute />}>
+                  <Route path='' element={<CardYield />} />
                 </Route>
                 <Route exact path='/' element={<Dashboard />} />
               </Route>
