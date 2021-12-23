@@ -61,6 +61,19 @@ namespace WebService
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
+            //Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ClientPermission", policy =>
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .AllowCredentials();
+                });
+            });
+            services.AddCors();
+
             #region Swagger
             //Add Swagger
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -106,6 +119,9 @@ namespace WebService
             });
 
             app.UseHttpsRedirection();
+
+            app.UseCors("ClientPermission");
+
 
             app.UseRouting();
 
