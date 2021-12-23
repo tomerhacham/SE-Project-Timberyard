@@ -8,6 +8,5 @@ namespace WebService.Domain.Business.Queries
     public interface IQuery
     {
         public Task<QueryResult> Execute();
-        public Task<IQuery> Clone();
     }
 }

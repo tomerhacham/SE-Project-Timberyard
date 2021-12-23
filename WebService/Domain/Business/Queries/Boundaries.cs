@@ -11,11 +11,6 @@ namespace WebService.Domain.Business.Queries
         DateTime StartDate { get; set; }
         DateTime EndDate { get; set; }
 
-        public Task<IQuery> Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<QueryResult> Execute()
         {
             throw new NotImplementedException();
