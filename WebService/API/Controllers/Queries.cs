@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebService.API.Controllers.Models;
+using WebService.API.Swagger.Example.QueriesController;
+using WebService.API.Swagger.Example.WeatherForecastController;
+using WebService.Domain.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,36 +18,30 @@ namespace WebService.API.Controllers
     [ApiController]
     public class Queries : ControllerBase
     {
-        // GET: api/<QueriesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        SystemFacade SystemInterface { get; }
+
+        public Queries(SystemFacade systemInterface)
         {
-            return new string[] { "value1", "value2" };
+            SystemInterface = systemInterface;
         }
 
-        // GET api/<QueriesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<QueriesController>
+        [Route("CardYield")]
         [HttpPost]
-        public void Post([FromBody] string value)
+        [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
+        [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> CardYield([FromBody] CardYieldModel model)
         {
+            var response = await SystemInterface.CalculateCardYield(model.StartDate, model.EndDate, model.Catalog);
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                return BadRequest(response.Message);
+            }
         }
 
-        // PUT api/<QueriesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<QueriesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

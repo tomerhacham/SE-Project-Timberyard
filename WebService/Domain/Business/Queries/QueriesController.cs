@@ -10,16 +10,22 @@ namespace WebService.Domain.Business.Queries
     public class QueriesController
     {
         ILogger Logger { get; }
-        public ILogsAndTestsRepository LogsAndTestsRepository { get; }
-        public QueriesController(ILogsAndTestsRepository logsAndTestsRepository, ILogger logger)
+        public LogsAndTestsRepository LogsAndTestsRepository { get; }
+        public QueriesController(LogsAndTestsRepository logsAndTestsRepository, ILogger logger)
         {
             LogsAndTestsRepository = logsAndTestsRepository;
             Logger = logger;
         }
 
-        internal Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Result<QueryResult>> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
+        {
+            var query = new CardYield(catalog, startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
         }
     }
 }

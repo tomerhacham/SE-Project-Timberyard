@@ -22,7 +22,7 @@ namespace WebService.Utils
         /// </summary>
         /// <param name="success"></param>
         /// <param name="fail"></param>
-        public void ContinueWith(Action<T> success, Action<T> fail = null)
+        public void ContinueWith<T1>(Action<T> success, Action<T1> fail = null)
         {
             if (Status)
             {
@@ -32,7 +32,7 @@ namespace WebService.Utils
             {
                 if (!(fail is null))
                 {
-                    fail.DynamicInvoke(Data);
+                    fail.DynamicInvoke(Message);
                 }
             }
         }

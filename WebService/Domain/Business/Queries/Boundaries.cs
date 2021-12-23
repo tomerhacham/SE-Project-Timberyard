@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebService.Domain.DataAccess;
+using WebService.Utils;
 
 namespace WebService.Domain.Business.Queries
 {
@@ -11,7 +13,7 @@ namespace WebService.Domain.Business.Queries
         DateTime StartDate { get; set; }
         DateTime EndDate { get; set; }
 
-        public Task<QueryResult> Execute()
+        public Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
         {
             throw new NotImplementedException();
         }
