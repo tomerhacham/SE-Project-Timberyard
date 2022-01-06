@@ -7,22 +7,20 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xunit;
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 
 namespace ETLTests
 {
-    public class TestSuit<T>
+    public class TestSuit
     {
-        public T GetConfiguratedComponent(string profile)
-        {
-            var servicesProvider = ConfigureServices(profile);
-            return servicesProvider.GetService<T>();
-        }
 
         /// <summary>
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        private  ServiceProvider ConfigureServices(string profile)
+        protected  ServiceProvider ConfigureServices(string profile)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()

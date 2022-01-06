@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ETLTests;
-
+using Microsoft.Extensions.DependencyInjection;
 namespace ETL.Tests
 {
-    public class FileManagerTests : TestSuit<FileManager>
+    public class FileManagerTests : TestSuit
     {
 
 
@@ -15,15 +15,16 @@ namespace ETL.Tests
         /// Verify that all the files which been return are json files
         /// </summary>
         [Fact()]
-        public void GetFilesTests_JsonFormat()
+        public void GetNewLogsTest_JsonFormat()
         {
-            var fileManager = GetConfiguratedComponent("Valid");
+            var serviceProvider = ConfigureServices("Valid");
+            var fileManager = serviceProvider.GetService<FileManager>();
             var filesResult = fileManager.GetNewLogs();
             Assert.True(filesResult.Status);
             foreach (var file in filesResult.Data)
             {
                 Assert.EndsWith(".json", file);
-            }     
+            }
 
         }
 
@@ -31,9 +32,10 @@ namespace ETL.Tests
         /// Verify searching for new logs is in all the subdirectories
         /// </summary>
         [Fact()]
-        public void GetFilesTests_EmptyParentDirectory()
+        public void GetNewLogsTest_EmptyParentDirectory()
         {
-            var fileManager = GetConfiguratedComponent("Valid");
+            var serviceProvider = ConfigureServices("Valid");
+            var fileManager = serviceProvider.GetService<FileManager>();
             var filesResult = fileManager.GetNewLogs();
             Assert.True(filesResult.Status);
             Assert.NotEmpty(filesResult.Data);
@@ -43,11 +45,42 @@ namespace ETL.Tests
         /// Verify searching for new logs is in all the subdirectories
         /// </summary>
         [Fact()]
-        public void GetFilesTests_DirectoryNotFound()
+        public void GetNewLogsTest_DirectoryNotFound()
         {
-            var fileManager = GetConfiguratedComponent("NonExisitngDirectory");
+            var serviceProvider = ConfigureServices("NonExisitngDirectory");
+            var fileManager = serviceProvider.GetService<FileManager>();
             var filesResult = fileManager.GetNewLogs();
             Assert.False(filesResult.Status);
+        }
+
+        [Fact()]
+        public void ReadFromFileTest_ValidFile()
+        {
+            var serviceProvider = ConfigureServices("FaultLog");
+            var fileManager = serviceProvider.GetService<FileManager>();
+            fileManager.GetNewLogs().ContinueWith(
+                success: (data) =>
+                {
+                    var readingResult = fileManager.ReadFromFile(data[0]);
+                    if (readingResult.Status)
+                    {
+                        Assert.NotEqual(String.Empty, readingResult.Data);
+                    }
+                    else
+                    {
+                        Assert.True(false);
+                    }
+                },
+            fail: (data) => Assert.True(false)); 
+        }
+
+        [Fact()]
+        public void ReadFromFileTest_NonExisitngFile()
+        {
+            var serviceProvider = ConfigureServices("Valid");
+            var fileManager = serviceProvider.GetService<FileManager>();
+            var readingResult = fileManager.ReadFromFile("FileNotFound.json");
+            Assert.False(readingResult.Status);
         }
     }
 }

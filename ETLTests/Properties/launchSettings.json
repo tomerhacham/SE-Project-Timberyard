@@ -23,6 +23,30 @@
         "DatabaseSettings__DbPassword": "etl_process",
         "DatabaseSettings__DbUsername": "etl_process"
       }
+    },
+    "FaultLog": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\FaultLogs",
+        "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
+        "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
+        "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
+        "DatabaseSettings__DbPassword": "etl_process",
+        "DatabaseSettings__DbUsername": "etl_process"
+      }
+    },
+    "FaultDBSettings": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NewLogsRoot",
+        "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
+        "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
+        "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
+        "DatabaseSettings__DbPassword": "badPasword",
+        "DatabaseSettings__DbUsername": "badUsername"
+      }
     }
   }
 }
