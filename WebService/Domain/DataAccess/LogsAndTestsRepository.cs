@@ -14,10 +14,12 @@ namespace WebService.Domain.DataAccess
     public class LogsAndTestsRepository
     {
         //Properties
-        DatabaseSettings DatabaseSettings { get; }
-        ILogger Logger { get; }
+        public DatabaseSettings DatabaseSettings { get; set; }
+        public ILogger Logger { get; set; }
 
         //Constructor
+        public LogsAndTestsRepository() { }
+
         public LogsAndTestsRepository(IOptions<DatabaseSettings> databaseSettings, ILogger logger)
         {
             DatabaseSettings = databaseSettings.Value;
@@ -59,7 +61,7 @@ namespace WebService.Domain.DataAccess
         /// <returns>
         ///     [Catalog, CardName, NumberSuccessedTests(%)]        
         /// </returns>
-        public async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
             try
             {
