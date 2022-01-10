@@ -87,11 +87,6 @@ namespace WebService.Domain.DataAccess
                 var objects = await connection.QueryAsync<dynamic>(sqlCommand,
                     new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate });
 
-                /*if (objects.Count() == 0)
-                {
-                    return new Result<List<dynamic>>(true, new List<dynamic>(), "No data was found");
-                }
-                */
                 return new Result<List<dynamic>>(true, objects.AsList());
             }
             catch (Exception e)
