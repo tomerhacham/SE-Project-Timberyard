@@ -15,14 +15,12 @@ namespace Timberyard_UnitTests
         public QueriesController QueriesController;
         public Mock<LogsAndTestsRepository> RepositoryMock = new Mock<LogsAndTestsRepository>();
         public Mock<ILogger> LoggerMock = new Mock<ILogger>();
+        
         // Constructor
-
-
         public QueryTests()
         {            
             RepositoryMock.Setup(repository => repository.ExecuteQuery(It.IsAny<CardYield>()))
                .ReturnsAsync(new Result<List<dynamic>>(true, new List<dynamic>(), ""));
-
 
             LoggerMock.Setup(logger => logger.Info(It.IsAny<string>(), It.IsAny<Dictionary<LogEntry, string>>(), It.IsAny<string>()));
             LoggerMock.Setup(logger => logger.Warning(It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<Dictionary<LogEntry, string>>()));         
