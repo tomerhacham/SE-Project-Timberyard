@@ -15,8 +15,8 @@ namespace AcceptanceTests
         }
 
         [Theory]
-        [InlineData(2020, 2022, "OA_HF")]           // catalog ID not exists
-        [InlineData(2020, 2022, "OP_KLF")]          // empty catalog ID
+        [InlineData(2020, 2022, "OA_HF")]           // catalog ID exists
+        [InlineData(2020, 2022, "OP_KLF")]         
         public void SuccessCaseTest(int start, int end, string catalog)
         {
             Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
