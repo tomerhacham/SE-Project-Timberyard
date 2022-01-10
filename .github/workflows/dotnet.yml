@@ -44,5 +44,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         dotnet-version: 3.1.x
+    - name: Install formater
+      run: dotnet tool install --global dotnet-format
     - name: Unit Tests-ETL
       run: dotnet test '.\ETLTests\ETLTests.csproj'   
