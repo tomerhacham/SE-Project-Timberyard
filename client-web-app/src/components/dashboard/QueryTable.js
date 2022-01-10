@@ -27,14 +27,18 @@ function CustomToolbar() {
 
 const QueryTable = ({ rows, columns }) => {
     return (
-        <div style={{ height: '100%', width: '100%' }}>
-            <DataGrid
-                rows={rows} 
-                columns={columns}
-                components={{
-                Toolbar: CustomToolbar,
-                }}
-            />
+        <div id="query-table" style={{ height: 400, width: '100%' }}>
+            <div style={{ display: 'flex', height: '100%' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        rows={rows} 
+                        columns={columns}
+                        components={{
+                        Toolbar: CustomToolbar,
+                        }}
+                    />
+                </div>
+            </div>
         </div>
     )
 }

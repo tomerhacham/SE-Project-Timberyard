@@ -96,7 +96,8 @@ const Sidebar = ({ open, onClose }) => {
                         icon={<DashboardIcon fontSize='small' />}
                         />
                         {queriesListItems.map((item) =>
-                            <NavItem 
+                            <NavItem
+                                id={`sidebar-${item.primary.replace(/\s/g, '').toLowerCase()}`} 
                                 key={item.primary}
                                 primary={item.primary}
                                 to={item.to}

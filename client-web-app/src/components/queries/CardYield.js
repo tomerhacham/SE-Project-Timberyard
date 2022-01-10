@@ -122,6 +122,7 @@ const CardYield = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <Button
+                    id="cardyield-submit-button"
                     type="submit"
                     fullWidth
                     variant="contained"
