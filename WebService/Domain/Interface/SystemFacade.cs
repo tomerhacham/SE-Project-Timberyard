@@ -18,7 +18,7 @@ namespace WebService.Domain.Interface
             QueriesController = queriesController;
         }
 
-        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             return QueriesController.CalculateBoundaries(catalog, startDate, endDate);
         }

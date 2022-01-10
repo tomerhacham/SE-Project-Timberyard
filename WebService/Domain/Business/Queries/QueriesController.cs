@@ -17,7 +17,7 @@ namespace WebService.Domain.Business.Queries
             Logger = logger;
         }
 
-        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             throw new NotImplementedException();
         }
