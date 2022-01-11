@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
-    public class CardTestDurationTests: TimberyardTestCase
+    public class CardTestDurationTests : TimberyardTestCase
     {
-        public CardTestDurationTests(): base()
+        public CardTestDurationTests() : base()
         {
 
         }

@@ -11,12 +11,12 @@ namespace AcceptanceTests
 
         public CardYieldTests() : base()
         {
-            
+
         }
 
         [Theory]
         [InlineData(2020, 2022, "OA_HF")]           // catalog ID exists
-        [InlineData(2020, 2022, "OP_KLF")]         
+        [InlineData(2020, 2022, "OP_KLF")]
         public void SuccessCaseTest(int start, int end, string catalog)
         {
             Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
@@ -25,9 +25,9 @@ namespace AcceptanceTests
         }
 
         [Theory]
-        [InlineData (2020 , 2022, "CCH1")]      // catalog ID not exists
-        [InlineData (2020 , 2022, "")]          // empty catalog ID
-        [InlineData (2022 , 2020, "")]          // start date > end date
+        [InlineData(2020, 2022, "CCH1")]      // catalog ID not exists
+        [InlineData(2020, 2022, "")]          // empty catalog ID
+        [InlineData(2022, 2020, "")]          // start date > end date
         public void NoExistCatalogNumberTest(int start, int end, string catalog)
         {
             Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);

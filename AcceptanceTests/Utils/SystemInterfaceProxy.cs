@@ -12,17 +12,17 @@ namespace AcceptanceTests.Utils
     {
         public ISystemInterface Real { get; set; }
 
-        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate) 
+        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             if (Real == null)
                 return new Result<QueryResult>(true, null, "");
 
             return new Result<QueryResult>(false, null, "");
         }
-        public Result<QueryResult> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog) 
+        public Result<QueryResult> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
         {
             if (Real == null)
-                return new Result<QueryResult>(false, null, ""); 
+                return new Result<QueryResult>(false, null, "");
 
             return null;
         }

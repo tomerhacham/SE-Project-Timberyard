@@ -8,14 +8,14 @@ using WebService.Utils;
 
 namespace AcceptanceTests.Utils
 {
-    public class SystenRealAdapter: InitializeSystem, ISystemInterface
+    public class SystenRealAdapter : InitializeSystem, ISystemInterface
     {
         public SystemFacade system { set; get; }
 
 
         public SystenRealAdapter()
         {
-            system = GetSystemFacade(); 
+            system = GetSystemFacade();
         }
 
         public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
-    public class BoundariesTests: TimberyardTestCase
+    public class BoundariesTests : TimberyardTestCase
     {
-        public BoundariesTests(): base()
+        public BoundariesTests() : base()
         {
-            
+
         }
     }
 }
