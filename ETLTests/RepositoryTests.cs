@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ETL.Repository;
 namespace ETL.Tests
 {
-    public class RepositoryTests :TestSuit
+    public class RepositoryTests : TestSuit
     {
         [Fact()]
         public void InsertLogTest_CommunicationFail()

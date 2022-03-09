@@ -2,9 +2,9 @@ name: Timberyard
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, Development ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, Development ]
 
 jobs:
   linter:
@@ -27,8 +27,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
@@ -38,3 +36,15 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
+  unittests:      
+    needs: build
+    name:  Unit Tests
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        dotnet-version: 3.1.x
+    - name: Install formater
+      run: dotnet tool install --global dotnet-format
+    - name: Unit Tests-ETL
+      run: dotnet test '.\ETLTests\ETLTests.csproj'   

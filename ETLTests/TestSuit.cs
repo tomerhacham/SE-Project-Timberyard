@@ -20,7 +20,7 @@ namespace ETLTests
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected  ServiceProvider ConfigureServices(string profile)
+        protected ServiceProvider ConfigureServices(string profile)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()

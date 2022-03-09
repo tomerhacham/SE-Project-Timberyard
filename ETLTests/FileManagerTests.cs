@@ -71,7 +71,7 @@ namespace ETL.Tests
                         Assert.True(false);
                     }
                 },
-            fail: (data) => Assert.True(false)); 
+            fail: (data) => Assert.True(false));
         }
 
         [Fact()]
