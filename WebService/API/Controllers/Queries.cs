@@ -32,15 +32,23 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> CardYield([FromBody] CardYieldModel model)
         {
-            var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
-            if (response.Status)
+            if (ModelState.IsValid) 
             {
-                return Ok(response.Data);
+                var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
             }
             else
             {
-                return BadRequest(response.Message);
+                return BadRequest();
             }
+
         }
         [Route("StationYield")]
         [HttpPost]
