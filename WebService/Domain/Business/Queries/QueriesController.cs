@@ -20,48 +20,26 @@ namespace WebService.Domain.Business.Queries
 
         public Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
-/*            Result<QueryResult> inputValidation = IsValidInputs(catalog, startDate, endDate);
-            if (!inputValidation.Status)
-            {
-                return inputValidation;
-            }*/
+            /*            Result<QueryResult> inputValidation = IsValidInputs(catalog, startDate, endDate);
+                        if (!inputValidation.Status)
+                        {
+                            return inputValidation;
+                        }*/
 
             throw new NotImplementedException();
         }
 
         public async Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
-            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, catalog);
-            if (!inputValidation.Status)
-            {
-                return inputValidation;
-            }
             var query = new CardYield(catalog, startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
 
         public async Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
         {
-            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate);
-            if (!inputValidation.Status)
-            {
-                return inputValidation;
-            }
             var query = new StationsYield(startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
 
-        private Result<QueryResult> IsValidInputs(DateTime startDate, DateTime endDate, [Optional] string catalog)
-        {
-            if (catalog!=null && catalog == "")
-            {
-                return new Result<QueryResult>(false, null, "Invalid catalog name\n");
-            }
-            if (startDate > endDate)
-            {
-                return new Result<QueryResult>(false, null, "Invalid range of dates\n");
-            }
-            return new Result<QueryResult>(true, null, "All inputs are valid\n");
-        }
     }
 }

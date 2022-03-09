@@ -27,7 +27,7 @@ namespace WebService.API.Controllers.ModelValidation
             }
             else
             {
-                return new ValidationResult($"{DateToCompareFieldName} is before {earlierDate}");
+                return new ValidationResult($"date is before {DateToCompareFieldName}");
             }
         }
     }
