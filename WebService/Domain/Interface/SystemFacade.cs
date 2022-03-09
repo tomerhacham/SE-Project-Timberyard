@@ -27,5 +27,9 @@ namespace WebService.Domain.Interface
         {
             return QueriesController.CalculateCardYield(catalog, startDate, endDate);
         }
+        public Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateStationsYield(startDate, endDate);
+        }
     }
 }

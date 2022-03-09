@@ -42,6 +42,23 @@ namespace WebService.API.Controllers
                 return BadRequest(response.Message);
             }
         }
+        [Route("StationYield")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
+        [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> StationYield([FromBody] StationsYieldModel model)
+        {
+            var response = await SystemInterface.CalculateStationsYield(model.StartDate, model.EndDate);
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                return BadRequest(response.Message);
+            }
+        }
 
     }
 }
