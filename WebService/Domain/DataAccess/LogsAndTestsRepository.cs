@@ -99,7 +99,33 @@ namespace WebService.Domain.DataAccess
 
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield)
         {
-            var sqlCommand = "";
+            var sqlCommand =
+                @"
+                SELECT COALESCE (T1.Station,T2.Station) as Station, CAST(((IsNull(Success, 0) * 100.0) / (IsNull(Success, 0) + IsNull(Fail, 0))) AS FLOAT) AS SuccessRatio
+                from
+                (
+	                (Select Logs.Station , count(*) as Success
+                from Logs
+                WHERE  Logs.Date between @StartDate AND @EndDate AND
+                            FinalResult = 'PASS' AND
+                            ContinueOnFail = 'FALSE' AND
+                            TECHMode = 'FALSE' AND
+                            ABORT = 'FALSE' AND
+                            SN != '0'
+                GROUP BY Station) as T1
+	                full join 
+	                (Select Logs.Station , count(*) as Fail
+                from Logs
+                WHERE  Logs.Date between @StartDate AND @EndDate AND
+                            FinalResult = 'FAIL' AND
+                            ContinueOnFail = 'FALSE' AND
+                            TECHMode = 'FALSE' AND
+                            ABORT = 'FALSE' AND
+                            SN != '0'
+                GROUP BY Station ) as T2
+	                on T1.Station = T2.Station
+                )
+                ";
             var queryParams = new { StartDate = stationsYield.StartDate, EndDate = stationsYield.EndDate };
             return await ExecuteQuery(sqlCommand, queryParams);
 

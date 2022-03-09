@@ -50,12 +50,12 @@ namespace WebService.API.Controllers
             }
 
         }
-        [Route("StationYield")]
+        [Route("StationsYield")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
-        [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> StationYield([FromBody] StationsYieldModel model)
+        [SwaggerRequestExample(typeof(object), typeof(StationsYieldRequestExample))]
+        [ProducesResponseType(typeof(StationsYieldResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StationsYieldResponseExample))]
+        public async Task<IActionResult> StationsYield([FromBody] StationsYieldModel model)
         {
             if (ModelState.IsValid)
             {
