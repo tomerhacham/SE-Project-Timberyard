@@ -28,7 +28,7 @@ namespace Timberyard_UnitTests
             var serviceProvier = new ServiceCollection()
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                 .AddSingleton<LogsAndTestsRepository>()
-                .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))                  
+                .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
                 .AddSingleton<QueriesController>()
                 .BuildServiceProvider();
             return serviceProvier;

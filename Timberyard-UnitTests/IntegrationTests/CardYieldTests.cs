@@ -1,4 +1,4 @@
-﻿using Moq ;
+﻿using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +24,7 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         // TODO - change inputs according to db
         [Theory]
-        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF" , "OA_ASDF" } , new double[] { 93.12, 95.2, 89.2 })]        // Happy : There are X records of the inputs out of Y records ( where X==Y )
+        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]        // Happy : There are X records of the inputs out of Y records ( where X==Y )
         [InlineData("", 2010, 2011, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Happy : There are X records of the inputs out of Y records ( where X<Y )
         [InlineData("X16434", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are 0 records of the inputs out of Y records        
         [InlineData("", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : There are 0 records of the inputs out of 0 records ( catalog does not exists )         
@@ -40,7 +40,7 @@ namespace Timberyard_UnitTests.IntegrationTests
 
             for (int i = 0; i < records_count; i++)
             {
-                Assert.Equal(catalog , queryResult.Data.Records[i]["catalog"]);
+                Assert.Equal(catalog, queryResult.Data.Records[i]["catalog"]);
                 Assert.Equal(CardName_results[i], queryResult.Data.Records[i]["cardName"]);
                 Assert.Equal(SuccessRatio_results[i], queryResult.Data.Records[i]["successRatio"]);
             }
