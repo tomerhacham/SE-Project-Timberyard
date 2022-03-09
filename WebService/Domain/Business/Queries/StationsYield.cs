@@ -5,15 +5,13 @@ using WebService.Utils;
 
 namespace WebService.Domain.Business.Queries
 {
-    public class CardYield : IQuery
+    public class StationsYield : IQuery
     {
-        public string Catalog { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public CardYield(string catalog, DateTime startDate, DateTime endDate)
+        public StationsYield(DateTime startDate, DateTime endDate)
         {
-            Catalog = catalog;
             StartDate = startDate;
             EndDate = endDate;
         }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
-using System;
 using System.Threading.Tasks;
 using WebService.API.Swagger.Example.WeatherForecastController;
 using WebService.Domain.Interface;

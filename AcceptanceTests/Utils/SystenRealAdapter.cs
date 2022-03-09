@@ -24,7 +24,7 @@ namespace AcceptanceTests.Utils
         }
         public Result<QueryResult> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
         {
-            var fromSystem = system.CalculateCardYield(startDate, endDate, catalog);
+            var fromSystem = system.CalculateCardYield(catalog, startDate, endDate);
 
             return fromSystem.Result;
         }

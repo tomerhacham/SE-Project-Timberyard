@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WebService.Domain.Business.Alarms;
-using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 
@@ -26,6 +22,10 @@ namespace WebService.Domain.Interface
         public Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
             return QueriesController.CalculateCardYield(catalog, startDate, endDate);
+        }
+        public Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateStationsYield(startDate, endDate);
         }
     }
 }

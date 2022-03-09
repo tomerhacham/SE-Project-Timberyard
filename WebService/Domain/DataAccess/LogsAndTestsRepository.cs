@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
@@ -63,37 +62,93 @@ namespace WebService.Domain.DataAccess
         /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
-            try
-            {
-                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
-                await connection.OpenAsync();
-                var sqlCommand =
+            var sqlCommand =
                 @"
                 SELECT COALESCE (T1.Catalog,T2.Catalog) as Catalog, COALESCE(T1.CardName, T2.CardName) as CardName, CAST(((IsNull(SuccessTests, 0) * 100.0) / (IsNull(SuccessTests, 0) + IsNull(FailedTests, 0))) AS FLOAT) AS SuccessRatio
                 FROM (
 	                (SELECT Catalog, CardName, COUNT(*) as SuccessTests
                 From Logs
-                WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'PASS'
+                WHERE   Catalog=@Catalog AND
+                        Logs.Date between @StartDate AND @EndDate AND
+                        FinalResult = 'PASS' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
                 GROUP BY Catalog, CardName 
                 ) as T1 
                 FULL JOIN
                 (SELECT Catalog, CardName, COUNT(*) as FailedTests
                 From Logs
-                WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'FAIL'
+                WHERE   Catalog=@Catalog AND
+                        Logs.Date between @StartDate and @EndDate AND
+                        FinalResult = 'FAIL' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
                 GROUP BY Catalog, CardName
                 ) as T2
 	                ON T1.CardName = T2.CardName
                 ) ";
-                var objects = await connection.QueryAsync<dynamic>(sqlCommand,
-                    new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate });
+            var queryParams = new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
 
+        }
+
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield)
+        {
+            var sqlCommand =
+                @"
+                SELECT COALESCE (T1.Station,T2.Station) as Station, CAST(((IsNull(Success, 0) * 100.0) / (IsNull(Success, 0) + IsNull(Fail, 0))) AS FLOAT) AS SuccessRatio
+                from
+                (
+	                (Select Logs.Station , count(*) as Success
+                from Logs
+                WHERE  Logs.Date between @StartDate AND @EndDate AND
+                            FinalResult = 'PASS' AND
+                            ContinueOnFail = 'FALSE' AND
+                            TECHMode = 'FALSE' AND
+                            ABORT = 'FALSE' AND
+                            SN != '0'
+                GROUP BY Station) as T1
+	                full join 
+	                (Select Logs.Station , count(*) as Fail
+                from Logs
+                WHERE  Logs.Date between @StartDate AND @EndDate AND
+                            FinalResult = 'FAIL' AND
+                            ContinueOnFail = 'FALSE' AND
+                            TECHMode = 'FALSE' AND
+                            ABORT = 'FALSE' AND
+                            SN != '0'
+                GROUP BY Station ) as T2
+	                on T1.Station = T2.Station
+                )
+                ";
+            var queryParams = new { StartDate = stationsYield.StartDate, EndDate = stationsYield.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+
+        }
+
+        /// <summary>
+        /// privat function to wrap and handle execptions in query execution process
+        /// </summary>
+        /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
+        /// <param name="queryParams">object hold SQL query parameters</param>
+        /// <returns></returns>
+        private async Task<Result<List<dynamic>>> ExecuteQuery(string sqlCommand, object queryParams)
+        {
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var objects = await connection.QueryAsync<dynamic>(sqlCommand, queryParams);
                 return new Result<List<dynamic>>(true, objects.AsList());
             }
             catch (Exception e)
             {
                 return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
             }
-
         }
     }
 }

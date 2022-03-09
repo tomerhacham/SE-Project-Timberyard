@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.QueriesController;
-using WebService.API.Swagger.Example.WeatherForecastController;
 using WebService.Domain.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,15 +28,48 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> CardYield([FromBody] CardYieldModel model)
         {
-            var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
-            if (response.Status)
+            if (ModelState.IsValid)
             {
-                return Ok(response.Data);
+                var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
             }
             else
             {
-                return BadRequest(response.Message);
+                return BadRequest();
             }
+
+        }
+        [Route("StationsYield")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(StationsYieldRequestExample))]
+        [ProducesResponseType(typeof(StationsYieldResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StationsYieldResponseExample))]
+        public async Task<IActionResult> StationsYield([FromBody] StationsYieldModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await SystemInterface.CalculateStationsYield(model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
     }
