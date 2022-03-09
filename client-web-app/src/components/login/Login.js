@@ -105,6 +105,7 @@ const Login = () => {
                             label="Remember me"
                         /> */}
                         <Button
+                            id="login-signIn-button"
                             type="submit"
                             fullWidth
                             variant="contained"

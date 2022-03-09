@@ -14,10 +14,12 @@ namespace WebService.Domain.DataAccess
     public class LogsAndTestsRepository
     {
         //Properties
-        DatabaseSettings DatabaseSettings { get; }
-        ILogger Logger { get; }
+        public DatabaseSettings DatabaseSettings { get; set; }
+        public ILogger Logger { get; set; }
 
         //Constructor
+        public LogsAndTestsRepository() { }
+
         public LogsAndTestsRepository(IOptions<DatabaseSettings> databaseSettings, ILogger logger)
         {
             DatabaseSettings = databaseSettings.Value;
@@ -59,7 +61,7 @@ namespace WebService.Domain.DataAccess
         /// <returns>
         ///     [Catalog, CardName, NumberSuccessedTests(%)]        
         /// </returns>
-        public async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
             try
             {
@@ -85,11 +87,6 @@ namespace WebService.Domain.DataAccess
                 var objects = await connection.QueryAsync<dynamic>(sqlCommand,
                     new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate });
 
-                /*if (objects.Count() == 0)
-                {
-                    return new Result<List<dynamic>>(true, new List<dynamic>(), "No data was found");
-                }
-                */
                 return new Result<List<dynamic>>(true, objects.AsList());
             }
             catch (Exception e)

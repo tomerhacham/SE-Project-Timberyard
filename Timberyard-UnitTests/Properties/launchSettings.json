@@ -1,0 +1,14 @@
+﻿{
+  "profiles": {
+    "IntegrationTests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard_Testing;",
+        "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
+        "DatabaseSettings__DbPassword": "timberyard_service",
+        "DatabaseSettings__DbUsername": "timberyard_service"
+      }
+    }
+  }
+}

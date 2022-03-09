@@ -22,10 +22,14 @@ namespace WebService.Domain.Business.Queries
 
         public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
         {
+            if (LogsAndTestsRepository == null)
+            {
+                return new Result<QueryResult>(false, null, "The logs and test repository was not entered\n");
+            }
             var sqlResult = await LogsAndTestsRepository.ExecuteQuery(this);
             if (sqlResult.Status)
             {
-                return new Result<QueryResult>(true, new QueryResult(sqlResult.Data), "");
+                return new Result<QueryResult>(true, new QueryResult(sqlResult.Data), "\n");
             }
             return new Result<QueryResult>(false, null, sqlResult.Message);
         }
