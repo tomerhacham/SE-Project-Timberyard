@@ -73,13 +73,25 @@ namespace WebService.Domain.DataAccess
                 FROM (
 	                (SELECT Catalog, CardName, COUNT(*) as SuccessTests
                 From Logs
-                WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'PASS'
+                WHERE   Catalog=@Catalog AND
+                        Logs.Date between @StartDate AND @EndDate AND
+                        FinalResult = 'PASS' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
                 GROUP BY Catalog, CardName 
                 ) as T1 
                 FULL JOIN
                 (SELECT Catalog, CardName, COUNT(*) as FailedTests
                 From Logs
-                WHERE Catalog=@Catalog AND Logs.Date between @StartDate and @EndDate AND FinalResult = 'FAIL'
+                WHERE   Catalog=@Catalog AND
+                        Logs.Date between @StartDate and @EndDate AND
+                        FinalResult = 'FAIL' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
                 GROUP BY Catalog, CardName
                 ) as T2
 	                ON T1.CardName = T2.CardName
