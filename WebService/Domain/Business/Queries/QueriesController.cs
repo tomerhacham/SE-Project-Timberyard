@@ -37,6 +37,11 @@ namespace WebService.Domain.Business.Queries
             var query = new StationsYield(startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
+        public async Task<Result<QueryResult>> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate)
+        {
+            var query = new StationAndCardYield(station, catalog, startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
+        }
 
     }
 }

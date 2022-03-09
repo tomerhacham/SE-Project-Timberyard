@@ -129,6 +129,43 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield)
+        {
+            var sqlCommand =
+                @"
+                SELECT COALESCE (T1.Catalog,T2.Catalog) as Catalog, COALESCE(T1.CardName, T2.CardName) as CardName, CAST(((IsNull(SuccessTests, 0) * 100.0) / (IsNull(SuccessTests, 0) + IsNull(FailedTests, 0))) AS FLOAT) AS SuccessRatio
+                FROM (
+	                (SELECT Catalog, CardName, COUNT(*) as SuccessTests
+                From Logs
+                WHERE   Catalog=@Catalog AND
+                        Station = @Station AND
+                        Logs.Date between @StartDate AND @EndDate AND
+                        FinalResult = 'PASS' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
+                GROUP BY Catalog, CardName 
+                ) as T1 
+                FULL JOIN
+                (SELECT Catalog, CardName, COUNT(*) as FailedTests
+                From Logs
+                WHERE   Catalog=@Catalog AND
+                        Station = @Station AND
+                        Logs.Date between @StartDate and @EndDate AND
+                        FinalResult = 'FAIL' AND
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
+                GROUP BY Catalog, CardName
+                ) as T2
+	                ON T1.CardName = T2.CardName
+                ) ";
+            var queryParams = new { Station = stationAndCardYield.Station, Catalog = stationAndCardYield.Catalog, StartDate = stationAndCardYield.StartDate, EndDate = stationAndCardYield.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+
+        }
 
         /// <summary>
         /// privat function to wrap and handle execptions in query execution process
