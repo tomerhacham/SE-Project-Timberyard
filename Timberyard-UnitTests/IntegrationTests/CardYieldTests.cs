@@ -24,12 +24,12 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         // TODO - change inputs according to db
         [Theory]
-        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]        // Happy : There are X records of the inputs out of Y records ( where X==Y )
+        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are X records of the inputs out of Y records ( where X==Y )
         [InlineData("", 2010, 2011, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Happy : There are X records of the inputs out of Y records ( where X<Y )
         [InlineData("X16434", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are 0 records of the inputs out of Y records        
         [InlineData("", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : There are 0 records of the inputs out of 0 records ( catalog does not exists )         
         [InlineData("", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : invalid catalog         
-        [InlineData("X16434", 2011, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : invalid dates         
+        [InlineData("X16434", 2011, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Bad : invalid dates         
         public async void CardYield_Scenarios_Test
             (string catalog, int startDate, int endDate, bool query_result, int records_count, string[] CardName_results, double[] SuccessRatio_results)
         {
