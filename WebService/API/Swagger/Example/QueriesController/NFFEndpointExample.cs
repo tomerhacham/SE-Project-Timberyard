@@ -17,10 +17,19 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            var records = new List<object> { new {Catalog= "X56868", CardName= "OA_HF", SuccessRatio=93.12 },
-            new {Catalog= "X56868", CardName= "OP_KLF", SuccessRatio=95.2 },
-            new {Catalog= "X56868", CardName= "OA_ASDF", SuccessRatio=89.2 }};
-            var headers = new string[] { "Catalog", "CardName", "SuccessRatio" };
+            var sampleRecord = new {
+                Date = new DateTime(2020, 11, 30),
+                CardName = "XMCP-B",
+                Catalog = "X74216",
+                Station = "2X",
+                Operator = "71489",
+                FailedTests = new List<string>() {  "XMCP-B UUT LOAD",
+                                                    "XMCP Rom Boot Version test",
+                                                    "APLICATION Version test",
+                                                    "MCP Serial Number Check",}
+            };
+            var records = new List<object> { sampleRecord };
+            var headers = new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" };
             return new QueryResult(headers, records);
         }
     }

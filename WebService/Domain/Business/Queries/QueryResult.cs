@@ -13,11 +13,6 @@ namespace WebService.Domain.Business.Queries
             ColumnNames = (records.Count() > 0) ? ((IDictionary<string, object>)records.FirstOrDefault()).Keys.ToArray() : new string[0];
             Records = records;
         }
-        public QueryResult(List<dynamic> records, string[] columnNames)
-        {
-            ColumnNames = columnNames;
-            Records = records;
-        }
         public QueryResult(string[] columnNames, List<object> record)
         {
             ColumnNames = columnNames;

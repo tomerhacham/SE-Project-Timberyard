@@ -49,7 +49,7 @@ namespace WebService.Domain.Business.Queries
                 var failedTestNames = records.Where(record => record.Id == logId).Select(record => record.TestName).Distinct().ToList();
                 aggregatedData.Add(new { Date = date, CardName = cardName, Catalog = catalog, Station = station, Operator = @operator, FailedTests = failedTestNames });
             }
-            return new Result<QueryResult>(true, new QueryResult(aggregatedData, new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }), "\n");
+            return new Result<QueryResult>(true, new QueryResult(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, aggregatedData), "\n");
 
         }
     }
