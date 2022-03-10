@@ -29,7 +29,7 @@ namespace WebService.Domain.Business.Queries
 
         public async Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
-            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate,catalog: catalog);
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, catalog: catalog);
             if (!inputValidation.Status)
             {
                 return inputValidation;
@@ -50,7 +50,7 @@ namespace WebService.Domain.Business.Queries
         }
         public async Task<Result<QueryResult>> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate)
         {
-            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate,catalog:catalog, station:station);
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, catalog: catalog, station: station);
             if (!inputValidation.Status)
             {
                 return inputValidation;
