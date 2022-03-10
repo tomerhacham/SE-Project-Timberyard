@@ -99,5 +99,30 @@ namespace WebService.API.Controllers
 
         }
 
+        [Route("NFF")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(NFFRequestExample))]
+        [ProducesResponseType(typeof(NFFResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(NFFResponseExample))]
+        public async Task<IActionResult> NoFailureFound([FromBody] NoFailureFoundModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
     }
 }
