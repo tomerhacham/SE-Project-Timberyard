@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WebService.Domain.DataAccess;
@@ -58,12 +59,27 @@ namespace WebService.Domain.Business.Queries
             var query = new StationAndCardYield(station, catalog, startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
-
-        private Result<QueryResult> IsValidInputs(DateTime startDate, DateTime endDate, [Optional] string catalog, [Optional] string station)
+        public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate)
         {
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, cardName: cardName);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            var query = new NoFailureFound(cardName, startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
+        }
+
+        private Result<QueryResult> IsValidInputs(DateTime startDate, DateTime endDate, [Optional] string catalog, [Optional] string station, [Optional] string cardName)
+        {
+
             if (catalog != null && catalog == "")
             {
                 return new Result<QueryResult>(false, null, "Invalid catalog name\n");
+            }
+            if (cardName != null && cardName == "")
+            {
+                return new Result<QueryResult>(false, null, "Invalid card name\n");
             }
             if (station != null && station == "")
             {

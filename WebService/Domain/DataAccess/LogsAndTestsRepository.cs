@@ -129,6 +129,44 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(NoFailureFound noFailureFound)
+        {
+            var sqlCommand =
+                @"
+                select Id,Date,Catalog,CardName,Station,Operator,TestName
+                from 
+                (	(select failLogs.Id as Id,failLogs.Catalog,failLogs.CardName,failLogs.Station,Operator,Date
+                from (
+	                (select * 
+                from Logs
+                where finalresult='FAIL' and
+		                date between @StartDate and @EndDate and
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0') as failLogs
+	                join
+	                (select SN, finalResult 
+                from Logs
+                where finalresult='PASS' and
+		                date between @StartDate and @EndDate and
+                        ContinueOnFail = 'FALSE' AND
+                        TECHMode = 'FALSE' AND
+                        ABORT = 'FALSE' AND
+                        SN != '0'
+                ) as passLogs
+	                on failLogs.SN=passLogs.SN
+                )) as nffLogs
+	                inner join
+	                (select TestName,LogId from Tests) as failTests
+	                on nffLogs.Id=failTests.LogId
+                )
+                where CardName=@CardName
+                ";
+            var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+
+        }
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield)
         {
             var sqlCommand =
