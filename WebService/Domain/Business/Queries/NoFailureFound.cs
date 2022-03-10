@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebService.Domain.DataAccess;
@@ -36,6 +37,12 @@ namespace WebService.Domain.Business.Queries
         }
         private async Task<Result<QueryResult>> AggregateResults(List<dynamic> records)
         {
+            dynamic InstanceExpandoObject(DateTime date, string cardName, string catalog, string station, string @operator, List<dynamic> failedTestNames)
+            {
+                dynamic obj = new ExpandoObject();
+                obj.Date = date; obj.CardName = cardName; obj.Catalog = catalog; obj.Station = station; obj.Operator = @operator; obj.FailedTests = failedTestNames;
+                return obj;
+            }
             var logIds = records.Select(record => record.Id).Distinct().ToList();
             var aggregatedData = new List<dynamic>();
             foreach (var logId in logIds)
@@ -47,7 +54,7 @@ namespace WebService.Domain.Business.Queries
                 var station = sampleRecord.Station;
                 var @operator = sampleRecord.Operator;
                 var failedTestNames = records.Where(record => record.Id == logId).Select(record => record.TestName).Distinct().ToList();
-                aggregatedData.Add(new { Date = date, CardName = cardName, Catalog = catalog, Station = station, Operator = @operator, FailedTests = failedTestNames });
+                aggregatedData.Add(InstanceExpandoObject(date, cardName, catalog, station, @operator, failedTestNames));
             }
             return new Result<QueryResult>(true, new QueryResult(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, aggregatedData), "\n");
 
