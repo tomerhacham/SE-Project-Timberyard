@@ -23,7 +23,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData("XMCP-B", 2020, 2020, true, 2,"2X", "71489", new string[] {   "NO INF ALARMS CHECK (INF A&B ON) - PC14",
+        [InlineData("XMCP-B", 2020, 2020, true, 2, "2X", "71489", new string[] {   "NO INF ALARMS CHECK (INF A&B ON) - PC14",
                                                                                 "NO INF ALARMS CHECK (INF A&B ON)-ALTERA",
                                                                                 "INF A INPUT",
                                                                                 "INF B INPUT ALARM CHECK (INF A ON , B OFF)- PC14",
@@ -33,8 +33,8 @@ namespace Timberyard_UnitTests.IntegrationTests
                                                                                 "INF A INPUT ALARM CHECK (INF A OFF , B ON)-ALTERA",
                                                                                 "MCP FLASH BOOT TEST",
                                                                                 "NVM test" })]
-        [InlineData("", 2020, 2020, false, 0, "2X", "71489", new string[] { "NO INF ALARMS CHECK (INF A&B ON) - PC14"})]
-        public async void NFF_Scenarios_Test(string cardName, int startDate, int endDate, bool expectedResult, int expectedNumOfRecords,string stationNames, string operators, string[] failedTestNames)
+        [InlineData("", 2020, 2020, false, 0, "2X", "71489", new string[] { "NO INF ALARMS CHECK (INF A&B ON) - PC14" })]
+        public async void NFF_Scenarios_Test(string cardName, int startDate, int endDate, bool expectedResult, int expectedNumOfRecords, string stationNames, string operators, string[] failedTestNames)
         {
             Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 11, 30), new DateTime(endDate, 11, 30));
             Assert.Equal(expectedResult, queryResult.Status);
