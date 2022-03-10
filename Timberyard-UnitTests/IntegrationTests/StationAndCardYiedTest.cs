@@ -22,26 +22,25 @@ namespace Timberyard_UnitTests.IntegrationTests
             QueriesController = serviceProvider.GetService<QueriesController>();
         }
 
-        // TODO - change inputs according to db
         [Theory]
-        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]        // Happy : There are X records of the inputs out of Y records ( where X==Y )
-        [InlineData("", 2010, 2011, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Happy : There are X records of the inputs out of Y records ( where X<Y )
-        [InlineData("X16434", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are 0 records of the inputs out of Y records        
-        [InlineData("", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : There are 0 records of the inputs out of 0 records ( catalog does not exists )         
-        [InlineData("", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : invalid catalog         
-        [InlineData("X16434", 2011, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : invalid dates   
-        public async void StationAndCardYield_Scenarios_Test (string station, string catalog, int startDate, int endDate,bool expectedResult,string[] stationNames,double[] SuccessRatioValues)
+        [InlineData("10B", "X16434", 2020, 2020, true, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]          // Happy : There are X records of the inputs out of Y records
+        [InlineData("10B", "X16434", 2020, 2019, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]         // Bad: invalid dates
+        [InlineData("10B", "", 2020, 2020, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]               // Bad: empty catalog
+        [InlineData("", "X16434", 2020, 2020, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]            // Bad: empty station
+
+        public async void StationAndCardYield_Scenarios_Test(string station, string catalog, int startDate, int endDate, bool expectedResult, string[] catalogNames, string[] cardNames, double[] SuccessRatioValues)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateStationAndCardYield( new DateTime(startDate, 01, 01), new DateTime(endDate, 01, 03));
+            Result<QueryResult> queryResult = await QueriesController.CalculateStationAndCardYield(station, catalog, new DateTime(startDate, 11, 15), new DateTime(endDate, 11, 30));
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "Station", "SuccessRatio" }, queryResult.Data.ColumnNames);
-                Assert.Equal(stationNames.Length, queryResult.Data.Records.Count);
+                Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                Assert.Equal(catalogNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
-                for (int i = 0; i < stationNames.Length; i++)
+                for (int i = 0; i < catalogNames.Length; i++)
                 {
-                    Assert.Equal(stationNames[i], data.Records[i].Station);
+                    Assert.Equal(catalogNames[i], data.Records[i].Catalog);
+                    Assert.Equal(cardNames[i], data.Records[i].CardName);
                     Assert.Equal(SuccessRatioValues[i], data.Records[i].SuccessRatio);
                     Assert.True(0 <= data.Records[i].SuccessRatio && data.Records[i].SuccessRatio <= 100);
                 }
