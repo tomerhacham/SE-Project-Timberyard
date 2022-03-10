@@ -23,18 +23,18 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData("10B", "X16434", 2020, 2020, true, new string[] { "X16434" }, new string[]{ "XFCMV14" },new double[] { 54.545454545454 })]          // Happy : There are X records of the inputs out of Y records
-        [InlineData("10B", "X16434", 2020, 2019, false, new string[] { "X16434" }, new string[]{ "XFCMV14" },new double[] { 54.545454545454 })]         // Bad: invalid dates
-        [InlineData("10B", "", 2020, 2020, false, new string[] { "X16434" }, new string[]{ "XFCMV14" },new double[] { 54.545454545454 })]               // Bad: empty catalog
-        [InlineData("", "X16434", 2020, 2020, false, new string[] { "X16434" }, new string[]{ "XFCMV14" },new double[] { 54.545454545454 })]            // Bad: empty station
-      
-        public async void StationAndCardYield_Scenarios_Test (string station, string catalog, int startDate, int endDate,bool expectedResult,string[] catalogNames,string[] cardNames,double[] SuccessRatioValues)
+        [InlineData("10B", "X16434", 2020, 2020, true, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]          // Happy : There are X records of the inputs out of Y records
+        [InlineData("10B", "X16434", 2020, 2019, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]         // Bad: invalid dates
+        [InlineData("10B", "", 2020, 2020, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]               // Bad: empty catalog
+        [InlineData("", "X16434", 2020, 2020, false, new string[] { "X16434" }, new string[] { "XFCMV14" }, new double[] { 54.545454545454 })]            // Bad: empty station
+
+        public async void StationAndCardYield_Scenarios_Test(string station, string catalog, int startDate, int endDate, bool expectedResult, string[] catalogNames, string[] cardNames, double[] SuccessRatioValues)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateStationAndCardYield(station,catalog, new DateTime(startDate, 11, 15), new DateTime(endDate, 11, 30));
+            Result<QueryResult> queryResult = await QueriesController.CalculateStationAndCardYield(station, catalog, new DateTime(startDate, 11, 15), new DateTime(endDate, 11, 30));
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "Catalog","CardName" ,"SuccessRatio" }, queryResult.Data.ColumnNames);
+                Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
                 Assert.Equal(catalogNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
                 for (int i = 0; i < catalogNames.Length; i++)
