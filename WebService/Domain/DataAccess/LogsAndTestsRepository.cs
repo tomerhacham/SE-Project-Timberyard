@@ -205,6 +205,12 @@ namespace WebService.Domain.DataAccess
 
         }
 
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
+        {
+
+
+        }
+
         /// <summary>
         /// privat function to wrap and handle execptions in query execution process
         /// </summary>

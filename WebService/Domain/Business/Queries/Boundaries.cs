@@ -7,13 +7,29 @@ namespace WebService.Domain.Business.Queries
 {
     public class Boundaries : IQuery
     {
-        string Catalog { get; set; }
-        DateTime StartDate { get; set; }
-        DateTime EndDate { get; set; }
+        public string Catalog { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
+        public Boundaries(string catalog, DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            Catalog = catalog;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
+        public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
+        {
+            if (LogsAndTestsRepository == null)
+            {
+                return new Result<QueryResult>(false, null, "The logs and test repository was not entered\n");
+            }
+            var sqlResult = await LogsAndTestsRepository.ExecuteQuery(this);
+            if (sqlResult.Status)
+            {
+                return new Result<QueryResult>(true, new QueryResult(sqlResult.Data), "\n");
+            }
+            return new Result<QueryResult>(false, null, sqlResult.Message);
         }
     }
 }
