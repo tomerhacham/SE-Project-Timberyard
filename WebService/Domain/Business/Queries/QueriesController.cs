@@ -69,6 +69,17 @@ namespace WebService.Domain.Business.Queries
             return await query.Execute(LogsAndTestsRepository);
         }
 
+        public async Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, catalog: catalog);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            var query = new CardTestDuration(catalog, startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
+        }
+
         private Result<QueryResult> IsValidInputs(DateTime startDate, DateTime endDate, [Optional] string catalog, [Optional] string station, [Optional] string cardName)
         {
 

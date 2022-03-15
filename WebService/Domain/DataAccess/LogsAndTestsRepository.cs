@@ -95,7 +95,6 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
-
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield)
         {
             var sqlCommand =
@@ -204,6 +203,32 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute Card Test Duration query
+        /// </summary>
+        /// <param name="cardTestDuration">
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Operator, NetTimeAvg, TotalTimeAvg]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration)
+        {
+            var sqlCommand =
+                @"
+                SELECT Operator, AVG(NetTime) as NetTimeAvg, AVG(EndTime - StartTime) TotalTimeAvg,
+                From Logs
+                WHERE Catalog=@Catalog AND
+                      Date between @StartDate AND @EndDate 
+                GROUP BY Operator
+                ORDER BY Operator DESC
+                ";
+
+            var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+        }
 
         /// <summary>
         /// privat function to wrap and handle execptions in query execution process
@@ -225,5 +250,8 @@ namespace WebService.Domain.DataAccess
                 return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
             }
         }
+
+
+
     }
 }
