@@ -124,5 +124,31 @@ namespace WebService.API.Controllers
             }
 
         }
+
+        [Route("TesterLoad")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(TesterLoadRequestExample))]
+        [ProducesResponseType(typeof(TesterLoadResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(TesterLoadResponseExample))]
+        public async Task<IActionResult> TesterLoad([FromBody] TesterLoadModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await SystemInterface.CalculateTesterLoad(model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
     }
 }
