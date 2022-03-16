@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 using Xunit;

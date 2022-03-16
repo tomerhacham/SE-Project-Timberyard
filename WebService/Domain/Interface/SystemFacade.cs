@@ -36,5 +36,9 @@ namespace WebService.Domain.Interface
         {
             return QueriesController.CalculateNFF(cardName, startDate, endDate);
         }
+        public Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateTesterLoad(startDate, endDate);
+        }
     }
 }

@@ -68,7 +68,16 @@ namespace WebService.Domain.Business.Queries
             var query = new NoFailureFound(cardName, startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
-
+        public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
+        {
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            var query = new TesterLoad(startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
+        }
         private Result<QueryResult> IsValidInputs(DateTime startDate, DateTime endDate, [Optional] string catalog, [Optional] string station, [Optional] string cardName)
         {
 
