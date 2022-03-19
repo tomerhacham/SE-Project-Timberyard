@@ -1,9 +1,5 @@
-﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using WebService.Domain.Business.Queries;
-using WebService.Domain.DataAccess;
 using WebService.Utils;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;

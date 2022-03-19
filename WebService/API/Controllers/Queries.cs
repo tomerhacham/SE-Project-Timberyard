@@ -125,11 +125,11 @@ namespace WebService.API.Controllers
 
         }
 
-        [Route("CardTestDuration")]  // TODO 
+        [Route("CardTestDuration")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
-        [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerRequestExample(typeof(object), typeof(CardTestDurationRequestExample))]
+        [ProducesResponseType(typeof(CardTestDurationResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardTestDurationResponseExample))]
         public async Task<IActionResult> CardTestDuration([FromBody] CardYieldModel model)
         {
             if (ModelState.IsValid)
