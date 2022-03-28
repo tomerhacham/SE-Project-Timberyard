@@ -3,13 +3,15 @@ import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme/index';
 import AuthProvider from './contexts/AuthContext';
-import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './generic-components/PrivateRoute';
 // Pages
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import Dashboard from './components/dashboard/Dashboard';
 import Login from './components/login/Login';
 import Settings from './components/settings/Settings';
 import CardYield from './components/queries/CardYield';
+import StationYield from './components/queries/StationYield';
+import StationCardYield from './components/queries/StationCardYield';
 
 const App = () => {
   return (
@@ -25,6 +27,12 @@ const App = () => {
                 </Route>
                 <Route exact path='/cardyield' element={<PrivateRoute />}>
                   <Route path='' element={<CardYield />} />
+                </Route>
+                <Route exact path='/stationyield' element={<PrivateRoute />}>
+                  <Route path='' element={<StationYield />} />
+                </Route>
+                <Route exact path='/stationcardyield' element={<PrivateRoute />}>
+                  <Route path='' element={<StationCardYield />} />
                 </Route>
                 <Route exact path='/' element={<Dashboard />} />
               </Route>

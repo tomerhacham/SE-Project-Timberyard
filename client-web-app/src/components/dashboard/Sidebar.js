@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 import { Box, Divider, Drawer, useMediaQuery, List } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
-import NavItem from '../../utils/NavItem';
+import NavItem from '../../generic-components/NavItem';
 import Logo from '../icons/Logo';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
