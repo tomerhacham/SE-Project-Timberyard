@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.QueriesController;
@@ -28,22 +29,18 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> CardYield([FromBody] CardYieldModel model)
         {
-            if (ModelState.IsValid)
+
+            var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateCardYield(model.Catalog, model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
             }
+
 
         }
 
@@ -54,22 +51,18 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StationsYieldResponseExample))]
         public async Task<IActionResult> StationsYield([FromBody] StationsYieldModel model)
         {
-            if (ModelState.IsValid)
+
+            var response = await SystemInterface.CalculateStationsYield(model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateStationsYield(model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
             }
+
 
         }
 
@@ -80,23 +73,16 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(StationAndCardYieldResponseExample))]
         public async Task<IActionResult> StationAndCardYield([FromBody] StationAndCardYieldModel model)
         {
-            if (ModelState.IsValid)
+            var response = await SystemInterface.CalculateStationAndCardYield(model.Station, model.Catalog, model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateStationAndCardYield(model.Station, model.Catalog, model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
             }
-
         }
 
         [Route("NFF")]
@@ -106,22 +92,18 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(NFFResponseExample))]
         public async Task<IActionResult> NoFailureFound([FromBody] NoFailureFoundModel model)
         {
-            if (ModelState.IsValid)
+
+            var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
             }
+
 
         }
 
@@ -132,21 +114,15 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(TesterLoadResponseExample))]
         public async Task<IActionResult> TesterLoad([FromBody] TesterLoadModel model)
         {
-            if (ModelState.IsValid)
+            var response = await SystemInterface.CalculateTesterLoad(model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateTesterLoad(model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
             }
 
         }
