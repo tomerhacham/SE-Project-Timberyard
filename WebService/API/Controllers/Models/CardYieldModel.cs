@@ -6,7 +6,6 @@ namespace WebService.API.Controllers.Models
 {
     public class CardYieldModel
     {
-        [Required]
         [StringIsNotNullOrEmpty]
         public string Catalog { get; set; }
         [Required]

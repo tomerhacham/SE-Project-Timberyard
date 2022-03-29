@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using WebService.API.ActionFilters;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.DataAccess;
 using WebService.Domain.Interface;
@@ -42,11 +43,13 @@ namespace WebService
 
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-                    .AddSingleton<Utils.ILogger>(sp => new Logger("Timberyard-service"))
+                    .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<QueriesController>().AddSingleton<SystemFacade>();
+                    .AddSingleton<QueriesController>()
+                    .AddSingleton<SystemFacade>();
 
-            services.AddControllers().AddJsonOptions(options =>
+            services.AddControllers(options => options.Filters.Add(new UnhandledExceptionCheckFilter(new Logger("Timberyard-service"))))
+                     .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
@@ -88,6 +91,12 @@ namespace WebService
                 c.IncludeXmlComments(xmlPath);
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
+
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(new ModelStateCheckFilter());
+            });
+
 
         }
         #endregion
