@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import EvStationIcon from '@mui/icons-material/EvStation';
 import QueryTable from '../dashboard/QueryTable';
@@ -11,12 +10,10 @@ import { STATION_CARD_YIELD_TITLE } from '../../constants/queries';
 import { queriesInputBoxSx } from '../../theme';
 
 const StationCardYield = () => {
-    const navigate = useNavigate();
-
     const [userInput, setUserInput] = useState({ station: '', catalog: '', startDate: '', endDate: '' });
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
-    const [tableData, setTableData] = useState({ rows: [], columns: [] });
+    const [tableData, setTableData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -102,13 +99,10 @@ const StationCardYield = () => {
     )
 
     useEffect(() => {
-        setShowQuery(true);
+        if (tableData) {
+            setShowQuery(true);
+        }
     }, [tableData]);
-
-    useEffect(() => {
-        setShowQuery(false);
-    }, [navigate.pathname]);
-
 
     return (
         <Box 

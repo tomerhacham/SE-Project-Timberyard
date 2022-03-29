@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import QueryTable from '../dashboard/QueryTable';
@@ -11,12 +10,10 @@ import { STATION_YIELD_TITLE } from '../../constants/queries';
 import { queriesInputBoxSx } from '../../theme';
 
 const StationYield = () => {
-    const navigate = useNavigate();
-
     const [userInput, setUserInput] = useState({ startDate: '', endDate: '' });
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
-    const [tableData, setTableData] = useState({ rows: [], columns: [] });
+    const [tableData, setTableData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -79,12 +76,10 @@ const StationYield = () => {
     )
 
     useEffect(() => {
-        setShowQuery(true);
+        if (tableData) {
+            setShowQuery(true);
+        }
     }, [tableData]);
-
-    useEffect(() => {
-        setShowQuery(false);
-    }, [navigate.pathname]);
 
     return (
         <Box 

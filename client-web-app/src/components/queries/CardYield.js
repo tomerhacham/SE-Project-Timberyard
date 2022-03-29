@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import QueryTable from '../dashboard/QueryTable';
@@ -23,12 +22,11 @@ import { queriesInputBoxSx } from '../../theme';
 // ];
 
 const CardYield = () => {
-    const navigate = useNavigate();
     const [userInput, setUserInput] = useState({ catalog: '', startDate: '', endDate: '' })
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
     const [queryData, setQueryData] = useState(null);
-    const [tableData, setTableData] = useState({ rows: [], columns: [] });
+    const [tableData, setTableData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -113,12 +111,10 @@ const CardYield = () => {
     )
 
     useEffect(() => {
-        setShowQuery(true);
+        if (tableData) {
+            setShowQuery(true);
+        }
     }, [tableData]);
-
-    useEffect(() => {
-        setShowQuery(false);
-    }, [navigate.pathname]);
 
     return (
         <Box
