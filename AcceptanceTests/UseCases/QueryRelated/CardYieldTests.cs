@@ -12,29 +12,24 @@ namespace AcceptanceTests
     {
 
         public CardYieldTests() : base()
-        {
-
-        }
-
+        { }
 
         [Theory]
-        [InlineData(2020, 2022, "OA_HF", HttpStatusCode.OK, false)]          // Happy - catalog ID exists
-        [InlineData(2020, 2022, "OP_KLF", HttpStatusCode.OK, false)]         // Happy - catalog ID exists
-        [InlineData(2020, 2022, "CCH1", HttpStatusCode.OK, true)]            // Sad - catalog ID not exists
-        public async void GoodAcceptenceScenrarios(int start, int end, string catalog, HttpStatusCode expectedStatusCode, bool isEmptyContent)
+        [InlineData(2020, 2022, "OA_HF", HttpStatusCode.OK, true)]          // Happy - catalog ID exists
+        [InlineData(2020, 2022, "OP_KLF", HttpStatusCode.OK, true)]         // Happy - catalog ID exists
+        [InlineData(2020, 2022, "CCH1", HttpStatusCode.OK, false)]            // Sad - catalog ID not exists
+        public async void GoodAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode, bool isEmptyContent)
         {
             IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
             Assert.Equal(expectedStatusCode, response.StatusCode);
             dynamic content = JsonConvert.DeserializeObject<dynamic>(response.Content);
             Assert.Equal(isEmptyContent, content.Records > 0);
-
-
         }
-        [Theory]
 
+        [Theory]
         [InlineData(2020, 2022, "", HttpStatusCode.BadRequest)]         // Bad - empty catalog ID
-        [InlineData(2022, 2020, "", HttpStatusCode.BadRequest)]         // Bad - start date > end date
-        public async void BadAcceptenceScenrarios(int start, int end, string catalog, HttpStatusCode expectedStatusCode)
+        [InlineData(2022, 2020, "SomeCatalog", HttpStatusCode.BadRequest)]         // Bad - start date > end date
+        public async void BadAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode)
         {
             IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
             Assert.Equal(expectedStatusCode, response.StatusCode);
