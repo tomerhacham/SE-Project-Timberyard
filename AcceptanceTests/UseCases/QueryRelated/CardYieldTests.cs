@@ -1,6 +1,8 @@
 using AcceptanceTests.Utils;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
@@ -14,24 +16,28 @@ namespace AcceptanceTests
 
         }
 
+
         [Theory]
-        [InlineData(2020, 2022, "OA_HF")]           // catalog ID exists
-        [InlineData(2020, 2022, "OP_KLF")]
-        public async void SuccessCaseTest(int start, int end, string catalog)
+        [InlineData(2020, 2022, "OA_HF", HttpStatusCode.OK, false)]          // Happy - catalog ID exists
+        [InlineData(2020, 2022, "OP_KLF", HttpStatusCode.OK, false)]         // Happy - catalog ID exists
+        [InlineData(2020, 2022, "CCH1", HttpStatusCode.OK, true)]            // Sad - catalog ID not exists
+        public async void GoodAcceptenceScenrarios(int start, int end, string catalog, HttpStatusCode expectedStatusCode, bool isEmptyContent)
         {
-            IRestResponse res = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
-            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(expectedStatusCode, response.StatusCode);
+            dynamic content = JsonConvert.DeserializeObject<dynamic>(response.Content);
+            Assert.Equal(isEmptyContent, content.Records > 0);
+
 
         }
-
         [Theory]
-        [InlineData(2020, 2022, "CCH1")]      // catalog ID not exists
-        [InlineData(2020, 2022, "")]          // empty catalog ID
-        [InlineData(2022, 2020, "")]          // start date > end date
-        public async void NoExistCatalogNumberTest(int start, int end, string catalog)
+
+        [InlineData(2020, 2022, "", HttpStatusCode.BadRequest)]         // Bad - empty catalog ID
+        [InlineData(2022, 2020, "", HttpStatusCode.BadRequest)]         // Bad - start date > end date
+        public async void BadAcceptenceScenrarios(int start, int end, string catalog, HttpStatusCode expectedStatusCode)
         {
-            IRestResponse res = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
-            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(expectedStatusCode, response.StatusCode);
 
         }
 

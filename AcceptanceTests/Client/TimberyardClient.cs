@@ -18,11 +18,11 @@ namespace AcceptanceTests.Client
     {
         #region End-Points
         //Queries
-        private readonly string CARD_YIELD_ENDPOINT = "api/Queries/CardYield";
-        private readonly string STATION_YIELD_ENDPOINT = "api/Queries/StationsYield";
-        private readonly string STATION_AND_CARD_YIELD_ENDPOINT = "api/Queries/StationAndCardYield";
-        private readonly string NFF_ENDPOINT = "api/Queries/NFF";
-        private readonly string TESTER_LOAD_ENDPOINT = "api/Queries/TesterLoad";
+        private readonly string CARD_YIELD_ENDPOINT = "/api/Queries/CardYield";
+        private readonly string STATION_YIELD_ENDPOINT = "/api/Queries/StationsYield";
+        private readonly string STATION_AND_CARD_YIELD_ENDPOINT = "/api/Queries/StationAndCardYield";
+        private readonly string NFF_ENDPOINT = "/api/Queries/NFF";
+        private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
         #endregion
 
         RestClient RestClient { get; }
