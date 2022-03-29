@@ -53,7 +53,7 @@ namespace WebService.Domain.Business.Queries
                 var catalog = sampleRecord.Catalog;
                 var station = sampleRecord.Station;
                 var @operator = sampleRecord.Operator;
-                var failedTestNames = records.Where(record => record.Id == logId).Select(record => record.TestName).Distinct().ToList();
+                var failedTestNames = records.Where(record => record.Id == logId).Select(record => record.TestName).ToList(); //might be not distinct results
                 aggregatedData.Add(InstanceExpandoObject(date, cardName, catalog, station, @operator, failedTestNames));
             }
             return new Result<QueryResult>(true, new QueryResult(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, aggregatedData), "\n");

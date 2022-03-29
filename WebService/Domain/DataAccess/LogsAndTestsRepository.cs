@@ -178,7 +178,7 @@ namespace WebService.Domain.DataAccess
 	                on failLogs.SN=passLogs.SN
                 )) as nffLogs
 	                inner join
-	                (select TestName,LogId from Tests) as failTests
+	                (select TestName,LogId from Tests where Result='FAIL') as failTests
 	                on nffLogs.Id=failTests.LogId
                 )
                 where CardName=@CardName
@@ -250,7 +250,7 @@ namespace WebService.Domain.DataAccess
         {
             var sqlCommand =
                 @"
-                SELECT Station, count(*) as NumberOfRuns, (sum(DATEDIFF(SECOND,StartTime,EndTime)/ 60.0) /60.0) as TotalRunTimeHours
+                SELECT Station, count(*) as NumberOfRuns, (sum(DATEDIFF(SECOND,StartTime,EndTime)) /3600.0) as TotalRunTimeHours
                 from Logs
                 where Logs.Date BETWEEN @StartDate AND @EndDate
                 group by Station
