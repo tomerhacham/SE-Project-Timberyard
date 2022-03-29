@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AcceptanceTests.Client;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using WebService.Domain.Interface;
@@ -7,11 +8,11 @@ namespace AcceptanceTests.Utils
 {
     public class TimberyardTestCase
     {
-        protected ISystemInterface sut;
+        protected ITimberyardClient Client;
 
         protected TimberyardTestCase()
         {
-            sut = SystemBridge.GetService();
+            Client = SystemBridge.GetService();
         }
     }
 }

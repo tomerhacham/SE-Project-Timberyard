@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AcceptanceTests.Client;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using WebService.Domain.Interface;
@@ -7,11 +8,11 @@ namespace AcceptanceTests.Utils
 {
     public class SystemBridge
     {
-        public static ISystemInterface GetService()
+        public static ITimberyardClient GetService()
         {
-            SystemInterfaceProxy proxy = new SystemInterfaceProxy();
+            TimberyardClientProxy proxy = new TimberyardClientProxy();
             // Uncomment when real application is ready
-            proxy.Real = new SystenRealAdapter();
+            // proxy.RealClient = new TimeryardClientRealAdapter();
             return proxy;
         }
     }

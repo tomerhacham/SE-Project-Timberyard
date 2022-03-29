@@ -1,4 +1,5 @@
 ﻿
+using AcceptanceTests.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -26,16 +27,15 @@ namespace AcceptanceTests.Utils
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected SystemFacade GetSystemFacade()
+        protected ITimberyardClient GetConfiguratedClient()
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("AcceptanceTests").Build();
             var serviceProvier = new ServiceCollection()
-                    .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-                    .AddSingleton<ILogger>(sp => new Logger(""))
-                    .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<QueriesController>().AddSingleton<SystemFacade>().BuildServiceProvider();
+                    .Configure<ClientCredentials>(config.GetSection("ClientCredentials"))
+                    .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
+                    .AddSingleton<ITimberyardClient, TimberyardClient>();
 
-            return serviceProvier.GetService<SystemFacade>();
+            return serviceProvier.GetService<ITimberyardClient>();
         }
     }
 

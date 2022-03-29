@@ -19,7 +19,7 @@ namespace AcceptanceTests
         [InlineData(2020, 2022, "OP_KLF")]
         public void SuccessCaseTest(int start, int end, string catalog)
         {
-            Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
+            Result<QueryResult> res = Client.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
             Assert.True(res.Status);
 
         }
@@ -30,7 +30,7 @@ namespace AcceptanceTests
         [InlineData(2022, 2020, "")]          // start date > end date
         public void NoExistCatalogNumberTest(int start, int end, string catalog)
         {
-            Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
+            Result<QueryResult> res = Client.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
             Assert.False(res.Status);
             Assert.Empty(res.Data.Records);
         }
