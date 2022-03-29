@@ -31,10 +31,10 @@ namespace AcceptanceTests.Utils
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("AcceptanceTests").Build();
             var serviceProvier = new ServiceCollection()
-                    .Configure<ClientCredentials>(config.GetSection("ClientCredentials"))
+                    .Configure<UserCredentials>(config.GetSection("UserCredentials"))
                     .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
-                    .AddSingleton<ITimberyardClient, TimberyardClient>();
-
+                    .AddSingleton<ITimberyardClient, TimberyardClient>()
+                    .BuildServiceProvider();
             return serviceProvier.GetService<ITimberyardClient>();
         }
     }

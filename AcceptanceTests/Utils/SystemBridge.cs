@@ -12,7 +12,7 @@ namespace AcceptanceTests.Utils
         {
             TimberyardClientProxy proxy = new TimberyardClientProxy();
             // Uncomment when real application is ready
-            // proxy.RealClient = new TimeryardClientRealAdapter();
+             proxy.RealClient = new TimberyardClientRealAdapter();
             return proxy;
         }
     }

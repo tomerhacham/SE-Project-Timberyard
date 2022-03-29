@@ -1,3 +1,4 @@
+using AcceptanceTests.Client;
 using AcceptanceTests.Utils;
 using System;
 using WebService.Domain.Business.Queries;

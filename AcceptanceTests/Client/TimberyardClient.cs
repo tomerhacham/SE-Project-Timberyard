@@ -27,11 +27,11 @@ namespace AcceptanceTests.Client
         #endregion
 
         RestClient RestClient { get; }
-        ClientCredentials ClientCredentials { get; }
+        public UserCredentials UserCredentials { get; set; }
 
-        public TimberyardClient(IOptions<ClientCredentials> clientCredentials, IOptions<ServiceSettings> serviceSettings)
+        public TimberyardClient(IOptions<UserCredentials> userCredentials, IOptions<ServiceSettings> serviceSettings)
         {
-            ClientCredentials = clientCredentials.Value;
+            UserCredentials = userCredentials.Value;
             RestClient = new RestClient(serviceSettings.Value.Url);
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {

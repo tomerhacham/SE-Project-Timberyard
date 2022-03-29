@@ -14,11 +14,11 @@ namespace AcceptanceTests.Utils
     /// Adapter class for future use in case responses will change.
     /// Currently the class simply deligate the request to the RealClient
     /// </summary>
-    public class TimeryardClientRealAdapter : InitializeSystem, ITimberyardClient
+    public class TimberyardClientRealAdapter : InitializeSystem, ITimberyardClient
     {
-        ITimberyardClient RealClient;
+        public ITimberyardClient RealClient { get; set; }
 
-        public TimeryardClientRealAdapter()
+        public TimberyardClientRealAdapter()
         {
             RealClient = GetConfiguratedClient();
         }
