@@ -1,8 +1,7 @@
-using AcceptanceTests.Client;
 using AcceptanceTests.Utils;
+using RestSharp;
 using System;
-using WebService.Domain.Business.Queries;
-using WebService.Utils;
+using System.Net;
 using Xunit;
 
 namespace AcceptanceTests
@@ -18,10 +17,10 @@ namespace AcceptanceTests
         [Theory]
         [InlineData(2020, 2022, "OA_HF")]           // catalog ID exists
         [InlineData(2020, 2022, "OP_KLF")]
-        public void SuccessCaseTest(int start, int end, string catalog)
+        public async void SuccessCaseTest(int start, int end, string catalog)
         {
-            Result<QueryResult> res = Client.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
-            Assert.True(res.Status);
+            IRestResponse res = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
 
         }
 
@@ -29,11 +28,11 @@ namespace AcceptanceTests
         [InlineData(2020, 2022, "CCH1")]      // catalog ID not exists
         [InlineData(2020, 2022, "")]          // empty catalog ID
         [InlineData(2022, 2020, "")]          // start date > end date
-        public void NoExistCatalogNumberTest(int start, int end, string catalog)
+        public async void NoExistCatalogNumberTest(int start, int end, string catalog)
         {
-            Result<QueryResult> res = Client.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
-            Assert.False(res.Status);
-            Assert.Empty(res.Data.Records);
+            IRestResponse res = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+
         }
 
     }

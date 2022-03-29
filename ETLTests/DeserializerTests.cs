@@ -1,11 +1,7 @@
-﻿using Xunit;
-using ETL;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ETL.DataObjects;
 using ETLTests;
-using ETL.DataObjects;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 namespace ETL.Tests
 {
     public class DeserializerTests : TestSuit

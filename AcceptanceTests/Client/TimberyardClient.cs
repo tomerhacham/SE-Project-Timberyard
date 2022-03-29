@@ -2,7 +2,6 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AcceptanceTests.Client
@@ -10,10 +9,10 @@ namespace AcceptanceTests.Client
     public interface ITimberyardClient
     {
         public Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate);
-        public  Task<IRestResponse> CalculateStationsYield(DateTime startDate, DateTime endDate);
-        public  Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
-        public  Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate);
-        public  Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateStationsYield(DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
     }
     public class TimberyardClient : ITimberyardClient
     {
@@ -71,7 +70,7 @@ namespace AcceptanceTests.Client
         public async Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             var request = new RestRequest(TESTER_LOAD_ENDPOINT, Method.POST);
-            var body = new {StartDate = startDate, EndDate = endDate };
+            var body = new { StartDate = startDate, EndDate = endDate };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }

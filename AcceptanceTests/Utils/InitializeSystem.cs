@@ -4,16 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using WebService.Domain.Business.Queries;
-using WebService.Domain.DataAccess;
-using WebService.Domain.Interface;
-using WebService.Utils;
-using WebService.Utils.Models;
 using Xunit;
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 

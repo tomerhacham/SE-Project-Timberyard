@@ -1,15 +1,8 @@
-﻿
-using Moq;
-using AcceptanceTests.Client;
+﻿using AcceptanceTests.Client;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using WebService.Domain.Business.Queries;
-using WebService.Domain.Interface;
-using WebService.Utils;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace AcceptanceTests.Utils
 {

@@ -1,12 +1,7 @@
 ﻿using AcceptanceTests.Client;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using WebService.Domain.Business.Queries;
-using WebService.Domain.Interface;
-using WebService.Utils;
 
 namespace AcceptanceTests.Utils
 {
