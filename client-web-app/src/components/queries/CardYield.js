@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
-import QueryTable from '../dashboard/QueryTable';
+import QueryTable from '../../generic-components/QueryTable';
 import { QueryPost } from '../../api/Api';
 import Loader from '../../generic-components/Loader';
 import BarChart from './graph/BarChart';

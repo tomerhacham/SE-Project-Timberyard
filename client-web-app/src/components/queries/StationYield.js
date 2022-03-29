@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import QueryTable from '../dashboard/QueryTable';
+import QueryTable from '../../generic-components/QueryTable';
 import { QueryPost } from '../../api/Api';
 import Loader from '../../generic-components/Loader';
 import { dataToTable } from '../../utils/helperFunctions';
