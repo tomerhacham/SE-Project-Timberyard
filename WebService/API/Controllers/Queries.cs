@@ -40,8 +40,6 @@ namespace WebService.API.Controllers
                 var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
                 return BadRequest(error);
             }
-
-
         }
 
         [Route("StationsYield")]
@@ -62,8 +60,6 @@ namespace WebService.API.Controllers
                 var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
                 return BadRequest(error);
             }
-
-
         }
 
         [Route("StationAndCardYield")]
@@ -103,8 +99,6 @@ namespace WebService.API.Controllers
                 var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
                 return BadRequest(error);
             }
-
-
         }
 
         [Route("TesterLoad")]
@@ -124,7 +118,6 @@ namespace WebService.API.Controllers
                 var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
                 return BadRequest(error);
             }
-
         }
     }
 }
