@@ -9,11 +9,11 @@ namespace AcceptanceTests.UseCases.QueryRelated
 {
     public class StationsYieldTests : TimberyardTestCase
     {
-        public StationsYieldTests() : base() 
-        {}
+        public StationsYieldTests() : base()
+        { }
 
         [Theory]
-        [InlineData("OA_HF","J",2020, 2022, HttpStatusCode.OK, true)]          // Happy - catalog ID exists
+        [InlineData("OA_HF", "J", 2020, 2022, HttpStatusCode.OK, true)]          // Happy - catalog ID exists
 
         public async void GoodAcceptenceScenarioes(string station, string catalog, int start, int end, HttpStatusCode expectedStatusCode, bool isEmptyContent)
         {
