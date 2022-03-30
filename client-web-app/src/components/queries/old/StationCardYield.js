@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import EvStationIcon from '@mui/icons-material/EvStation';
-import QueryTable from '../../generic-components/QueryTable';
-import { QueryPost } from '../../api/Api';
-import Loader from '../../generic-components/Loader';
-import { dataToTable } from '../../utils/helperFunctions';
-import { STATION_CARD_YIELD_URL } from '../../constants/api-urls';
-import { STATION_CARD_YIELD_TITLE } from '../../constants/queries';
-import { queriesInputBoxSx } from '../../theme';
+import QueryTable from '../QueryTable';
+import { QueryPost } from '../../../api/Api';
+import Loader from '../../../generic-components/Loader';
+import { dataToTable } from '../../../utils/helperFunctions';
+import { STATION_CARD_YIELD_URL, STATION_CARD_YIELD_TITLE } from '../../../constants/constants';
+import { queriesInputBoxSx } from '../../../theme';
 
 const StationCardYield = () => {
     const [userInput, setUserInput] = useState({ station: '', catalog: '', startDate: '', endDate: '' });

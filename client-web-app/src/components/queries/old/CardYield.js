@@ -1,14 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
-import QueryTable from '../../generic-components/QueryTable';
-import { QueryPost } from '../../api/Api';
-import Loader from '../../generic-components/Loader';
-import BarChart from './graph/BarChart';
-import { dataToTable } from '../../utils/helperFunctions';
-import { CARD_YIELD_URL } from '../../constants/api-urls';
-import { CARD_YIELD_TITLE } from '../../constants/queries';
-import { queriesInputBoxSx } from '../../theme';
+import QueryTable from '../QueryTable';
+import { QueryPost } from '../../../api/Api';
+import Loader from '../../../generic-components/Loader';
+import BarChart from '../graph/BarChart';
+import { dataToTable } from '../../../utils/helperFunctions';
+import { CARD_YIELD_URL, CARD_YIELD_TITLE } from '../../../constants/constants';
+import { queriesInputBoxSx } from '../../../theme';
 
 // const rowsExample = [
 //     { id: 1, col1: 'Hello', col2: 'World' },
