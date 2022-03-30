@@ -1,6 +1,8 @@
-﻿namespace AcceptanceTests.UseCases.QueryRelated
+﻿using AcceptanceTests.Utils;
+
+namespace AcceptanceTests.UseCases.QueryRelated
 {
-    public class NFFTests : StationYieldTests
+    public class NFFTests : TimberyardTestCase
     {
         public NFFTests() : base()
         {
