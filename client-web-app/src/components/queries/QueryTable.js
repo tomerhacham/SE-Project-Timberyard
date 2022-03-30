@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
     DataGrid,
     GridToolbarContainer,
@@ -19,9 +20,9 @@ import {
 
 function CustomToolbar() {
     return (
-      <GridToolbarContainer className={gridClasses.toolbarContainer}>
-        <GridToolbarExport />
-      </GridToolbarContainer>
+        <GridToolbarContainer className={gridClasses.toolbarContainer}>
+            <GridToolbarExport />
+        </GridToolbarContainer>
     );
 }
 
@@ -33,14 +34,17 @@ const QueryTable = ({ rows, columns }) => {
                     <DataGrid
                         rows={rows} 
                         columns={columns}
-                        components={{
-                        Toolbar: CustomToolbar,
-                        }}
+                        components={{ Toolbar: CustomToolbar }}
                     />
                 </div>
             </div>
         </div>
     )
 }
+
+QueryTable.propTypes = {
+    rows: PropTypes.array,
+    columns: PropTypes.array
+};
 
 export default QueryTable;

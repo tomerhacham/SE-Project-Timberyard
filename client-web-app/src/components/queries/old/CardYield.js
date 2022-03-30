@@ -1,72 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
-import EvStationIcon from '@mui/icons-material/EvStation';
-import QueryTable from '../dashboard/QueryTable';
-import { QueryPost } from '../../api/Api';
-import Loader from '../../generic-components/Loader';
-import { dataToTable } from '../../utils/helperFunctions';
-import { STATION_CARD_YIELD_URL } from '../../constants/api-urls';
-import { STATION_CARD_YIELD_TITLE } from '../../constants/queries';
-import { queriesInputBoxSx } from '../../theme';
+import SdCardIcon from '@mui/icons-material/SdCard';
+import QueryTable from '../QueryTable';
+import { QueryPost } from '../../../api/Api';
+import Loader from '../../../generic-components/Loader';
+import BarChart from '../graph/BarChart';
+import { dataToTable } from '../../../utils/helperFunctions';
+import { CARD_YIELD_URL, CARD_YIELD_TITLE } from '../../../constants/constants';
+import { queriesInputBoxSx } from '../../../theme';
 
-const StationCardYield = () => {
-    const navigate = useNavigate();
+// const rowsExample = [
+//     { id: 1, col1: 'Hello', col2: 'World' },
+//     { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+//     { id: 3, col1: 'MUI', col2: 'is Amazing' },
+// ];
 
-    const [userInput, setUserInput] = useState({ station: '', catalog: '', startDate: '', endDate: '' });
+// const columnsExample = [
+//     { field: 'col1', headerName: 'Column 1', width: 150 },
+//     { field: 'col2', headerName: 'Column 2', width: 150 },
+// ];
+
+const CardYield = () => {
+    const [userInput, setUserInput] = useState({ catalog: '', startDate: '', endDate: '' })
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
-    const [tableData, setTableData] = useState({ rows: [], columns: [] });
+    const [queryData, setQueryData] = useState(null);
+    const [tableData, setTableData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         setLoading(true);
 
-        const request = { url: STATION_CARD_YIELD_URL, data: userInput };
+        const request = { url: CARD_YIELD_URL, data: userInput };
         const result = await QueryPost(request);
         if (result) {
             console.log(result);
+            setQueryData(result);
             setTableData(dataToTable(result));
         }
         setLoading(false);
+        
+        // QueryPost(request).then(res => res.json())
+        // .then((result) => {
+        //     console.log(result);
+        //     setQueryData(result);
+        //     setTableData(dataToTable(result));
+        // })
+        // .catch((error) => {
+        //     console.log('Catched error:', error);
+        // })
+        // .finally(() => setLoading(false));
     };
-
-    const isButtonDisabled = () => userInput.station === '' || userInput.catalog === '' || 
-        userInput.startDate === '' || userInput.endDate === '';
 
     const inputFields = (
         <Box id='input-box' sx={queriesInputBoxSx}>
             <Avatar sx={{ m: 0, bgcolor: 'secondary.main' }}>
-                <EvStationIcon />
+                <SdCardIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                {STATION_CARD_YIELD_TITLE}
+                {CARD_YIELD_TITLE}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
-                    id="station-card-yield-station"
-                    required
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    label="Station #"
-                    type="text"
-                    autoFocus
-                    onChange={(e) => setUserInput({ ...userInput, station: e.target.value })}
-                />
-                <TextField
-                    id="station-card-yield-catalog"
+                    id="card-yield-catalog"
                     required
                     variant="outlined"
                     margin="normal"
                     fullWidth
                     label="Catalog #"
                     type="text"
+                    autoFocus
                     onChange={(e) => setUserInput({ ...userInput, catalog: e.target.value })}
                 />
                 <TextField
-                    id="station-card-yield-start-date"
+                    id="card-yield-start-date"
                     required
                     variant="outlined"
                     margin="normal"
@@ -77,7 +85,7 @@ const StationCardYield = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
-                    id="station-card-yield-end-date"
+                    id="card-yield-end-date"
                     required
                     variant="outlined"
                     margin="normal"
@@ -88,11 +96,11 @@ const StationCardYield = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <Button
-                    id="station-card-yield-submit-button"
+                    id="card-yield-submit-button"
                     type="submit"
                     fullWidth
                     variant="contained"
-                    disabled={isButtonDisabled()}
+                    disabled={userInput.catalog === '' || userInput.startDate === '' || userInput.endDate === ''}
                     sx={{ mt: 3, mb: 2 }}
                 >
                     OK
@@ -102,17 +110,14 @@ const StationCardYield = () => {
     )
 
     useEffect(() => {
-        setShowQuery(true);
+        if (tableData) {
+            setShowQuery(true);
+        }
     }, [tableData]);
 
-    useEffect(() => {
-        setShowQuery(false);
-    }, [navigate.pathname]);
-
-
     return (
-        <Box 
-            id='station-yield-box'
+        <Box
+            id="card-yield-box"
             component="main"
             sx={{ flexGrow: 1, py: 8 }}
         >
@@ -125,9 +130,15 @@ const StationCardYield = () => {
                         <Loader />
                     )}
                     {showQuery && (
-                        <Grid item lg={8} md={12} xl={9} xs={12}>
-                            <QueryTable rows={tableData.rows} columns={tableData.columns} />
-                        </Grid>
+                        <Fragment>
+                            <Grid item lg={8} md={12} xl={9} xs={12}>
+                                <QueryTable rows={tableData.rows} columns={tableData.columns} />
+                            </Grid>
+                            <Grid item lg={8} md={12} xl={9} xs={12}>
+                                {queryData && tableData.rows.length > 0 && 
+                                    <BarChart data={queryData} />}
+                            </Grid>
+                        </Fragment>
                     )}
                 </Grid>
             </Container>
@@ -135,4 +146,4 @@ const StationCardYield = () => {
     )
 }
 
-export default StationCardYield;
+export default CardYield;
