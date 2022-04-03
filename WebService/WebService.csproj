@@ -22,11 +22,6 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\Business\Services\" />
-    <Folder Include="Domain\DataAccess\DTO\" />
-  </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="dotnet-format" />
   </Target>
