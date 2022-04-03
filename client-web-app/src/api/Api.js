@@ -1,5 +1,7 @@
+const API_URL = 'https://localhost:5001/api';
+
 export async function QueryPost(config) {   
-    return await fetch(`${config.url}`, {
+    return await fetch(`${API_URL}${config.url}`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
