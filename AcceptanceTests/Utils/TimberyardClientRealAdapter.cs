@@ -23,9 +23,9 @@ namespace AcceptanceTests.Utils
             return RealClient.CalculateCardYield(catalog, startDate, endDate);
         }
 
-        public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate)
+        public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
-            return RealClient.CalculateNoFailureFound(cardName, startDate, endDate);
+            return RealClient.CalculateNoFailureFound(cardName, startDate, endDate, timeInterval);
         }
 
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate)
