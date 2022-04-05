@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using ETL.DataObjects;
+using ETL.Repository.DTO;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -261,6 +263,10 @@ namespace WebService.Domain.DataAccess
 
         }
 
+        public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Private function to wrap and handle execptions in query execution process
