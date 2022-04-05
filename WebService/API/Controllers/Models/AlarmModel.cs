@@ -11,7 +11,6 @@ namespace WebService.API.Controllers.Models
 {
     public class AlarmModel
     {
-        [Required]
         public int Id { get; set; }
         [StringIsNotNullOrEmpty]
         public string Name { get; set; }

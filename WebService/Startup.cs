@@ -14,6 +14,7 @@ using System.Text.Json;
 using WebService.API.ActionFilters;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Domain.Interface;
 using WebService.Utils;
@@ -45,6 +46,7 @@ namespace WebService
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
+                    .AddSingleton<ISMTPClient,SMTPClient>()
                     .AddSingleton<LogsAndTestsRepository>()
                     .AddSingleton<QueriesController>()
                     .AddSingleton<AlarmsController>()
