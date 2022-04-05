@@ -60,15 +60,16 @@ namespace WebService.Domain.Business.Alarms
             {
                 condition = true;
                 String subject = "Alarm Notification - " + Name;
-                String message = getAlarmMessage();
+                String message = GetAlarmMessage(logs, log_count);
                 iSMTPClient.SendEmail(subject, message, Receivers);
             }
 
             return condition;
         }
 
-        private String GetAlarmMessage()
+        private String GetAlarmMessage(List<LogDTO> logs, int log_count)
         {
+            LogDTO log = logs[0];
             String message = "Notice :\n";
             switch (Field)
             {
@@ -81,9 +82,9 @@ namespace WebService.Domain.Business.Alarms
                     break;
             }
 
-            message += $"has passed the Threshold ({Threshold})";
+            message += $"has passed the Threshold ({Threshold})\n";
+            message += $"Details :\nDate {log.Date}\nNumber of faild tests are {log_count}.\n";
             return message;
-
         }
 
         public static Result<Alarm> ConstructFromDTO(AlarmDTO dto)
