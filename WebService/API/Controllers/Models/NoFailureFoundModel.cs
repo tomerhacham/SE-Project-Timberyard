@@ -17,5 +17,8 @@ namespace WebService.API.Controllers.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DateGreaterEqualThan("StartDate")]
         public DateTime EndDate { get; set; }
+
+        [PositiveNumber]
+        public int TimeInterval { get; set; }
     }
 }

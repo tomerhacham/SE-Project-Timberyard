@@ -89,7 +89,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> NoFailureFound([FromBody] NoFailureFoundModel model)
         {
 
-            var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate);
+            var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate,model.TimeInterval);
             if (response.Status)
             {
                 return Ok(response.Data);
