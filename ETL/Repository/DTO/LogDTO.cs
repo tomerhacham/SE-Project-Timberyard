@@ -1,7 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ETL.Repository.DTO
 {
@@ -15,8 +13,8 @@ namespace ETL.Repository.DTO
         public string SwRev { get; set; }
         public string DBRev { get; set; }
         public DateTime Date { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public TimeSpan NetTime { get; set; }
         public string SN { get; set; }
         public string Catalog { get; set; }

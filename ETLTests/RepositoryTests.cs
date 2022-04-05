@@ -1,10 +1,6 @@
-﻿using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ETLTests;
+﻿using ETLTests;
 using Microsoft.Extensions.DependencyInjection;
-using ETL.Repository;
+using Xunit;
 namespace ETL.Tests
 {
     public class RepositoryTests : TestSuit

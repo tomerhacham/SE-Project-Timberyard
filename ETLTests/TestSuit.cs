@@ -4,9 +4,6 @@ using ETL.Utils;
 using ETL.Utils.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 

@@ -1,22 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Filters;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
+using WebService.API.ActionFilters;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.DataAccess;
 using WebService.Domain.Interface;
@@ -48,11 +43,13 @@ namespace WebService
 
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-                    .AddSingleton<Utils.ILogger>(sp => new Logger("Timberyard-service"))
+                    .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<QueriesController>().AddSingleton<SystemFacade>();
+                    .AddSingleton<QueriesController>()
+                    .AddSingleton<SystemFacade>();
 
-            services.AddControllers().AddJsonOptions(options =>
+            services.AddControllers(options => options.Filters.Add(new UnhandledExceptionCheckFilter(new Logger("Timberyard-service"))))
+                     .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
@@ -94,6 +91,12 @@ namespace WebService
                 c.IncludeXmlComments(xmlPath);
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
+
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(new ModelStateCheckFilter());
+            });
+
 
         }
         #endregion

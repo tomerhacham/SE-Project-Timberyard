@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WebService.Domain.Business.Alarms;
-using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 
@@ -18,14 +14,31 @@ namespace WebService.Domain.Interface
             QueriesController = queriesController;
         }
 
-        public Result<QueryResult> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
             return QueriesController.CalculateBoundaries(catalog, startDate, endDate);
         }
 
-        public Task<Result<QueryResult>> CalculateCardYield(DateTime startDate, DateTime endDate, string catalog)
+        public Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
-            return QueriesController.CalculateCardYield(startDate, endDate, catalog);
+            return QueriesController.CalculateCardYield(catalog, startDate, endDate);
+        }
+        public Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateStationsYield(startDate, endDate);
+        }
+
+        public Task<Result<QueryResult>> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateStationAndCardYield(station, catalog, startDate, endDate);
+        }
+        public Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
+        {
+            return QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
+        }
+        public Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateTesterLoad(startDate, endDate);
         }
     }
 }

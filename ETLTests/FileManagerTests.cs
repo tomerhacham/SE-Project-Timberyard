@@ -1,10 +1,7 @@
-﻿using Xunit;
-using ETL;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ETLTests;
+﻿using ETLTests;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using Xunit;
 namespace ETL.Tests
 {
     public class FileManagerTests : TestSuit
