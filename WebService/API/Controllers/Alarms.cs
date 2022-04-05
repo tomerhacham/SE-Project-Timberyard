@@ -28,7 +28,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> AddNewAlarm([FromBody] AlarmModel model)
         {
 
-            var response = await SystemInterface.AddNewAlarm(model.Name,model.Field,model.Threshold,model.Receivers);
+            var response = await SystemInterface.AddNewAlarm(model.Name, model.Field, model.Objective, model.Threshold, model.Receivers);
             if (response.Status)
             {
                 return Ok(response.Data);

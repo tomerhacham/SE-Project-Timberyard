@@ -22,39 +22,40 @@ namespace WebService.Domain.Interface
         #region Queries
         public async Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
-            return await QueriesController .CalculateBoundaries(catalog, startDate, endDate);
+            return await QueriesController.CalculateBoundaries(catalog, startDate, endDate);
         }
         public async Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
-            return await QueriesController .CalculateCardYield(catalog, startDate, endDate);
+            return await QueriesController.CalculateCardYield(catalog, startDate, endDate);
         }
         public async Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
         {
-            return await QueriesController .CalculateStationsYield(startDate, endDate);
+            return await QueriesController.CalculateStationsYield(startDate, endDate);
         }
         public async Task<Result<QueryResult>> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate)
         {
-            return await QueriesController .CalculateStationAndCardYield(station, catalog, startDate, endDate);
+            return await QueriesController.CalculateStationAndCardYield(station, catalog, startDate, endDate);
         }
         public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
-            return await QueriesController .CalculateNFF(cardName, startDate, endDate, timeInterval);
+            return await QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
         }
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateTesterLoad(startDate, endDate);
-        } 
+        }
         #endregion
-    
-        public async Task<Result<AlarmModel>> AddNewAlarm(string name, Field field, int threshold, List<string> receivers)
+
+        public async Task<Result<AlarmModel>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
-            var alarmResult = await AlarmsController.AddNewAlarm(name, field, threshold, receivers);
+            var alarmResult = await AlarmsController.AddNewAlarm(name, field, objective, threshold, receivers);
             if (alarmResult.Status)
             {
                 var model = new AlarmModel()
                 {
                     Id = alarmResult.Data.Id,
                     Name = alarmResult.Data.Name,
+                    Objective = alarmResult.Data.Objective,
                     Field = alarmResult.Data.Field,
                     Threshold = alarmResult.Data.Threshold,
                     Active = alarmResult.Data.Active,
@@ -63,7 +64,7 @@ namespace WebService.Domain.Interface
                 return new Result<AlarmModel>(true, model);
             }
             return new Result<AlarmModel>(alarmResult.Status, null, alarmResult.Message);
-            
+
         }
 
     }

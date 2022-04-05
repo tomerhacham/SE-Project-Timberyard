@@ -15,6 +15,8 @@ namespace WebService.API.Controllers.Models
         public int Id { get; set; }
         [StringIsNotNullOrEmpty]
         public string Name { get; set; }
+        [StringIsNotNullOrEmpty]
+        public string Objective { get; set; }
         [EnumDataType(typeof(Field))]
         [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
         public Field Field { get; set; }
