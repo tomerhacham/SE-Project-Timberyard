@@ -46,8 +46,8 @@ namespace WebService.Domain.Business.Alarms
         }
         public async void CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
         {
-            bool raiseCondition = false;
-            int count = 0;
+            var raiseCondition = false;
+            var count = 0;
             switch (Field)
             {
                 case Field.Catalog:
@@ -59,22 +59,24 @@ namespace WebService.Domain.Business.Alarms
                     raiseCondition = count >= Threshold ? true : false;
                     break;
             }
-
-            string message = GetAlarmMessage(DateTime.Now.Date.ToShortDateString(), count);
-            await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
+            if (raiseCondition)
+            {
+                var message = GetAlarmMessage(DateTime.Now.Date.ToShortDateString(), count);
+                await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
+            }
         }
 
         private string GetAlarmMessage(string date, int log_count)
         {
-            string message = "Notice :\n";
+            var message = "Notice :\n";
             switch (Field)
             {
                 case Field.Catalog:
-                    message += $"Catalog {Objective}";
+                    message += $"Catalog {Objective} ";
                     break;
 
                 case Field.Station:
-                    message += $"Station {Objective}";
+                    message += $"Station {Objective} ";
                     break;
             }
             message += $"has passed the Threshold ({Threshold})\n";

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
-using WebService.API.Swagger.Example.QueriesController;
 using WebService.Domain.Interface;
 
 namespace WebService.API.Controllers

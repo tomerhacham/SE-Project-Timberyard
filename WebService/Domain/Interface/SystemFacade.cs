@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
-using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace WebService.Domain.Interface

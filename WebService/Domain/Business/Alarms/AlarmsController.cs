@@ -1,5 +1,4 @@
-﻿using ETL.Repository.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
@@ -66,7 +65,7 @@ namespace WebService.Domain.Business.Alarms
             {
                 var currentTime = DateTime.Now;
                 var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
-                if (logsQueryResult.Status && logsQueryResult.Data.Count>0)
+                if (logsQueryResult.Status && logsQueryResult.Data.Count > 0)
                 {
                     Parallel.ForEach(activeAlarmsResult.Data, async (Alarm alarm) => alarm.CheckCondition(logsQueryResult.Data, SMTPClient));
 

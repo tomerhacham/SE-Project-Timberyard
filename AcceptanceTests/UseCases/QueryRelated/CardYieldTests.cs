@@ -2,7 +2,6 @@ using AcceptanceTests.Utils;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using Xunit;
 
