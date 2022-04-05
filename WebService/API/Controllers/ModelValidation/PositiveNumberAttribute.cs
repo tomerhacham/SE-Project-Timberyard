@@ -11,7 +11,7 @@ namespace WebService.API.Controllers.ModelValidation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if ((int)value > 0)
+            if ((int)value < 0)
             {
                 return new ValidationResult($"This field cannot be non positive value");
             }
