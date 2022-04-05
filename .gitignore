@@ -448,4 +448,6 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 ETL/Properties/launchSettings.json
 *.vpp
+*.vpp.*
 *.lck
+

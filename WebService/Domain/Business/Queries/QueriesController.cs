@@ -65,7 +65,7 @@ namespace WebService.Domain.Business.Queries
             {
                 return inputValidation;
             }
-            var query = new NoFailureFound(cardName, startDate, endDate,timeInterval);
+            var query = new NoFailureFound(cardName, startDate, endDate, timeInterval);
             return await query.Execute(LogsAndTestsRepository);
         }
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
