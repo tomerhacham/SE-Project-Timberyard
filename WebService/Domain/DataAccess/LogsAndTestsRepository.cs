@@ -165,7 +165,7 @@ namespace WebService.Domain.DataAccess
                 ";
             var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate };
             return await ExecuteQuery(sqlCommand, queryParams);
-
+            
         }
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield)
         {
@@ -207,7 +207,16 @@ namespace WebService.Domain.DataAccess
 
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
         {
-
+            var sqlCommand =
+                @"
+                SELECT TestName, Min, Max, AVG(Received), STDEVP(Received)
+                from
+                
+                WHERE  
+                
+                ";
+            var queryParams = new { Catalog = boundaries.Catalog, StartDate = boundaries.StartDate, EndDate = boundaries.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
 
         }
 
