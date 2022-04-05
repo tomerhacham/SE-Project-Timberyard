@@ -27,7 +27,8 @@ namespace ETL.DataObjects
 
         public LogDTO GetDTO()
         {
-
+            var startTime = Date.Add(StartTime);
+            var endTime = EndTime.CompareTo(StartTime) < 0 ? Date.AddDays(1).Add(EndTime) : Date.Add(EndTime);
             return new LogDTO()
             {
                 CardRev = CardRev,
@@ -35,8 +36,8 @@ namespace ETL.DataObjects
                 SwRev = SwRev,
                 DBRev = DBRev,
                 Date = Date,
-                StartTime = StartTime,
-                EndTime = EndTime,
+                StartTime = startTime,
+                EndTime = endTime,
                 NetTime = NetTime,
                 SN = SN,
                 Catalog = Catalog,

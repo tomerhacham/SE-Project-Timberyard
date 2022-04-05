@@ -166,7 +166,7 @@ namespace WebService.Domain.DataAccess
                         ABORT = 'FALSE' AND
                         SN != '0') as failLogs
 	                join
-	                (select SN, finalResult 
+	                (select distinct(SN), finalResult ,StartTime
                 from Logs
                 where finalresult='PASS' and
 		                date between @StartDate and @EndDate and
@@ -175,15 +175,16 @@ namespace WebService.Domain.DataAccess
                         ABORT = 'FALSE' AND
                         SN != '0'
                 ) as passLogs
-	                on failLogs.SN=passLogs.SN
+	                on failLogs.SN=passLogs.SN 	and DATEDIFF(SECOND,failLogs.StartTime,passLogs.StartTime) between 0 and @TimeInterval
+
                 )) as nffLogs
 	                inner join
-	                (select TestName,LogId from Tests where Result='FAIL') as failTests
+	                (select TestName,LogId from Tests) as failTests
 	                on nffLogs.Id=failTests.LogId
                 )
                 where CardName=@CardName
                 ";
-            var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate };
+            var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
