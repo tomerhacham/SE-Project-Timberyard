@@ -23,9 +23,9 @@ namespace WebService.Domain.Business.Alarms
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
         }
 
-        public async Task<Result<Alarm>> AddNewAlarm(string name, Field field, int threshold, List<string> receivers)
+        public async Task<Result<Alarm>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
-            var newAlarm = new Alarm(name, field, threshold, true, receivers);
+            var newAlarm = new Alarm(name, field, objective, threshold, true, receivers);
             return await AlarmsAndUsersRepository.InsertAlarm(newAlarm);
         }
         public async Task<Result<Alarm>> EditAlarm(Alarm alarmToEdit)
@@ -41,39 +41,39 @@ namespace WebService.Domain.Business.Alarms
         {
             // var latestLogs = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
             #region CPS
-/*            var activeAlarmsResult = await AlarmsAndUsersRepository.GetAllActiveAlarms();
-            activeAlarmsResult.ContinueWith<List<Alarm>>(
-                    success: async (List<Alarm> alarms) =>
-                    {
-                        var currentTime = DateTime.Now;
-                        var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
-                        logsQueryResult.ContinueWith<List<LogDTO>>(
-                               success: (List<LogDTO> latestLogs) =>
-                               {
-                                   Parallel.ForEach(alarms, (Alarm alarm) => alarm.CheckCondition(latestLogs, SMTPClient));
+            /*            var activeAlarmsResult = await AlarmsAndUsersRepository.GetAllActiveAlarms();
+                        activeAlarmsResult.ContinueWith<List<Alarm>>(
+                                success: async (List<Alarm> alarms) =>
+                                {
+                                    var currentTime = DateTime.Now;
+                                    var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
+                                    logsQueryResult.ContinueWith<List<LogDTO>>(
+                                           success: (List<LogDTO> latestLogs) =>
+                                           {
+                                               Parallel.ForEach(alarms, (Alarm alarm) => alarm.CheckCondition(latestLogs, SMTPClient));
 
-                               },
-                               fail: (List<LogDTO> _) =>
-                               {
-                                   Logger.Warning(logsQueryResult.Message);
-                               });
-                    }
-                    , fail: (List<Alarm> _) => { Logger.Warning(activeAlarmsResult.Message); });*/
+                                           },
+                                           fail: (List<LogDTO> _) =>
+                                           {
+                                               Logger.Warning(logsQueryResult.Message);
+                                           });
+                                }
+                                , fail: (List<Alarm> _) => { Logger.Warning(activeAlarmsResult.Message); });*/
             #endregion
 
             var activeAlarmsResult = await AlarmsAndUsersRepository.GetAllActiveAlarms();
-            if(activeAlarmsResult.Status)
+            if (activeAlarmsResult.Status)
             {
                 var currentTime = DateTime.Now;
                 var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
-                if(logsQueryResult.Status)
+                if (logsQueryResult.Status)
                 {
                     Parallel.ForEach(activeAlarmsResult.Data, (Alarm alarm) => alarm.CheckCondition(logsQueryResult.Data, SMTPClient));
 
                 }
-                else { Logger.Warning(logsQueryResult.Message);}
+                else { Logger.Warning(logsQueryResult.Message); }
             }
-            else { Logger.Warning(activeAlarmsResult.Message);}
+            else { Logger.Warning(activeAlarmsResult.Message); }
 
 
         }

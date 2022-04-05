@@ -33,7 +33,7 @@ namespace WebService.Domain.Business.Alarms
             Active = active;
             Receivers = receivers;
         }
-        private Alarm(int id,string name, Field field, String objective, int threshold, bool active, List<string> receivers)
+        private Alarm(int id, string name, Field field, String objective, int threshold, bool active, List<string> receivers)
         {
             Id = id;
             Name = name;
@@ -43,24 +43,24 @@ namespace WebService.Domain.Business.Alarms
             Active = active;
             Receivers = receivers;
         }
-        public bool CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient) 
+        public bool CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
         {
             int log_count = 0;
             bool condition = false;
-            foreach(LogDTO log in logs)
+            foreach (LogDTO log in logs)
             {
-                if((Field == Field.Catalog && log.Catalog == Objective) ||
+                if ((Field == Field.Catalog && log.Catalog == Objective) ||
                     (Field == Field.Station && log.Station == Objective))
                 {
                     log_count++;
                 }
             }
 
-            if(log_count >= Threshold)
+            if (log_count >= Threshold)
             {
                 condition = true;
                 String subject = "Alarm Notification - " + Name;
-                String message = getAlarmMessage();
+                String message = GetAlarmMessage();
                 iSMTPClient.SendEmail(subject, message, Receivers);
             }
 
@@ -91,10 +91,10 @@ namespace WebService.Domain.Business.Alarms
             try
             {
                 var receivers = JsonConvert.DeserializeObject<List<string>>(dto.Receivers);
-                var alarm = new Alarm(dto.Id, dto.Name, dto.Field, dto.Threshold, dto.Active, receivers);
+                var alarm = new Alarm(dto.Id, dto.Name, dto.Field, dto.Objective, dto.Threshold, dto.Active, receivers);
                 return new Result<Alarm>(true, alarm);
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 return new Result<Alarm>(false, null, e.Message);
             }
@@ -106,6 +106,7 @@ namespace WebService.Domain.Business.Alarms
             {
                 Name = Name,
                 Field = Field,
+                Objective = Objective,
                 Threshold = Threshold,
                 Active = Active,
                 Receivers = JsonConvert.SerializeObject(Receivers)

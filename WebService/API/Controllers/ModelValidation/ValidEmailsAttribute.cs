@@ -11,15 +11,15 @@ namespace WebService.API.Controllers.ModelValidation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            List<string> emails= (List<string>)value;
+            List<string> emails = (List<string>)value;
             foreach (var email in emails)
             {
-                if(!IsValidEmail(email))
+                if (!IsValidEmail(email))
                 {
                     return new ValidationResult($"This email address {email} is not valid");
                 }
             }
-             return ValidationResult.Success;
+            return ValidationResult.Success;
         }
 
         /// <summary>
