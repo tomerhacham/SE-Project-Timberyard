@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using ETL.DataObjects;
 using ETL.Repository.DTO;
 using Microsoft.Extensions.Options;
 using System;
@@ -94,7 +93,7 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -274,18 +273,18 @@ namespace WebService.Domain.DataAccess
         /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
         /// <param name="queryParams">object hold SQL query parameters</param>
         /// <returns></returns>
-        private async Task<Result<List<dynamic>>> ExecuteQuery(string sqlCommand, object queryParams)
+        private async Task<Result<List<T>>> ExecuteQuery<T>(string sqlCommand, object queryParams)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var objects = await connection.QueryAsync<dynamic>(sqlCommand, queryParams);
-                return new Result<List<dynamic>>(true, objects.AsList());
+                var objects = await connection.QueryAsync<T>(sqlCommand, queryParams);
+                return new Result<List<T>>(true, objects.AsList());
             }
             catch (Exception e)
             {
-                return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
+                return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }
     }

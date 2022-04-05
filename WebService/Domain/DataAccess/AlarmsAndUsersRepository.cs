@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.DataAccess.DTO;
@@ -33,14 +34,29 @@ namespace WebService.Domain.DataAccess
             DatabaseSettings.ConnectionString = builder.ToString();
         }
 
+        public async Task<Result<List<Alarm>>> GetAllActiveAlarms()
+        {
+            var sqlCommand = @"select * from Alarms where Active=1";
+            return await GetAlarmsQuery(sqlCommand);
+        }
         public async Task<Result<List<Alarm>>> GetAllAlarms() 
+        {
+            var sqlCommand =@"select * from Alarms";
+            return await GetAlarmsQuery(sqlCommand);
+        }
+        private async Task<Result<List<Alarm>>> GetAlarmsQuery(string sqlCommand, [Optional] object queryParams)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var dtos = await connection.GetAllAsync<AlarmDTO>();
-                var alarms = dtos.Select(x => Alarm.ConstructFromDTO(x)).Where(x=>x.Status==true).Select(x=>x.Data);
+                var dtos = queryParams==null ? await connection.QueryAsync<AlarmDTO>(sqlCommand) : await connection.QueryAsync<AlarmDTO>(sqlCommand, queryParams);
+                var alarms = dtos.Select(x => 
+                {
+                    var dto = Alarm.ConstructFromDTO(x);
+                    if(!dto.Status) { Logger.Warning(dto.Message);}
+                    return dto;
+                }).Where(x => x.Status == true).Select(x => x.Data); 
                 return new Result<List<Alarm>>(true, alarms.ToList());
             }
             catch (Exception e)
