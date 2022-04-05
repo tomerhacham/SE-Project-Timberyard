@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
+using WebService.API.Swagger.Example.AlarmsController;
 using WebService.API.Swagger.Example.QueriesController;
 using WebService.Domain.Interface;
 
@@ -22,9 +23,9 @@ namespace WebService.API.Controllers
 
         [Route("AddNewAlarm")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
-        [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerRequestExample(typeof(object), typeof(AddNewAlarmRequestExample))]
+        [ProducesResponseType(typeof(AddNewAlarmResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AddNewAlarmResponseExample))]
         public async Task<IActionResult> AddNewAlarm([FromBody] AlarmModel model)
         {
 
@@ -40,5 +41,14 @@ namespace WebService.API.Controllers
             }
         }
 
+        [Route("CheckAlarmsCondition")]
+        [HttpPost]
+        public async Task<IActionResult> CheckAlarmsCondition()
+        {
+
+            await SystemInterface.CheckAlarmsCondition();
+            return Ok();
+
+        }
     }
 }

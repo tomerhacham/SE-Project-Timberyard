@@ -268,7 +268,7 @@ namespace WebService.Domain.DataAccess
                 @"
                 SELECT *
                 from Logs
-                where Logs.Date BETWEEN @StartDate AND @EndDate AND FinalResult='FAIL'";
+                where Logs.EndTime BETWEEN @StartDate AND @EndDate";
             var queryParams = new { StartDate = startTime, EndDate = endTime };
             return await ExecuteQuery<LogDTO>(sqlCommand, queryParams);
         }

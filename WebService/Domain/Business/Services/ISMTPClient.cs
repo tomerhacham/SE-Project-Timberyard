@@ -7,6 +7,6 @@ namespace WebService.Domain.Business.Services
 {
     public interface ISMTPClient
     {
-        void SendEmail(string subject, string message, List<string> receivers);
+        Task SendEmail(string subject, string message, List<string> receivers);
     }
 }

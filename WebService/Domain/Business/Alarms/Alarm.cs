@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
@@ -43,34 +44,29 @@ namespace WebService.Domain.Business.Alarms
             Active = active;
             Receivers = receivers;
         }
-        public bool CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
+        public async void CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
         {
-            int log_count = 0;
-            bool condition = false;
-            foreach (LogDTO log in logs)
+            bool raiseCondition = false;
+            int count = 0;
+            switch (Field)
             {
-                if ((Field == Field.Catalog && log.Catalog == Objective) ||
-                    (Field == Field.Station && log.Station == Objective))
-                {
-                    log_count++;
-                }
+                case Field.Catalog:
+                    count = logs.Where(log => log.Catalog.Equals(Objective) && log.FinalResult.Equals("FAIL")).Count();
+                    raiseCondition = count >= Threshold ? true : false;
+                    break;
+                case Field.Station:
+                    count = logs.Where(log => log.Station.Equals(Objective) && log.FinalResult.Equals("FAIL")).Count();
+                    raiseCondition = count >= Threshold ? true : false;
+                    break;
             }
 
-            if (log_count >= Threshold)
-            {
-                condition = true;
-                String subject = "Alarm Notification - " + Name;
-                String message = GetAlarmMessage(logs, log_count);
-                iSMTPClient.SendEmail(subject, message, Receivers);
-            }
-
-            return condition;
+            string message = GetAlarmMessage(DateTime.Now.Date.ToShortDateString(), count);
+            await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
         }
 
-        private String GetAlarmMessage(List<LogDTO> logs, int log_count)
+        private string GetAlarmMessage(string date, int log_count)
         {
-            LogDTO log = logs[0];
-            String message = "Notice :\n";
+            string message = "Notice :\n";
             switch (Field)
             {
                 case Field.Catalog:
@@ -81,9 +77,8 @@ namespace WebService.Domain.Business.Alarms
                     message += $"Station {Objective}";
                     break;
             }
-
             message += $"has passed the Threshold ({Threshold})\n";
-            message += $"Details :\nDate {log.Date}\nNumber of faild tests are {log_count}.\n";
+            message += $"Details :\nDate {date}\nNumber of faild tests are {log_count}.\n";
             return message;
         }
 

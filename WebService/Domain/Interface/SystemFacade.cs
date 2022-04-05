@@ -40,6 +40,12 @@ namespace WebService.Domain.Interface
         {
             return await QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
         }
+
+        public async Task CheckAlarmsCondition()
+        {
+            AlarmsController.CheckForAlarmsCondition();
+        }
+
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateTesterLoad(startDate, endDate);
