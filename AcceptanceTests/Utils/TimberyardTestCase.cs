@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WebService.Domain.Interface;
+﻿using AcceptanceTests.Client;
+using System.Runtime.InteropServices;
 
 namespace AcceptanceTests.Utils
 {
     public class TimberyardTestCase
     {
-        protected ISystemInterface sut;
+        protected ITimberyardClient Client;
 
-        protected TimberyardTestCase()
+        protected TimberyardTestCase([Optional] UserCredentials userCredentials)
         {
-            sut = SystemBridge.GetService();
+            Client = SystemBridge.GetService();
+
+            if (userCredentials != null)
+            {
+                TimberyardClientRealAdapter adapter = Client as TimberyardClientRealAdapter;
+                TimberyardClient realClient = adapter.RealClient as TimberyardClient;
+                realClient.UserCredentials = userCredentials;
+            }
         }
     }
 }

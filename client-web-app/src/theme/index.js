@@ -297,3 +297,11 @@ export const theme = createTheme({
     }
   }
 });
+
+export const queriesInputBoxSx = {
+  my: 0,
+  mx: 2,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};

@@ -1,18 +1,12 @@
 ﻿
+using AcceptanceTests.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using WebService.Domain.Business.Queries;
-using WebService.Domain.DataAccess;
-using WebService.Domain.Interface;
-using WebService.Utils;
-using WebService.Utils.Models;
 using Xunit;
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
@@ -26,16 +20,15 @@ namespace AcceptanceTests.Utils
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected SystemFacade GetSystemFacade()
+        protected ITimberyardClient GetConfiguratedClient()
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("AcceptanceTests").Build();
             var serviceProvier = new ServiceCollection()
-                    .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-                    .AddSingleton<ILogger>(sp => new Logger(""))
-                    .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<QueriesController>().AddSingleton<SystemFacade>().BuildServiceProvider();
-
-            return serviceProvier.GetService<SystemFacade>();
+                    .Configure<UserCredentials>(config.GetSection("UserCredentials"))
+                    .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
+                    .AddSingleton<ITimberyardClient, TimberyardClient>()
+                    .BuildServiceProvider();
+            return serviceProvier.GetService<ITimberyardClient>();
         }
     }
 

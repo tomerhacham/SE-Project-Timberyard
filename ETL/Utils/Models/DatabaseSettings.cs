@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ETL.Utils.Models
+﻿namespace ETL.Utils.Models
 {
     public class DatabaseSettings
     {

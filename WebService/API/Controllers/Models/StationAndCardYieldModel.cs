@@ -7,10 +7,8 @@ namespace WebService.API.Controllers.Models
     public class StationAndCardYieldModel
 
     {
-        [Required]
         [StringIsNotNullOrEmpty]
         public string Station { get; set; }
-        [Required]
         [StringIsNotNullOrEmpty]
         public string Catalog { get; set; }
         [Required]

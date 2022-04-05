@@ -6,7 +6,6 @@ namespace WebService.API.Controllers.Models
 {
     public class NoFailureFoundModel
     {
-        [Required]
         [StringIsNotNullOrEmpty]
         public string CardName { get; set; }
         [Required]

@@ -15,19 +15,21 @@ describe("CARD YIELD TESTS", () => {
         cy.get("#sidebar-cardyield").click();
 
         //Enter query fields
-        cy.get("#cardyield-catalog-num").type('X56868');
-        cy.get("#cardyield-start-date").type('2021-10-19');
-        cy.get("#cardyield-end-date").type('2021-10-20');
+        cy.get("#cardYield-catalog").type('X56868');
+        cy.get("#cardYield-startDate").type('2021-10-19');
+        cy.get("#cardYield-endDate").type('2021-10-20');
 
         
         // Submit
-        cy.get("#cardyield-submit-button").should('be.visible').and('not.be.disabled');
-        cy.get("#cardyield-submit-button").click();
+        cy.get("#cardYield-submit-button").should('be.visible').and('not.be.disabled');
+        cy.get("#cardYield-submit-button").click();
 
         cy.intercept('POST', '**/Queries/CardYield', {fixture: 'cardyield_data.json'}).as('result');
         cy.wait('@result');
 
         cy.get("#query-table").should('be.visible');
+
+        // TODO: add check on chart bar
     });
 
     // it("Make Card Yield empty query", () => {

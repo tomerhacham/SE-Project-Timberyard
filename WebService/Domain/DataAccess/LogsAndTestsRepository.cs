@@ -58,7 +58,7 @@ namespace WebService.Domain.DataAccess
         ///     EndDate:DateTime
         /// </param>
         /// <returns>
-        ///     [Catalog, CardName, NumberSuccessedTests(%)]        
+        ///     [Catalog, CardName, SuccessRatio(%)]        
         /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
@@ -95,7 +95,16 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
-
+        /// <summary>
+        /// Execute Stations Yield Query 
+        /// </summary>
+        /// <param name="stationsYield">
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Station, SuccessRatio(%)]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield)
         {
             var sqlCommand =
@@ -129,6 +138,17 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute No Failure Found Query 
+        /// </summary>
+        /// <param name="noFailureFound">
+        ///     CardName:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Id, Date, Catalog, CardName, Station, Operator, TestName]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(NoFailureFound noFailureFound)
         {
             var sqlCommand =
@@ -158,7 +178,7 @@ namespace WebService.Domain.DataAccess
 	                on failLogs.SN=passLogs.SN
                 )) as nffLogs
 	                inner join
-	                (select TestName,LogId from Tests) as failTests
+	                (select TestName,LogId from Tests where Result='FAIL') as failTests
 	                on nffLogs.Id=failTests.LogId
                 )
                 where CardName=@CardName
@@ -167,6 +187,18 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
             
         }
+        /// <summary>
+        /// Execute Station and Card Yield Query 
+        /// </summary>
+        /// <param name="stationAndCardYield">
+        ///     Station:string
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Catalog, CardName, SuccessRatio(%)]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield)
         {
             var sqlCommand =
@@ -204,6 +236,30 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute Tester Load Query 
+        /// </summary>
+        /// <param name="testerLoad">
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Station, NumberOfRuns, TotalRunTimeHours]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad)
+        {
+            var sqlCommand =
+                @"
+                SELECT Station, count(*) as NumberOfRuns, (sum(DATEDIFF(SECOND,StartTime,EndTime)) /3600.0) as TotalRunTimeHours
+                from Logs
+                where Logs.Date BETWEEN @StartDate AND @EndDate
+                group by Station
+                order by NumberOfRuns desc, TotalRunTimeHours desc";
+            var queryParams = new { StartDate = testerLoad.StartDate, EndDate = testerLoad.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+
+        }
+
 
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
         {
@@ -221,7 +277,7 @@ namespace WebService.Domain.DataAccess
         }
 
         /// <summary>
-        /// privat function to wrap and handle execptions in query execution process
+        /// Private function to wrap and handle execptions in query execution process
         /// </summary>
         /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
         /// <param name="queryParams">object hold SQL query parameters</param>

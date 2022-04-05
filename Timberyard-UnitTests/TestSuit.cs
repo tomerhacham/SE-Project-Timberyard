@@ -2,16 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using WebService.Domain.DataAccess;
-using WebService.Utils.Models;
-using WebService.Utils;
-using Moq;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.DataAccess;
+using WebService.Utils;
+using WebService.Utils.Models;
 
 namespace Timberyard_UnitTests
 {
