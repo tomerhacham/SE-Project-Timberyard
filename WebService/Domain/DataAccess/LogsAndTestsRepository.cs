@@ -136,7 +136,7 @@ namespace WebService.Domain.DataAccess
                 )
                 ";
             var queryParams = new { StartDate = stationsYield.StartDate, EndDate = stationsYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -186,7 +186,7 @@ namespace WebService.Domain.DataAccess
                 where CardName=@CardName
                 ";
             var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -235,7 +235,7 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Station = stationAndCardYield.Station, Catalog = stationAndCardYield.Catalog, StartDate = stationAndCardYield.StartDate, EndDate = stationAndCardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -258,13 +258,19 @@ namespace WebService.Domain.DataAccess
                 group by Station
                 order by NumberOfRuns desc, TotalRunTimeHours desc";
             var queryParams = new { StartDate = testerLoad.StartDate, EndDate = testerLoad.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
 
         public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
-            throw new NotImplementedException();
+            var sqlCommand =
+                @"
+                SELECT *
+                from Logs
+                where Logs.Date BETWEEN @StartDate AND @EndDate AND FinalResult='FAIL'";
+            var queryParams = new { StartDate = startTime, EndDate = endTime };
+            return await ExecuteQuery<LogDTO>(sqlCommand, queryParams);
         }
 
         /// <summary>
