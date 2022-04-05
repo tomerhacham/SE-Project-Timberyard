@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
-using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace WebService.Domain.Business.Alarms

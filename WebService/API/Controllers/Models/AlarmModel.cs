@@ -22,6 +22,7 @@ namespace WebService.API.Controllers.Models
         public int Threshold { get; set; }
         [Required]
         public bool Active { get; set; }
+        [ValidEmails]
         public List<string> Receivers { get; set; }
     }
 }
