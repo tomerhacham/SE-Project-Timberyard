@@ -32,7 +32,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("", 2020, 2020, false, 0, "2X", "71489", new string[] { "NO INF ALARMS CHECK (INF A&B ON) - PC14" })]
         public async void NFF_Scenarios_Test(string cardName, int startDate, int endDate, bool expectedResult, int expectedNumOfRecords, string stationNames, string operators, string[] failedTestNames)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 11, 30), new DateTime(endDate, 11, 30));
+            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 11, 30), new DateTime(endDate, 11, 30), 5* 60 * 60);
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {

@@ -27,10 +27,10 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
-        public async Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate)
+        public async Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
-            var response = RealClient != null ? await RealClient.CalculateNoFailureFound(cardName, startDate, endDate) : defaultResponse;
+            var response = RealClient != null ? await RealClient.CalculateNoFailureFound(cardName, startDate, endDate, timeInterval) : defaultResponse;
             return response;
         }
 

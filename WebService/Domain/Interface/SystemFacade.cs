@@ -35,9 +35,9 @@ namespace WebService.Domain.Interface
         {
             return QueriesController.CalculateStationAndCardYield(station, catalog, startDate, endDate);
         }
-        public Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate)
+        public Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
-            return QueriesController.CalculateNFF(cardName, startDate, endDate);
+            return QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
         }
         public Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
