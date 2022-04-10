@@ -218,10 +218,15 @@ namespace WebService.Domain.DataAccess
         {
             var sqlCommand =
                 @"
-                SELECT Logs.Operator, AVG(datediff(second, cast('00:00' as time(7)), Logs.NetTime)) as NetTimeAvg , AVG(ABS(datediff(second, Logs.StartTime, Logs.EndTime))) as TotalTimeAvg
+                SELECT Logs.Operator, AVG(datediff(second, cast('00:00' as time(7)), Logs.NetTime)) as NetTimeAvg , AVG(datediff(second, Logs.StartTime, Logs.EndTime)) as TotalTimeAvg
                 From Logs
                 WHERE Catalog=@Catalog AND
-                      Date between @StartDate AND @EndDate 
+                      Date between @StartDate AND @EndDate AND
+					  FinalResult = 'PASS' AND
+					  ContinueOnFail = 'FALSE' AND
+					  TECHMode = 'FALSE' AND
+					  ABORT = 'FALSE' AND
+					  DBMode != 'BYPASS'
                 GROUP BY Operator
                 ORDER BY Operator DESC
                 ";
