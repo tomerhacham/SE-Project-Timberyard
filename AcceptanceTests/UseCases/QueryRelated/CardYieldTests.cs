@@ -1,7 +1,9 @@
 using AcceptanceTests.Utils;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
-using WebService.Domain.Business.Queries;
-using WebService.Utils;
+using System.Collections.Generic;
+using System.Net;
 using Xunit;
 
 namespace AcceptanceTests
@@ -10,29 +12,28 @@ namespace AcceptanceTests
     {
 
         public CardYieldTests() : base()
-        {
+        { }
 
+        [Theory]
+        [InlineData(2020, 2022, "OA_HF", HttpStatusCode.OK, true)]          // Happy - catalog ID exists
+        [InlineData(2020, 2022, "OP_KLF", HttpStatusCode.OK, true)]         // Happy - catalog ID exists
+        [InlineData(2020, 2022, "CCH1", HttpStatusCode.OK, false)]            // Sad - catalog ID not exists
+        public async void GoodAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode, bool isEmptyContent)
+        {
+            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(expectedStatusCode, response.StatusCode);
+            dynamic content = JsonConvert.DeserializeObject<dynamic>(response.Content);
+            Assert.Equal(isEmptyContent, content.Records > 0);
         }
 
         [Theory]
-        [InlineData(2020, 2022, "OA_HF")]           // catalog ID exists
-        [InlineData(2020, 2022, "OP_KLF")]
-        public void SuccessCaseTest(int start, int end, string catalog)
+        [InlineData(2020, 2022, "", HttpStatusCode.BadRequest)]         // Bad - empty catalog ID
+        [InlineData(2022, 2020, "SomeCatalog", HttpStatusCode.BadRequest)]         // Bad - start date > end date
+        public async void BadAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode)
         {
-            Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
-            Assert.True(res.Status);
+            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            Assert.Equal(expectedStatusCode, response.StatusCode);
 
-        }
-
-        [Theory]
-        [InlineData(2020, 2022, "CCH1")]      // catalog ID not exists
-        [InlineData(2020, 2022, "")]          // empty catalog ID
-        [InlineData(2022, 2020, "")]          // start date > end date
-        public void NoExistCatalogNumberTest(int start, int end, string catalog)
-        {
-            Result<QueryResult> res = sut.CalculateCardYield(new DateTime(start, 1, 10), new DateTime(end, 1, 10), catalog);
-            Assert.False(res.Status);
-            Assert.Empty(res.Data.Records);
         }
 
     }

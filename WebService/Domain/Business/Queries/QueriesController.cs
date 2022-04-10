@@ -58,14 +58,24 @@ namespace WebService.Domain.Business.Queries
             var query = new StationAndCardYield(station, catalog, startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
-        public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate)
+        public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
             Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, cardName: cardName);
             if (!inputValidation.Status)
             {
                 return inputValidation;
             }
-            var query = new NoFailureFound(cardName, startDate, endDate);
+            var query = new NoFailureFound(cardName, startDate, endDate, timeInterval);
+            return await query.Execute(LogsAndTestsRepository);
+        }
+        public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
+        {
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            var query = new TesterLoad(startDate, endDate);
             return await query.Execute(LogsAndTestsRepository);
         }
 

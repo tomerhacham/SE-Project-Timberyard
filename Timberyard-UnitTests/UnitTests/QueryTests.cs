@@ -1,7 +1,6 @@
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.DataAccess;
 using WebService.Utils;

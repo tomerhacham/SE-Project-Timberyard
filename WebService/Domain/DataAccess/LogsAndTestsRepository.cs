@@ -58,7 +58,7 @@ namespace WebService.Domain.DataAccess
         ///     EndDate:DateTime
         /// </param>
         /// <returns>
-        ///     [Catalog, CardName, NumberSuccessedTests(%)]        
+        ///     [Catalog, CardName, SuccessRatio(%)]        
         /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
@@ -95,6 +95,16 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute Stations Yield Query 
+        /// </summary>
+        /// <param name="stationsYield">
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Station, SuccessRatio(%)]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield)
         {
             var sqlCommand =
@@ -128,6 +138,17 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute No Failure Found Query 
+        /// </summary>
+        /// <param name="noFailureFound">
+        ///     CardName:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Id, Date, Catalog, CardName, Station, Operator, TestName]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(NoFailureFound noFailureFound)
         {
             var sqlCommand =
@@ -145,7 +166,7 @@ namespace WebService.Domain.DataAccess
                         ABORT = 'FALSE' AND
                         SN != '0') as failLogs
 	                join
-	                (select SN, finalResult 
+	                (select distinct(SN), finalResult ,StartTime
                 from Logs
                 where finalresult='PASS' and
 		                date between @StartDate and @EndDate and
@@ -154,7 +175,8 @@ namespace WebService.Domain.DataAccess
                         ABORT = 'FALSE' AND
                         SN != '0'
                 ) as passLogs
-	                on failLogs.SN=passLogs.SN
+	                on failLogs.SN=passLogs.SN 	and DATEDIFF(SECOND,failLogs.StartTime,passLogs.StartTime) between 0 and @TimeInterval
+
                 )) as nffLogs
 	                inner join
 	                (select TestName,LogId from Tests) as failTests
@@ -162,10 +184,22 @@ namespace WebService.Domain.DataAccess
                 )
                 where CardName=@CardName
                 ";
-            var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate };
+            var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
             return await ExecuteQuery(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute Station and Card Yield Query 
+        /// </summary>
+        /// <param name="stationAndCardYield">
+        ///     Station:string
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Catalog, CardName, SuccessRatio(%)]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield)
         {
             var sqlCommand =
@@ -235,8 +269,28 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery(sqlCommand, queryParams);
         }
 
+        /// Execute Tester Load Query 
+        /// </summary>
+        /// <param name="testerLoad">
+        ///     [Station, NumberOfRuns, TotalRunTimeHours]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad)
+        {
+            var sqlCommand =
+                @"
+                SELECT Station, count(*) as NumberOfRuns, (sum(DATEDIFF(SECOND,StartTime,EndTime)) /3600.0) as TotalRunTimeHours
+                from Logs
+                where Logs.Date BETWEEN @StartDate AND @EndDate
+                group by Station
+                order by NumberOfRuns desc, TotalRunTimeHours desc";
+            var queryParams = new { StartDate = testerLoad.StartDate, EndDate = testerLoad.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+
+        }
+
+
         /// <summary>
-        /// privat function to wrap and handle execptions in query execution process
+        /// Private function to wrap and handle execptions in query execution process
         /// </summary>
         /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
         /// <param name="queryParams">object hold SQL query parameters</param>

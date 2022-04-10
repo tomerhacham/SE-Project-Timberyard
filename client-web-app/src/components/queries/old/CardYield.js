@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
-import QueryTable from '../dashboard/QueryTable';
 import SdCardIcon from '@mui/icons-material/SdCard';
-import * as api from '../../api/Api';
-import BarChart from './graph/BarChart';
+import QueryTable from '../QueryTable';
+import { QueryPost } from '../../../api/Api';
+import Loader from '../../../generic-components/Loader';
+import BarChart from '../graph/BarChart';
+import { dataToTable } from '../../../utils/helperFunctions';
+import { CARD_YIELD_URL, CARD_YIELD_TITLE } from '../../../constants/constants';
+import { queriesInputBoxSx } from '../../../theme';
 
 // const rowsExample = [
 //     { id: 1, col1: 'Hello', col2: 'World' },
@@ -18,78 +21,49 @@ import BarChart from './graph/BarChart';
 // ];
 
 const CardYield = () => {
-    const navigate = useNavigate();
-    const [userInput, setUserInput] = useState({
-        catalog: '',
-        startDate: '',
-        endDate: ''
-    })
+    const [userInput, setUserInput] = useState({ catalog: '', startDate: '', endDate: '' })
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
     const [queryData, setQueryData] = useState(null);
-    const [tableData, setTableData] = useState({ rows: [], columns: [] });
+    const [tableData, setTableData] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log(userInput);
 
         setLoading(true);
 
-        api.CardYield(userInput).then(res => res.json())
-        .then(
-            (result) => {
-                console.log(result);
-                setQueryData(result);
-                dataToTable(result);
-                setLoading(false);
-            },
-            (error) => {
-                // TODO: do some functionality
-                console.log(error);
-                setLoading(false);
-            }
-        );
+        const request = { url: CARD_YIELD_URL, data: userInput };
+        const result = await QueryPost(request);
+        if (result) {
+            console.log(result);
+            setQueryData(result);
+            setTableData(dataToTable(result));
+        }
+        setLoading(false);
+        
+        // QueryPost(request).then(res => res.json())
+        // .then((result) => {
+        //     console.log(result);
+        //     setQueryData(result);
+        //     setTableData(dataToTable(result));
+        // })
+        // .catch((error) => {
+        //     console.log('Catched error:', error);
+        // })
+        // .finally(() => setLoading(false));
     };
 
-    const dataToTable = (data) => {
-        let columns = [];
-        data.columnNames.map((headerName) => columns.push({ field: headerName, headerName, width: 150 }));
-        // console.log(columns)
-
-        let rows = [];
-        data.records.map((record, index) => rows.push({ id: `${index + 1}`, ...record }))
-        // console.log(rows);
-
-        setTableData({ rows, columns });
-    }
-
-    useEffect(() => {
-        setShowQuery(true);
-    }, [tableData])
-
-    useEffect(() => {
-        setShowQuery(false);
-    }, [navigate.pathname])
-
     const inputFields = (
-        <Box
-            sx={{
-                my: 0,
-                mx: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
+        <Box id='input-box' sx={queriesInputBoxSx}>
             <Avatar sx={{ m: 0, bgcolor: 'secondary.main' }}>
                 <SdCardIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Card Yield
+                {CARD_YIELD_TITLE}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
-                    id="cardyield-catalog-num"
+                    id="card-yield-catalog"
                     required
                     variant="outlined"
                     margin="normal"
@@ -100,7 +74,7 @@ const CardYield = () => {
                     onChange={(e) => setUserInput({ ...userInput, catalog: e.target.value })}
                 />
                 <TextField
-                    id="cardyield-start-date"
+                    id="card-yield-start-date"
                     required
                     variant="outlined"
                     margin="normal"
@@ -111,7 +85,7 @@ const CardYield = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
-                    id="cardyield-end-date"
+                    id="card-yield-end-date"
                     required
                     variant="outlined"
                     margin="normal"
@@ -122,7 +96,7 @@ const CardYield = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <Button
-                    id="cardyield-submit-button"
+                    id="card-yield-submit-button"
                     type="submit"
                     fullWidth
                     variant="contained"
@@ -135,13 +109,17 @@ const CardYield = () => {
         </Box>
     )
 
+    useEffect(() => {
+        if (tableData) {
+            setShowQuery(true);
+        }
+    }, [tableData]);
+
     return (
         <Box
+            id="card-yield-box"
             component="main"
-            sx={{
-                flexGrow: 1,
-                py: 8
-            }}
+            sx={{ flexGrow: 1, py: 8 }}
         >
             <Container maxWidth={false}>
                 <Grid container spacing={3}>
@@ -149,17 +127,18 @@ const CardYield = () => {
                         {inputFields}
                     </Grid>
                     {loading && (
-                        <Typography>Fetching Data...</Typography>
+                        <Loader />
                     )}
                     {showQuery && (
-                        <>
+                        <Fragment>
                             <Grid item lg={8} md={12} xl={9} xs={12}>
                                 <QueryTable rows={tableData.rows} columns={tableData.columns} />
                             </Grid>
                             <Grid item lg={8} md={12} xl={9} xs={12}>
-                                {queryData && tableData.rows.length > 0 && <BarChart data={queryData} />}
+                                {queryData && tableData.rows.length > 0 && 
+                                    <BarChart data={queryData} />}
                             </Grid>
-                        </>
+                        </Fragment>
                     )}
                 </Grid>
             </Container>

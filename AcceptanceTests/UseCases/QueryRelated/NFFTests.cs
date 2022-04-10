@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AcceptanceTests.Utils;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
-    public class NFFTests : StationYieldTests
+    public class NFFTests : TimberyardTestCase
     {
         public NFFTests() : base()
         {

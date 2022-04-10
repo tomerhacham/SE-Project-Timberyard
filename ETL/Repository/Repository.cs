@@ -1,6 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
 using ETL.DataObjects;
-using ETL.Repository.DTO;
 using ETL.Utils;
 using ETL.Utils.Models;
 using Microsoft.Extensions.Options;
@@ -9,8 +8,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ETL.Repository
 {

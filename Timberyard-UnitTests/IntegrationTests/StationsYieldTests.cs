@@ -1,12 +1,8 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WebService.Domain.Business.Queries;
-using WebService.Domain.DataAccess;
 using WebService.Utils;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {

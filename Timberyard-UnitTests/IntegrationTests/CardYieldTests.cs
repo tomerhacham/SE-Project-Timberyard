@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
