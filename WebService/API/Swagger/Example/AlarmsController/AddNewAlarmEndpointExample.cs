@@ -8,7 +8,7 @@ namespace WebService.API.Swagger.Example.AlarmsController
     {
         public object GetExamples()
         {
-            return new AlarmModel()
+            return new PartialAlarmModel()
             {
                 Name = "Example Alarm",
                 Objective = "X56868",
@@ -22,7 +22,23 @@ namespace WebService.API.Swagger.Example.AlarmsController
     {
         public object GetExamples()
         {
-            return new AlarmModel()
+            return new FullAlarmModel()
+            {
+                Id = 1,
+                Name = "Example Alarm",
+                Objective = "X56868",
+                Field = Domain.Business.Alarms.Field.Catalog,
+                Threshold = 3,
+                Active = true,
+                Receivers = new List<string>() { "zoee@post.bgu.ac.il", "hachamto@post.bgu.ac.il" }
+            };
+        }
+    }
+    public class FullAlarmRequestExample : IExamplesProvider<object>
+    {
+        public object GetExamples()
+        {
+            return new FullAlarmModel()
             {
                 Id = 1,
                 Name = "Example Alarm",

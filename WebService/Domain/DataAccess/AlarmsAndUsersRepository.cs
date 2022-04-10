@@ -85,7 +85,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.UpdateAsync(alarm.GetDTO()) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the update of alarm {alarm.Id}");
+                var returnVal = await connection.UpdateAsync(alarm.GetDTO(true)) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the update of alarm {alarm.Id}");
                 return returnVal;
             }
             catch (Exception e)
@@ -99,7 +99,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(alarm.GetDTO()) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the deletion of alarm {alarm.Id}");
+                var returnVal = await connection.DeleteAsync(alarm.GetDTO(true)) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the deletion of alarm {alarm.Id}");
                 return returnVal;
             }
             catch (Exception e)

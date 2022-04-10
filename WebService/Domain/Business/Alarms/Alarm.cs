@@ -17,6 +17,7 @@ namespace WebService.Domain.Business.Alarms
 
     public class Alarm
     {
+        //Properties
         public int Id { get; set; }
         public string Name { get; set; }
         public Field Field { get; set; }
@@ -25,6 +26,7 @@ namespace WebService.Domain.Business.Alarms
         public bool Active { get; set; }
         public List<string> Receivers { get; set; }
 
+        //Constructors
         public Alarm(string name, Field field, String objective, int threshold, bool active, List<string> receivers)
         {
             Name = name;
@@ -34,7 +36,7 @@ namespace WebService.Domain.Business.Alarms
             Active = active;
             Receivers = receivers;
         }
-        private Alarm(int id, string name, Field field, String objective, int threshold, bool active, List<string> receivers)
+        internal Alarm(int id, string name, Field field, String objective, int threshold, bool active, List<string> receivers)
         {
             Id = id;
             Name = name;
@@ -44,6 +46,8 @@ namespace WebService.Domain.Business.Alarms
             Active = active;
             Receivers = receivers;
         }
+
+        //Methods
         public async void CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
         {
             var raiseCondition = false;
@@ -65,7 +69,6 @@ namespace WebService.Domain.Business.Alarms
                 await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
             }
         }
-
         private string GetAlarmMessage(string date, int log_count)
         {
             var message = "Notice :\n";
@@ -83,7 +86,6 @@ namespace WebService.Domain.Business.Alarms
             message += $"Details :\nDate {date}\nNumber of faild tests are {log_count}.\n";
             return message;
         }
-
         public static Result<Alarm> ConstructFromDTO(AlarmDTO dto)
         {
             try
@@ -97,11 +99,11 @@ namespace WebService.Domain.Business.Alarms
                 return new Result<Alarm>(false, null, e.Message);
             }
         }
-
-        internal AlarmDTO GetDTO()
+        internal AlarmDTO GetDTO(bool attachId = false)
         {
             var dto = new AlarmDTO()
             {
+                Id = attachId ? Id : default,
                 Name = Name,
                 Field = Field,
                 Objective = Objective,

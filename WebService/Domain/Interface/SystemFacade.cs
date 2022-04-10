@@ -45,18 +45,19 @@ namespace WebService.Domain.Interface
             AlarmsController.CheckForAlarmsCondition();
         }
 
+
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateTesterLoad(startDate, endDate);
         }
         #endregion
 
-        public async Task<Result<AlarmModel>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public async Task<Result<FullAlarmModel>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
             var alarmResult = await AlarmsController.AddNewAlarm(name, field, objective, threshold, receivers);
             if (alarmResult.Status)
             {
-                var model = new AlarmModel()
+                var model = new FullAlarmModel()
                 {
                     Id = alarmResult.Data.Id,
                     Name = alarmResult.Data.Name,
@@ -66,11 +67,49 @@ namespace WebService.Domain.Interface
                     Active = alarmResult.Data.Active,
                     Receivers = alarmResult.Data.Receivers
                 };
-                return new Result<AlarmModel>(true, model);
+                return new Result<FullAlarmModel>(true, model);
             }
-            return new Result<AlarmModel>(alarmResult.Status, null, alarmResult.Message);
+            return new Result<FullAlarmModel>(alarmResult.Status, null, alarmResult.Message);
 
         }
 
+        public async Task<Result<FullAlarmModel>> EditAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
+        {
+            var editAlarmResult = await AlarmsController.EditAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
+            if (editAlarmResult.Status)
+            {
+                var model = new FullAlarmModel()
+                {
+                    Id = editAlarmResult.Data.Id,
+                    Name = editAlarmResult.Data.Name,
+                    Objective = editAlarmResult.Data.Objective,
+                    Field = editAlarmResult.Data.Field,
+                    Threshold = editAlarmResult.Data.Threshold,
+                    Active = editAlarmResult.Data.Active,
+                    Receivers = editAlarmResult.Data.Receivers
+                };
+                return new Result<FullAlarmModel>(true, model);
+            }
+            return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
+        }
+        public async Task<Result<FullAlarmModel>> RemoveAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
+        {
+            var editAlarmResult = await AlarmsController.RemoveAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
+            if (editAlarmResult.Status)
+            {
+                var model = new FullAlarmModel()
+                {
+                    Id = editAlarmResult.Data.Id,
+                    Name = editAlarmResult.Data.Name,
+                    Objective = editAlarmResult.Data.Objective,
+                    Field = editAlarmResult.Data.Field,
+                    Threshold = editAlarmResult.Data.Threshold,
+                    Active = editAlarmResult.Data.Active,
+                    Receivers = editAlarmResult.Data.Receivers
+                };
+                return new Result<FullAlarmModel>(true, model);
+            }
+            return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
+        }
     }
 }

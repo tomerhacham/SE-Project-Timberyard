@@ -25,13 +25,52 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(AddNewAlarmRequestExample))]
         [ProducesResponseType(typeof(AddNewAlarmResponseExample), StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AddNewAlarmResponseExample))]
-        public async Task<IActionResult> AddNewAlarm([FromBody] AlarmModel model)
+        public async Task<IActionResult> AddNewAlarm([FromBody] PartialAlarmModel model)
         {
 
             var response = await SystemInterface.AddNewAlarm(model.Name, model.Field, model.Objective, model.Threshold, model.Receivers);
             if (response.Status)
             {
                 return Ok(response.Data);
+            }
+            else
+            {
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
+            }
+        }
+
+        [Route("EditAlarm")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
+        [ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(FullAlarmRequestExample))]
+        public async Task<IActionResult> EditAlarm([FromBody] FullAlarmModel model)
+        {
+
+            var response = await SystemInterface.EditAlarm(model.Id, model.Name, model.Field, model.Objective, model.Threshold, model.Active, model.Receivers);
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
+            }
+        }
+        [Route("RemoveAlarm")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
+        [ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
+        public async Task<IActionResult> RemoveAlarm([FromBody] FullAlarmModel model)
+        {
+
+            var response = await SystemInterface.RemoveAlarm(model.Id, model.Name, model.Field, model.Objective, model.Threshold, model.Active, model.Receivers);
+            if (response.Status)
+            {
+                return Ok();
             }
             else
             {

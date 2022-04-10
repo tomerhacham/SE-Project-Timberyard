@@ -6,8 +6,23 @@ using WebService.Domain.Business.Alarms;
 
 namespace WebService.API.Controllers.Models
 {
-    public class AlarmModel
+    public class PartialAlarmModel
     {
+        [StringIsNotNullOrEmpty]
+        public string Name { get; set; }
+        [StringIsNotNullOrEmpty]
+        public string Objective { get; set; }
+        [EnumDataType(typeof(Field))]
+        [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
+        public Field Field { get; set; }
+        [PositiveNumber]
+        public int Threshold { get; set; }
+        [ValidEmails]
+        public List<string> Receivers { get; set; }
+    }
+    public class FullAlarmModel
+    {
+        [Required]
         public int Id { get; set; }
         [StringIsNotNullOrEmpty]
         public string Name { get; set; }
@@ -16,8 +31,9 @@ namespace WebService.API.Controllers.Models
         [EnumDataType(typeof(Field))]
         [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
         public Field Field { get; set; }
-        [Required]
+        [PositiveNumber]
         public int Threshold { get; set; }
+        [Required]
         public bool Active { get; set; }
         [ValidEmails]
         public List<string> Receivers { get; set; }
