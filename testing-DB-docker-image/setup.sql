@@ -17,7 +17,6 @@ EXEC [Timberyard].[dbo].[sp_fulltext_database] @action = 'enable'
 end
 GO
 
-/* For security reasons the login is created disabled and with a random password. */
 /****** Object:  Login [etl_process]    Script Date: 11/04/2022 14:56:52 ******/
 CREATE LOGIN [etl_process] WITH PASSWORD='etl_process', DEFAULT_DATABASE=[Timberyard], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
 GO
@@ -25,7 +24,6 @@ GO
 ALTER LOGIN [etl_process] ENABLE
 GO
 
-/* For security reasons the login is created disabled and with a random password. */
 /****** Object:  Login [timberyard_service]    Script Date: 11/04/2022 14:56:52 ******/
 CREATE LOGIN [timberyard_service] WITH PASSWORD='timberyard_service', DEFAULT_DATABASE=[Timberyard], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
 GO
