@@ -2,6 +2,14 @@
     "baseUrl": "http://localhost:3000",
     "env": {
         "adminEmail": "admin@ribbon.com",
-        "adminPassword": "Admin123"
-    }
+        "adminPassword": "Admin123",
+        "dashboardUrl": "",
+        "loginUrl": "login",
+        "cardYieldUrl": "cardyield",
+        "stationYieldUrl": "stationyield",
+        "stationCardYieldUrl": "stationcardyield"
+    },
+    "testFiles": [
+        "tests/queryPage-test.js"
+    ]
 }

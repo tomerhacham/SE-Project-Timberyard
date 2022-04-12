@@ -28,7 +28,7 @@ function CustomToolbar() {
 
 const QueryTable = ({ rows, columns }) => {
     return (
-        <div id="query-table" style={{ height: 400, width: '100%' }}>
+        <div id='query-table' style={{ height: 400, width: '100%' }}>
             <div style={{ display: 'flex', height: '100%' }}>
                 <div style={{ flexGrow: 1 }}>
                     <DataGrid

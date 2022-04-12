@@ -1,0 +1,14 @@
+{
+  "columnNames": [
+    "Catalog",
+    "CardName",
+    "SuccessRatio"
+  ],
+  "records": [
+    {
+      "Catalog": "X56868",
+      "CardName": "OA_HF",
+      "SuccessRatio": 100
+    }
+  ]
+}
