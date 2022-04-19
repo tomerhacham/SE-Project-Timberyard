@@ -56,7 +56,7 @@ namespace WebService.Domain.Business.Services
             }
             catch (Exception e)
             {
-                return new Result<String>(true, "Could'nt sent email", e.Message);
+                return new Result<String>(false, "Could'nt sent email", e.Message);
             }
 
         }
