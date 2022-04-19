@@ -45,6 +45,7 @@ namespace WebService
 
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                    .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ISMTPClient, SMTPClient>()
                     .AddSingleton<LogsAndTestsRepository>()
