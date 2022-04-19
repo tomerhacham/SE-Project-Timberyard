@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types';
+import { camelCase } from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
 import { Box, Divider, Drawer, useMediaQuery, List } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
@@ -97,7 +98,7 @@ const Sidebar = ({ open, onClose }) => {
                         />
                         {queriesListItems.map((item) =>
                             <NavItem
-                                id={`sidebar-${item.primary.replace(/\s/g, '').toLowerCase()}`} 
+                                id={`sidebar-${camelCase(item.primary)}`} 
                                 key={item.primary}
                                 primary={item.primary}
                                 to={item.to}
