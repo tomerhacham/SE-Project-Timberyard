@@ -40,5 +40,9 @@ namespace WebService.Domain.Interface
         {
             return QueriesController.CalculateTesterLoad(startDate, endDate);
         }
+        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
     }
 }
