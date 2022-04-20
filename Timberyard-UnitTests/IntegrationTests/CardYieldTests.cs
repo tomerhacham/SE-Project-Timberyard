@@ -20,16 +20,15 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         // TODO - change inputs according to db
         [Theory]
-        [InlineData("X16434", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are X records of the inputs out of Y records ( where X==Y )
-        [InlineData("", 2010, 2011, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Happy : There are X records of the inputs out of Y records ( where X<Y )
-        [InlineData("X16434", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Happy : There are 0 records of the inputs out of Y records        
-        [InlineData("", 2000, 2001, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : There are 0 records of the inputs out of 0 records ( catalog does not exists )         
-        [InlineData("", 2001, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]                // Bad : invalid catalog         
-        [InlineData("X16434", 2011, 2000, true, 3, new string[] { "OA_HF", "OP_KLF", "OA_ASDF" }, new double[] { 93.12, 95.2, 89.2 })]          // Bad : invalid dates         
+        [InlineData("X93655", 2021, 2022, true, 3, new string[] { "9901X_JTAG", "HIO400A_JTAG" }, new double[] { 70, 50 })]                     // Happy : There are X records of the inputs out of Y records 
+        [InlineData("", 2010, 2011, true, 3, new string[] { "XMCP-B_HIK" }, new double[] { 0 })]                                                // Happy : There are 0 success records of the inputs out of Y records
+        [InlineData("X93677", 2001, 2000, true, 3, new string[] { }, new double[] { })]                                                         // Happy : There are 0 records of the inputs out of Y records (catalog not exists)   
+        [InlineData("____", 2022, 2021, true, 3, new string[] { }, new double[] { })]                                                           // Bad : invalid catalog         
+        [InlineData("X93655", 2022, 2021, true, 3, new string[] { }, new double[] { })]                                                         // Bad : invalid dates         
         public async void CardYield_Scenarios_Test
             (string catalog, int startDate, int endDate, bool query_result, int records_count, string[] CardName_results, double[] SuccessRatio_results)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateCardYield(catalog, new DateTime(startDate, 12, 12), new DateTime(endDate, 12, 12));
+            Result<QueryResult> queryResult = await QueriesController.CalculateCardYield(catalog, new DateTime(startDate, 12, 1), new DateTime(endDate, 12, 1));
             Assert.Equal(query_result, queryResult.Status);
             Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
             Assert.Equal(records_count, queryResult.Data.Records.Count);
