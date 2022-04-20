@@ -24,7 +24,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("L", "X93655", 2021, 2022, true, new string[] { }, new double[] { })]                                           // Happy : There are no records since station name does not exsists
         [InlineData("L5", "X93677", 2021, 2022, true, new string[] { }, new double[] { })]                                          // Happy : There are no records since catalog does not exsists
         [InlineData("L5", "X93655", 2017, 2018, true, new string[] { }, new double[] { })]                                          // Happy : There are no records since catalog does not exsists
-        [InlineData("10B", "X16434", 2020, 2019, false, new string[] { }, new double[] { })]              // Bad: invalid dates
+        [InlineData("L5", "X93655", 2022, 2021, false, new string[] { }, new double[] { })]               // Bad: invalid dates
         [InlineData("10B", "____", 2021, 2022, false, new string[] { }, new double[] { })]                // Bad: invalid catalog
         [InlineData("____", "X16434", 2021, 2022, false, new string[] { }, new double[] { })]             // Bad: invalid station
 
