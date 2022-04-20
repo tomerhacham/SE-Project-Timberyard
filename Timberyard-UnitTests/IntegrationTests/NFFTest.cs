@@ -48,7 +48,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("___", 2021, 2022, false, 0, "", "", new string[] { })]                                                                            // Bad: Invalid catalog
         public async void NFF_Scenarios_Test(string cardName, int startDate, int endDate, bool expectedResult, int expectedNumOfRecords, string stationNames, string operators, string[] failedTestNames)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 11, 30), new DateTime(endDate, 11, 30), 5* 60 * 60);
+            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01), 5* 60 * 60);
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {

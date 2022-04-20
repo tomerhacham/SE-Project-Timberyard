@@ -28,7 +28,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void CardYield_Scenarios_Test
             (string catalog, int startDate, int endDate, bool query_result, int records_count, string[] CardName_results, double[] SuccessRatio_results)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateCardYield(catalog, new DateTime(startDate, 12, 1), new DateTime(endDate, 12, 1));
+            Result<QueryResult> queryResult = await QueriesController.CalculateCardYield(catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(query_result, queryResult.Status);
             Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
             Assert.Equal(records_count, queryResult.Data.Records.Count);
