@@ -19,7 +19,8 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData(2021, 2022, true, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy 
+        [InlineData(2021, 2022, true, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is data in these dates
+        [InlineData(2017, 2018, true, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is no data in these dates
         [InlineData(2022, 2021, false, new string[] { }, new double[] { })]                                                                                     // Bad: Invalid dates
         public async void StationsYield_Scenarios_Test(int startDate, int endDate, bool expectedResult, string[] stationNames, double[] SuccessRatioValues)
         {
