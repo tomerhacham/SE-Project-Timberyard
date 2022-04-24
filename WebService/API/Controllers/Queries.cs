@@ -89,7 +89,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> NoFailureFound([FromBody] NoFailureFoundModel model)
         {
 
-            var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate);
+            var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate, model.TimeInterval);
             if (response.Status)
             {
                 return Ok(response.Data);
@@ -118,6 +118,32 @@ namespace WebService.API.Controllers
                 var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
                 return BadRequest(error);
             }
+        }
+
+        [Route("CardTestDuration")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(CardTestDurationRequestExample))]
+        [ProducesResponseType(typeof(CardTestDurationResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardTestDurationResponseExample))]
+        public async Task<IActionResult> CardTestDuration([FromBody] CardYieldModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await SystemInterface.CalculateCardTestDuration(model.Catalog, model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
     }
 }

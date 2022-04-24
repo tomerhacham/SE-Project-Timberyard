@@ -27,7 +27,6 @@ namespace Timberyard_UnitTests
             QueriesController = new QueriesController(RepositoryMock.Object, LoggerMock.Object);
         }
 
-
         [Theory]
         [InlineData("X16434", 2000, 2001, true)]
         [InlineData("", 2000, 2001, false)]

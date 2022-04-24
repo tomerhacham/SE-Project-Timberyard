@@ -27,7 +27,7 @@ const QueryPage = () => {
     const [loading, setLoading] = useState(false);
     const [showQuery, setShowQuery] = useState(false);
     const [tableData, setTableData] = useState(null);
-    const [queryData, setQueryData] = useState(null);
+    const [chartData, setChartData] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,7 +38,7 @@ const QueryPage = () => {
         if (result) {
             console.log(result);
             setTableData(dataToTable(result));
-            id === CARD_YIELD_ID && setQueryData(result);
+            showBarChart() && setChartData(result);
         }
     };
 
@@ -48,6 +48,9 @@ const QueryPage = () => {
         }
         return some(userInput, (field) => field === '');
     }
+
+    // TODO: Check if should be in other queries too
+    const showBarChart = () => id === CARD_YIELD_ID;
 
     const renderIcon = () => {
         switch (icon) {
@@ -112,7 +115,7 @@ const QueryPage = () => {
     useEffect(() => {
         setShowQuery(false);
         setTableData(null);
-        setQueryData(null);
+        setChartData(null);
         setUserInput({});
 
         switch (location.pathname) {
@@ -149,10 +152,10 @@ const QueryPage = () => {
                             <Grid item lg={8} md={12} xl={9} xs={12}>
                                 <QueryTable rows={tableData.rows} columns={tableData.columns} />
                             </Grid>
-                            {id === CARD_YIELD_ID &&
+                            {showBarChart() &&
                                 <Grid item lg={8} md={12} xl={9} xs={12}>
-                                    {queryData && tableData.rows.length > 0 && 
-                                        <BarChart data={queryData} />}
+                                    {chartData && tableData.rows.length > 0 && 
+                                        <BarChart data={chartData} />}
                                 </Grid>}
                         </Fragment>
                     )}

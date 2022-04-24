@@ -1,0 +1,28 @@
+{
+  "columnNames": [
+    "Station",
+    "SuccessRatio"
+  ],
+  "records": [
+    {
+      "Station": "A4",
+      "SuccessRatio": 100
+    },
+    {
+      "Station": "H1",
+      "SuccessRatio": 97.5
+    },
+    {
+      "Station": "B12",
+      "SuccessRatio": 70
+    },
+    {
+      "Station": "CO2",
+      "SuccessRatio": 84
+    },
+    {
+      "Station": "H2O",
+      "SuccessRatio": 89
+    }
+  ]
+}

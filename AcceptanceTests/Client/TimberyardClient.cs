@@ -11,7 +11,7 @@ namespace AcceptanceTests.Client
         public Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateStationsYield(DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
-        public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval);
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
     }
     public class TimberyardClient : ITimberyardClient
@@ -60,10 +60,10 @@ namespace AcceptanceTests.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
-        public async Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate)
+        public async Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
             var request = new RestRequest(STATION_AND_CARD_YIELD_ENDPOINT, Method.POST);
-            var body = new { CardName = cardName, StartDate = startDate, EndDate = endDate };
+            var body = new { CardName = cardName, StartDate = startDate, EndDate = endDate, TimeInterval = timeInterval };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
