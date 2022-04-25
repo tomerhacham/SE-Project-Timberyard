@@ -14,6 +14,10 @@ import SdCardIcon from '@mui/icons-material/SdCard';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import FenceIcon from '@mui/icons-material/Fence';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { 
+  CARD_YIELD_PATH, STATION_YIELD_PATH, 
+  STATION_CARD_YIELD_PATH, NFF_PATH
+} from '../../constants/constants';
 
 const Sidebar = ({ open, onClose }) => {
     const location = useLocation();
@@ -27,22 +31,22 @@ const Sidebar = ({ open, onClose }) => {
     const queriesListItems = [
         {
           primary: 'Station Yield',
-          to: '/stationyield',
+          to: STATION_YIELD_PATH,
           icon: <LocalGasStationIcon />
         },
         {
           primary: 'Card Yield',
-          to: '/cardyield',
+          to: CARD_YIELD_PATH,
           icon: <SdCardIcon />
         },
         {
           primary: 'Station & Card Yield',
-          to: '/stationcardyield',
+          to: STATION_CARD_YIELD_PATH,
           icon: <EvStationIcon />
         },
         {
           primary: 'NFF',
-          to: '/nff',
+          to: NFF_PATH,
           icon: <GppBadIcon />
         },
         {

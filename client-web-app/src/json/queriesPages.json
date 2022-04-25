@@ -80,5 +80,38 @@
             }
         ],
         "icon": "EvStation"
+    },
+    "nff": {
+        "id": "nff",
+        "title": "No Failure Found",
+        "url": "/Queries/NFF",
+        "fields": [
+            {
+                "id": "cardName",
+                "required": true,
+                "label": "Card Name",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            },
+			{
+                "id": "timeInterval",
+                "required": true,
+                "label": "Time Interval",
+                "type": "number"
+            }
+        ],
+        "icon": "GppBad"
     }
 }
