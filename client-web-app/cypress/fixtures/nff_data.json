@@ -1,0 +1,25 @@
+{
+    "columnNames": [
+        "Date",
+        "CardName",
+        "Catalog",
+        "Station",
+        "Operator",
+        "FailedTests"
+    ],
+    "records": [
+        {
+            "Date": "2020-11-30",
+            "CardName": "XMCP-B",
+            "Catalog": "X74216",
+            "Station": "2X",
+            "Operator": "71489",
+            "FailedTests": [
+                "XMCP-B UUT LOAD",
+                "XMCP Rom Boot Version test",
+                "APLICATION Version test",
+                "MCP Serial Number Check"
+            ]
+        }
+    ]
+}

@@ -2,11 +2,18 @@
 export const CARD_YIELD_PATH = '/cardyield';
 export const STATION_YIELD_PATH = '/stationyield';
 export const STATION_CARD_YIELD_PATH = '/stationcardyield';
+export const NFF_PATH = '/nff';
 export const SETTINGS_PATH = '/settings';
 export const LOGIN_PATH = '/login';
 
 // IDs
 export const CARD_YIELD_ID = 'cardYield';
+
+// Icons
+export const CARD_YIELD_ICON = 'SdCard';
+export const STATION_YIELD_ICON = 'LocalGasStation';
+export const STATION_CARD_YIELD_ICON = 'EvStation';
+export const NFF_ICON = 'GppBad';
 
 // TODO: Delete if unused
 // api-urls.js
