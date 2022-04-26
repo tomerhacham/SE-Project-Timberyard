@@ -239,13 +239,40 @@ namespace WebService.Domain.DataAccess
 
         }
         /// <summary>
-        /// Execute Tester Load Query 
+        /// Execute Card Test Duration query
         /// </summary>
-        /// <param name="testerLoad">
+        /// <param name="cardTestDuration">
+        ///     Catalog:string
         ///     StartDate:DateTime
         ///     EndDate:DateTime
         /// </param>
         /// <returns>
+        ///     [Operator, NetTimeAvg, TotalTimeAvg]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration)
+        {
+            var sqlCommand =
+                @"
+                SELECT Logs.Operator, AVG(datediff(second, cast('00:00' as time(7)), Logs.NetTime)) as NetTimeAvg , AVG(datediff(second, Logs.StartTime, Logs.EndTime)) as TotalTimeAvg
+                From Logs
+                WHERE Catalog=@Catalog AND
+                      Date between @StartDate AND @EndDate AND
+					  FinalResult = 'PASS' AND
+					  ContinueOnFail = 'FALSE' AND
+					  TECHMode = 'FALSE' AND
+					  ABORT = 'FALSE' AND
+					  DBMode != 'BYPASS'
+                GROUP BY Operator
+                ORDER BY Operator DESC
+                ";
+
+            var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
+            return await ExecuteQuery(sqlCommand, queryParams);
+        }
+
+        /// Execute Tester Load Query 
+        /// </summary>
+        /// <param name="testerLoad">
         ///     [Station, NumberOfRuns, TotalRunTimeHours]        
         /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad)
@@ -293,5 +320,8 @@ namespace WebService.Domain.DataAccess
                 return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }
+
+
+
     }
 }

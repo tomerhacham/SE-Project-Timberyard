@@ -119,5 +119,31 @@ namespace WebService.API.Controllers
                 return BadRequest(error);
             }
         }
+
+        [Route("CardTestDuration")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(CardTestDurationRequestExample))]
+        [ProducesResponseType(typeof(CardTestDurationResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardTestDurationResponseExample))]
+        public async Task<IActionResult> CardTestDuration([FromBody] CardYieldModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await SystemInterface.CalculateCardTestDuration(model.Catalog, model.StartDate, model.EndDate);
+                if (response.Status)
+                {
+                    return Ok(response.Data);
+                }
+                else
+                {
+                    return BadRequest(response.Message);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
     }
 }

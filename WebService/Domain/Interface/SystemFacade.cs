@@ -111,5 +111,9 @@ namespace WebService.Domain.Interface
             }
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
+        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
     }
 }
