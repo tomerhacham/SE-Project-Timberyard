@@ -3,6 +3,8 @@ using ETL.Utils;
 using ETL.Utils.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TimberyardClient.Client;
+
 namespace ETL
 {
     class Program
@@ -14,6 +16,7 @@ namespace ETL
             var repository = serviceProvier.GetService<Repository.Repository>();
             var fileManager = serviceProvier.GetService<FileManager>();
             var deserializer = serviceProvier.GetService<Deserializer>();
+            var restClient = serviceProvier.GetService<ITimberyardClient>();
 
             #region Continuation Passing Style
             fileManager.GetNewLogs().ContinueWith((string[] files) =>
@@ -49,7 +52,9 @@ namespace ETL
             var serviceProvier = new ServiceCollection()
                 .Configure<Directories>(config.GetSection("Directories"))
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-
+                .Configure<UserCredentials>(config.GetSection("UserCredentials"))
+                .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
+                .AddSingleton<ITimberyardClient, TimberyardClient.Client.TimberyardClient>()
                 .AddSingleton<ILogger>(sp => new Logger("ETL-process"))
                 .AddSingleton<FileManager>()
                 .AddSingleton<Deserializer>()

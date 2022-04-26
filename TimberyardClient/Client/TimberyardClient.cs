@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using RestSharp;
+using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval);
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CheckAlarmsCondition();
     }
     public class TimberyardClient : ITimberyardClient
     {
@@ -32,6 +34,7 @@ namespace TimberyardClient.Client
         {
             UserCredentials = userCredentials.Value;
             RestClient = new RestClient(serviceSettings.Value.Url);
+            RestClient.UseSerializer(() => new JsonNetSerializer());
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {
                 { "Content-Type","application/json" },
@@ -90,5 +93,9 @@ namespace TimberyardClient.Client
 
         }
 
+        public Task<IRestResponse> CheckAlarmsCondition()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

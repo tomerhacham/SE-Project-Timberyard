@@ -42,5 +42,10 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CalculateTesterLoad(startDate, endDate);
         }
+
+        public Task<IRestResponse> CheckAlarmsCondition()
+        {
+            return RealClient.CheckAlarmsCondition();
+        }
     }
 }
