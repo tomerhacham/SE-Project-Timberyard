@@ -1,7 +1,7 @@
-﻿using AcceptanceTests.Client;
-using RestSharp;
+﻿using RestSharp;
 using System;
 using System.Threading.Tasks;
+using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
 {
