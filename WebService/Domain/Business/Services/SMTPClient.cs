@@ -4,6 +4,7 @@ using FluentEmail.Smtp;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,27 +37,23 @@ namespace WebService.Domain.Business.Services
         public async Task<Result<string>> SendEmail(string subject, string message, List<string> receivers)
         {
             Email.DefaultSender = Sender;
-
-            List<Address> addressList = new List<Address>();
-            foreach (string recever in receivers)
-            {
-                addressList.Add(new Address(recever));
-            }
-
+            List<Address> addressList = receivers.ConvertAll(receiver => new Address(receiver));
             try
             {
-                var email = await Email
+                var emailResponse = await Email
                     .From(ClientSettings.SenderAddress)
                     .To(addressList)
                     .Subject(subject)
                     .Body(message)
                     .SendAsync();
 
-                return new Result<String>(true, "Email sent", "");
+                return new Result<string>(emailResponse.Successful, emailResponse.Successful ? emailResponse.MessageId :
+                                                                                              emailResponse.ErrorMessages.Aggregate(new StringBuilder(),
+                                                                                              (sb, a) => sb.AppendLine(String.Join(",", a)), sb => sb.ToString()));
             }
             catch (Exception e)
             {
-                return new Result<String>(false, "Could'nt sent email", e.Message);
+                return new Result<string>(false, "Could'nt sent email", e.Message);
             }
 
         }
