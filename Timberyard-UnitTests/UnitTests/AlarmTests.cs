@@ -1,8 +1,6 @@
 ﻿using ETL.Repository.DTO;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Services;
 using WebService.Utils;
@@ -126,7 +124,7 @@ namespace Timberyard_UnitTests.UnitTests
             };
             var alarmResult = await alarm.CheckCondition(lastRecords, SmtpClient.Object);
             Assert.False(alarmResult);
-        } 
+        }
         #endregion
     }
 }
