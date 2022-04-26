@@ -267,7 +267,7 @@ namespace WebService.Domain.DataAccess
                 ";
 
             var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
         }
 
         /// Execute Tester Load Query 
