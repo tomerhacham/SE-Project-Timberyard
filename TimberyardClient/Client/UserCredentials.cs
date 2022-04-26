@@ -1,4 +1,4 @@
-﻿namespace AcceptanceTests.Client
+﻿namespace TimberyardClient.Client
 {
     public class UserCredentials
     {

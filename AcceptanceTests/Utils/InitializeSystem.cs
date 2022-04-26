@@ -1,5 +1,4 @@
 ﻿
-using AcceptanceTests.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -7,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TimberyardClient.Client;
 using Xunit;
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
@@ -26,7 +26,7 @@ namespace AcceptanceTests.Utils
             var serviceProvier = new ServiceCollection()
                     .Configure<UserCredentials>(config.GetSection("UserCredentials"))
                     .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
-                    .AddSingleton<ITimberyardClient, TimberyardClient>()
+                    .AddSingleton<ITimberyardClient, TimberyardClient.Client.TimberyardClient>()
                     .BuildServiceProvider();
             return serviceProvier.GetService<ITimberyardClient>();
         }

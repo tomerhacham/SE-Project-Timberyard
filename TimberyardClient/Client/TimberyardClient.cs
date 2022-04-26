@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using RestSharp;
+using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AcceptanceTests.Client
+namespace TimberyardClient.Client
 {
     public interface ITimberyardClient
     {
@@ -13,6 +14,7 @@ namespace AcceptanceTests.Client
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval);
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CheckAlarmsCondition();
     }
     public class TimberyardClient : ITimberyardClient
     {
@@ -23,6 +25,9 @@ namespace AcceptanceTests.Client
         private readonly string STATION_AND_CARD_YIELD_ENDPOINT = "/api/Queries/StationAndCardYield";
         private readonly string NFF_ENDPOINT = "/api/Queries/NFF";
         private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
+
+        //Alarms
+        private readonly string CHECK_ALARM_CONDITION_ENDPOINT = "/api/Alarms/CheckAlarmsCondition";
         #endregion
 
         RestClient RestClient { get; }
@@ -32,6 +37,7 @@ namespace AcceptanceTests.Client
         {
             UserCredentials = userCredentials.Value;
             RestClient = new RestClient(serviceSettings.Value.Url);
+            RestClient.UseSerializer(() => new JsonNetSerializer());
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {
                 { "Content-Type","application/json" },
@@ -74,6 +80,11 @@ namespace AcceptanceTests.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
+        public async Task<IRestResponse> CheckAlarmsCondition()
+        {
+            var request = new RestRequest(CHECK_ALARM_CONDITION_ENDPOINT, Method.POST);
+            return await ExecuteWrapperAsync(request);
+        }
 
         /// <summary>
         /// Utility function to wrap the request sending process and add the JWT data
@@ -89,6 +100,5 @@ namespace AcceptanceTests.Client
             return response;
 
         }
-
     }
 }
