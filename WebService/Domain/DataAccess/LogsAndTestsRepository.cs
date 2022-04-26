@@ -186,7 +186,7 @@ namespace WebService.Domain.DataAccess
                 ";
             var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
             return await ExecuteQuery(sqlCommand, queryParams);
-            
+
         }
         /// <summary>
         /// Execute Station and Card Yield Query 
@@ -293,11 +293,10 @@ namespace WebService.Domain.DataAccess
         {
             var sqlCommand =
                 @"
-                SELECT TestName, Min, Max, AVG(Received), STDEVP(Received)
-                from
-                
-                WHERE  
-                
+                SELECT Tests.TestName, Tests.Min, Tests.Max, Tests.Received
+                From Logs Join Tests
+                On Tests.Type='Boundaries'
+                Where Catalog=@Catalog AND Date BETWEEN @StartDate AND @EndDate
                 ";
             var queryParams = new { Catalog = boundaries.Catalog, StartDate = boundaries.StartDate, EndDate = boundaries.EndDate };
             return await ExecuteQuery(sqlCommand, queryParams);
