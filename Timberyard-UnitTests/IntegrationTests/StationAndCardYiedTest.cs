@@ -25,16 +25,19 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("L5", "X93677", 2021, 2022, true, new string[] { }, new double[] { })]                                          // Happy : There are no records since catalog does not exsists
         [InlineData("L5", "X93655", 2017, 2018, true, new string[] { }, new double[] { })]                                          // Happy : There are no records since catalog does not exsists
         [InlineData("L5", "X93655", 2022, 2021, false, new string[] { }, new double[] { })]               // Bad: invalid dates
-        [InlineData("10B", "____", 2021, 2022, false, new string[] { }, new double[] { })]                // Bad: invalid catalog
-        [InlineData("____", "X16434", 2021, 2022, false, new string[] { }, new double[] { })]             // Bad: invalid station
+        [InlineData("10B", "", 2021, 2022, false, new string[] { }, new double[] { })]                // Bad: invalid catalog
+        [InlineData("", "X16434", 2021, 2022, false, new string[] { }, new double[] { })]             // Bad: invalid station
 
         public async void StationAndCardYield_Scenarios_Test(string station, string catalog, int startDate, int endDate, bool expectedResult, string[] cardNames, double[] SuccessRatioValues)
         {
             Result<QueryResult> queryResult = await QueriesController.CalculateStationAndCardYield(station, catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(expectedResult, queryResult.Status);
-            if (expectedResult)
+            if (queryResult.Status)
             {
-                Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                if (queryResult.Data.ColumnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                }
                 var data = queryResult.Data;
                 for (int i = 0; i < cardNames.Length; i++)
                 {

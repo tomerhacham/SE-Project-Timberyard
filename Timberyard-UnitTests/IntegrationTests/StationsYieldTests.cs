@@ -28,7 +28,10 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "Station", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                if (queryResult.Data.ColumnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "Station", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                }
                 Assert.Equal(stationNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
                 for (int i = 0; i < stationNames.Length; i++)
