@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,6 +34,7 @@ namespace TimberyardClient.Client
         {
             UserCredentials = userCredentials.Value;
             RestClient = new RestClient(serviceSettings.Value.Url);
+            RestClient.UseSerializer(() => new JsonNetSerializer());
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {
                 { "Content-Type","application/json" },
@@ -43,6 +46,7 @@ namespace TimberyardClient.Client
         {
             var request = new RestRequest(CARD_YIELD_ENDPOINT, Method.POST);
             var body = new { Catalog = catalog, StartDate = startDate, EndDate = endDate };
+            //var jsonBody = JsonConvert.SerializeObject(body);
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
