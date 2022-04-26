@@ -25,6 +25,9 @@ namespace TimberyardClient.Client
         private readonly string STATION_AND_CARD_YIELD_ENDPOINT = "/api/Queries/StationAndCardYield";
         private readonly string NFF_ENDPOINT = "/api/Queries/NFF";
         private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
+
+        //Alarms
+        private readonly string CHECK_ALARM_CONDITION_ENDPOINT = "/api/Alarms/CheckAlarmsCondition";
         #endregion
 
         RestClient RestClient { get; }
@@ -77,6 +80,11 @@ namespace TimberyardClient.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
+        public async Task<IRestResponse> CheckAlarmsCondition()
+        {
+            var request = new RestRequest(CHECK_ALARM_CONDITION_ENDPOINT, Method.POST);
+            return await ExecuteWrapperAsync(request);
+        }
 
         /// <summary>
         /// Utility function to wrap the request sending process and add the JWT data
@@ -91,11 +99,6 @@ namespace TimberyardClient.Client
             var response = await RestClient.ExecuteAsync(request);
             return response;
 
-        }
-
-        public Task<IRestResponse> CheckAlarmsCondition()
-        {
-            throw new NotImplementedException();
         }
     }
 }

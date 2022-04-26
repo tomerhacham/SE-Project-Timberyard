@@ -3,6 +3,8 @@ using ETL.Utils;
 using ETL.Utils.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 using TimberyardClient.Client;
 
 namespace ETL
@@ -17,6 +19,7 @@ namespace ETL
             var fileManager = serviceProvier.GetService<FileManager>();
             var deserializer = serviceProvier.GetService<Deserializer>();
             var restClient = serviceProvier.GetService<ITimberyardClient>();
+            Task.Delay(TimeSpan.FromSeconds(30)).Wait();
 
             #region Continuation Passing Style
             fileManager.GetNewLogs().ContinueWith((string[] files) =>
@@ -30,9 +33,10 @@ namespace ETL
                                 success: (Log log) =>
                                 {
                                     var res = repository.InsertLog(log);
-                                    res.ContinueWith((bool insertSucceed) =>
+                                    res.ContinueWith(async (bool insertSucceed) =>
                                     {
                                         fileManager.MoveToHandeledLogsDirectory(file);
+                                        restClient.CheckAlarmsCondition().Wait();
                                     });
                                 }, fail: (Log log) => { fileManager.MoveToFaultLogsDirectory(file); }
 
