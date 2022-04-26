@@ -5,6 +5,7 @@ import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mu
 import SdCardIcon from '@mui/icons-material/SdCard';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import EvStationIcon from '@mui/icons-material/EvStation';
+import GppBadIcon from '@mui/icons-material/GppBad';
 import { QueryPost } from '../../api/Api';
 import QueryTable from './QueryTable';
 import BarChart from './graph/BarChart';
@@ -14,7 +15,9 @@ import queriesJson from '../../json/queriesPages.json';
 import { queriesInputBoxSx } from '../../theme';
 import { 
     CARD_YIELD_PATH, STATION_YIELD_PATH, 
-    STATION_CARD_YIELD_PATH, CARD_YIELD_ID
+    STATION_CARD_YIELD_PATH, CARD_YIELD_ID, NFF_PATH,
+    CARD_YIELD_ICON, STATION_YIELD_ICON,
+    STATION_CARD_YIELD_ICON, NFF_ICON
 } from '../../constants/constants';
 
 const QueryPage = () => {
@@ -54,12 +57,14 @@ const QueryPage = () => {
 
     const renderIcon = () => {
         switch (icon) {
-            case 'SdCard':
+            case CARD_YIELD_ICON:
                 return <SdCardIcon />;
-            case 'LocalGasStation':
+            case STATION_YIELD_ICON:
                 return <LocalGasStationIcon />;
-            case 'EvStation':
+            case STATION_CARD_YIELD_ICON:
                 return <EvStationIcon />;
+            case NFF_ICON:
+                return <GppBadIcon />;
             default:
                 return <SdCardIcon />;
         }
@@ -87,7 +92,10 @@ const QueryPage = () => {
                         label={field.label}
                         type={field.type}
                         autoFocus={field.autoFocus || false}
-                        onChange={(e) => setUserInput({ ...userInput, [field.id]: e.target.value })}
+                        onChange={(e) => 
+                            setUserInput({ ...userInput, 
+                                [field.id]: field.type === 'number' ? e.target.valueAsNumber : e.target.value 
+                            })}
                         InputLabelProps={{ shrink: true }}
                     />
                 )}
@@ -114,6 +122,7 @@ const QueryPage = () => {
 
     useEffect(() => {
         setShowQuery(false);
+        setLoading(false);
         setTableData(null);
         setChartData(null);
         setUserInput({});
@@ -127,6 +136,9 @@ const QueryPage = () => {
                 break;
             case STATION_CARD_YIELD_PATH:
                 setQueryElement(queriesJson.stationCardYield);
+                break;
+            case NFF_PATH:
+                setQueryElement(queriesJson.nff);
                 break;
             default:
                 console.log('error in location');
