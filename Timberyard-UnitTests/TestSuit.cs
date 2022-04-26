@@ -5,7 +5,9 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
 using WebService.Utils.Models;
@@ -24,9 +26,13 @@ namespace Timberyard_UnitTests
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
+                .AddSingleton<ISMTPClient, SMTPClient>()
                 .AddSingleton<LogsAndTestsRepository>()
+                .AddSingleton<AlarmsAndUsersRepository>()
                 .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
                 .AddSingleton<QueriesController>()
+                .AddSingleton<AlarmsController>()
                 .BuildServiceProvider();
             return serviceProvier;
         }
