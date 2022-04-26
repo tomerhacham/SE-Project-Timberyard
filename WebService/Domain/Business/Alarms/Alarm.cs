@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
@@ -48,7 +49,7 @@ namespace WebService.Domain.Business.Alarms
         }
 
         //Methods
-        public async void CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
+        public async Task<bool> CheckCondition(List<LogDTO> logs, ISMTPClient iSMTPClient)
         {
             var raiseCondition = false;
             var count = 0;
@@ -68,6 +69,7 @@ namespace WebService.Domain.Business.Alarms
                 var message = GetAlarmMessage(DateTime.Now.Date.ToShortDateString(), count);
                 await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
             }
+            return raiseCondition;
         }
         private string GetAlarmMessage(string date, int log_count)
         {
