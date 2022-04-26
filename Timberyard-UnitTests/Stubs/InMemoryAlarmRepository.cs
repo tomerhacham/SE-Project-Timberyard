@@ -11,7 +11,7 @@ namespace Timberyard_UnitTests.Stubs
 {
     public class InMemoryAlarmRepository : IAlarmsRepository
     {
-        Dictionary<int,Alarm> Data { get; set; }
+        public Dictionary<int,Alarm> Data { get; set; }
 
         public InMemoryAlarmRepository()
         {

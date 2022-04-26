@@ -49,7 +49,7 @@ namespace WebService
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ISMTPClient, SMTPClient>()
                     .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<AlarmsAndUsersRepository>()
+                    .AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>()
                     .AddSingleton<QueriesController>()
                     .AddSingleton<AlarmsController>()
                     .AddSingleton<SystemFacade>();

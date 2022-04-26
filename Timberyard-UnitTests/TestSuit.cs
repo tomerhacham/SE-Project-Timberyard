@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Timberyard_UnitTests.Stubs;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.Business.Services;
@@ -27,9 +29,14 @@ namespace Timberyard_UnitTests
             var serviceProvier = new ServiceCollection()
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                 .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
-                .AddSingleton<ISMTPClient, SMTPClient>()
+
+                .AddSingleton<ISMTPClient>((sp) => {
+                    var SmtpClient = new Mock<ISMTPClient>();
+                    SmtpClient.Setup(client => client.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
+                            .ReturnsAsync(new Result<string>(true, "Email sent", ""));
+                    return SmtpClient.Object; })
                 .AddSingleton<LogsAndTestsRepository>()
-                .AddSingleton<AlarmsAndUsersRepository>()
+                .AddSingleton<IAlarmsRepository,InMemoryAlarmRepository>()
                 .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
                 .AddSingleton<QueriesController>()
                 .AddSingleton<AlarmsController>()
