@@ -55,6 +55,19 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
+        public async Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.CalculateCardTestDuration(catalog, startDate, endDate) : defaultResponse;
+            return response;
+        }
+        public async Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.CalculateBoundaries(catalog, startDate, endDate) : defaultResponse;
+            return response;
+        }
+
         public async Task<IRestResponse> CheckAlarmsCondition()
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };

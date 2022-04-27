@@ -29,7 +29,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void CardTestDuration_Scenarios_Test
             (string catalog, int startDate, int endDate, bool query_result, int records_count, string[] Operators_results, double[] NetTimeAvg_results, double[] TotalTimeAvg_results)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateCardTestDuration(catalog, new DateTime(startDate, 11, 11), new DateTime(endDate, 11, 12));
+            Result<QueryResult> queryResult = await QueriesController.CalculateCardTestDuration(catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(query_result, queryResult.Status);
             if (queryResult.Status)
             {

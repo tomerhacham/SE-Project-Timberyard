@@ -8,6 +8,8 @@ namespace WebService.Domain.Business.Queries
         public string[] ColumnNames { get; set; }
         public List<dynamic> Records { get; set; }
 
+        public QueryResult() { }
+
         public QueryResult(List<dynamic> records)
         {
             ColumnNames = (records.Count() > 0) ? ((IDictionary<string, object>)records.FirstOrDefault()).Keys.ToArray() : new string[0];

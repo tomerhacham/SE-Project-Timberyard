@@ -40,6 +40,7 @@ namespace Timberyard_UnitTests.IntegrationTests
 
                 for (int i = 0; i < records_count; i++)
                 {
+                    var rec = queryResult.Data.Records[i];
                     Assert.Equal(catalog, queryResult.Data.Records[i].Catalog);
                     Assert.Equal(CardName_results[i], queryResult.Data.Records[i].CardName);
                     Assert.Equal(SuccessRatio_results[i], queryResult.Data.Records[i].SuccessRatio);
