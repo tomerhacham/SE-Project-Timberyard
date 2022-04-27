@@ -19,6 +19,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
+        [Trait("Category", "Integration")]
         [InlineData("X93655", 2021, 2022, true, 2, new string[] { "9901X_JTAG", "HIO400A_JTAG" }, new double[] { 70, 50 })]                     // Happy : There are X records of the inputs out of Y records 
         [InlineData("XH8655", 2021, 2022, true, 1, new string[] { "XMCP-B_HIK" }, new double[] { 0 })]                                                // Happy : There are 0 success records of the inputs out of Y records
         [InlineData("X93677", 2021, 2022, true, 0, new string[] { }, new double[] { })]                                                         // Happy : There are 0 records of the inputs out of Y records (catalog not exists)   

@@ -54,14 +54,14 @@ namespace Timberyard_UnitTests
             }
             else
             {
-                serviceProvier.AddSingleton<ILogsAndTestsRepository,LogsAndTestsRepository>();
+                serviceProvier.AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>();
             }
 
             serviceProvier.AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
             .AddSingleton<QueriesController>()
             .AddSingleton<AlarmsController>();
 
-            return serviceProvier.BuildServiceProvider(); ;
+            return serviceProvier.BuildServiceProvider();
         }
     }
 

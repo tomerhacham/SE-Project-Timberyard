@@ -21,7 +21,7 @@ namespace Timberyard_UnitTests.Stubs
         }
         public async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
-            var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).Select(log=> log.GetDTO()).ToList();
+            var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).Select(log => log.GetDTO()).ToList();
             return new Result<List<LogDTO>>(true, logs);
         }
 

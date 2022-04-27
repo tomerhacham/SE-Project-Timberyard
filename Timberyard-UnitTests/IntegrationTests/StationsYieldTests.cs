@@ -19,6 +19,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
+        [Trait("Category", "Integration")]
         [InlineData(2021, 2022, true, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is data in these dates
         [InlineData(2017, 2018, true, new string[] { }, new double[] { })]                                                                                      // Happy: there is no data in these dates
         [InlineData(2022, 2021, false, new string[] { }, new double[] { })]                                                                                     // Bad: Invalid dates
