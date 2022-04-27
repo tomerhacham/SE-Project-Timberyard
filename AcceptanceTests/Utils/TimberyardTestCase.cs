@@ -1,5 +1,5 @@
-﻿using AcceptanceTests.Client;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
 {
@@ -14,7 +14,7 @@ namespace AcceptanceTests.Utils
             if (userCredentials != null)
             {
                 TimberyardClientRealAdapter adapter = Client as TimberyardClientRealAdapter;
-                TimberyardClient realClient = adapter.RealClient as TimberyardClient;
+                TimberyardClient.Client.TimberyardClient realClient = adapter.RealClient as TimberyardClient.Client.TimberyardClient;
                 realClient.UserCredentials = userCredentials;
             }
         }

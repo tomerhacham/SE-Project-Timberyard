@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ETL.Repository.DTO;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -92,7 +93,7 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -135,7 +136,7 @@ namespace WebService.Domain.DataAccess
                 )
                 ";
             var queryParams = new { StartDate = stationsYield.StartDate, EndDate = stationsYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -185,7 +186,7 @@ namespace WebService.Domain.DataAccess
                 where CardName=@CardName
                 ";
             var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -234,7 +235,7 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Station = stationAndCardYield.Station, Catalog = stationAndCardYield.Catalog, StartDate = stationAndCardYield.StartDate, EndDate = stationAndCardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -266,7 +267,7 @@ namespace WebService.Domain.DataAccess
                 ";
 
             var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
         }
 
         /// Execute Tester Load Query 
@@ -284,10 +285,20 @@ namespace WebService.Domain.DataAccess
                 group by Station
                 order by NumberOfRuns desc, TotalRunTimeHours desc";
             var queryParams = new { StartDate = testerLoad.StartDate, EndDate = testerLoad.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
 
+        public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
+        {
+            var sqlCommand =
+                @"
+                SELECT *
+                from Logs
+                where Logs.EndTime BETWEEN @StartDate AND @EndDate";
+            var queryParams = new { StartDate = startTime, EndDate = endTime };
+            return await ExecuteQuery<LogDTO>(sqlCommand, queryParams);
+        }
 
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
         {
@@ -309,18 +320,18 @@ namespace WebService.Domain.DataAccess
         /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
         /// <param name="queryParams">object hold SQL query parameters</param>
         /// <returns></returns>
-        private async Task<Result<List<dynamic>>> ExecuteQuery(string sqlCommand, object queryParams)
+        private async Task<Result<List<T>>> ExecuteQuery<T>(string sqlCommand, object queryParams)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var objects = await connection.QueryAsync<dynamic>(sqlCommand, queryParams);
-                return new Result<List<dynamic>>(true, objects.AsList());
+                var objects = await connection.QueryAsync<T>(sqlCommand, queryParams);
+                return new Result<List<T>>(true, objects.AsList());
             }
             catch (Exception e)
             {
-                return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
+                return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }
 

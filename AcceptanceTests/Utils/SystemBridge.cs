@@ -1,4 +1,5 @@
-﻿using AcceptanceTests.Client;
+﻿
+using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
 {

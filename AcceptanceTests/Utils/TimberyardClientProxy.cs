@@ -1,8 +1,8 @@
-﻿using AcceptanceTests.Client;
-using RestSharp;
+﻿using RestSharp;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
 {
@@ -52,6 +52,13 @@ namespace AcceptanceTests.Utils
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
             var response = RealClient != null ? await RealClient.CalculateTesterLoad(startDate, endDate) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> CheckAlarmsCondition()
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.CheckAlarmsCondition() : defaultResponse;
             return response;
         }
     }

@@ -2,7 +2,11 @@
 export const dataToTable = (data) => {
     const columns = [];
     data.columnNames.map((headerName) => 
-        columns.push({ field: headerName, headerName, width: 150 })
+        columns.push({ 
+            field: headerName, 
+            headerName, 
+            flex: 1
+        })
     );
 
     const rows = [];
