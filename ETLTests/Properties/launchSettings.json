@@ -1,6 +1,6 @@
 {
   "profiles": {
-   "Valid": {
+  "Valid": {
       "commandName": "Project",
       "environmentVariables": {
         "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NewLogsRoot",
