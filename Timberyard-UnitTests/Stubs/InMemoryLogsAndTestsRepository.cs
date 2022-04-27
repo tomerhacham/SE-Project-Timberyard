@@ -54,5 +54,10 @@ namespace Timberyard_UnitTests.Stubs
         {
             throw new NotImplementedException();
         }
+
+        public Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

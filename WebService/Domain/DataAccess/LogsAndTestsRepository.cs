@@ -19,6 +19,7 @@ namespace WebService.Domain.DataAccess
         Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield);
         Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration);
         Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad);
+        Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries);
         Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime);
     }
 

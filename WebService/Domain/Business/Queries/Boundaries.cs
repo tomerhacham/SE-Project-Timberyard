@@ -22,7 +22,7 @@ namespace WebService.Domain.Business.Queries
             EndDate = endDate;
         }
 
-        public Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
+        public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
             {
