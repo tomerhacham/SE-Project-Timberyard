@@ -47,5 +47,10 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CalculateCardTestDuration(catalog, startDate, endDate);
         }
+
+        public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return RealClient.CalculateBoundaries(catalog, startDate, endDate);
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval);
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate);
     }
     public class TimberyardClient : ITimberyardClient
     {
@@ -27,9 +28,10 @@ namespace TimberyardClient.Client
         private readonly string NFF_ENDPOINT = "/api/Queries/NFF";
         private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
         private readonly string CARD_TEST_DURATION_ENDPOINT = "/api/Queries/CardTestDuration";
+        private readonly string BOUNDARIES_DURATION_ENDPOINT = "/api/Queries/Boundaries";
         #endregion
 
-        RestClient RestClient { get; }
+         RestClient RestClient { get; }
         public UserCredentials UserCredentials { get; set; }
 
         public TimberyardClient(IOptions<UserCredentials> userCredentials, IOptions<ServiceSettings> serviceSettings)
@@ -88,6 +90,14 @@ namespace TimberyardClient.Client
             return await ExecuteWrapperAsync(request);
         }
 
+        public async Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            var request = new RestRequest(BOUNDARIES_DURATION_ENDPOINT, Method.POST);
+            var body = new { Catalog = catalog, StartDate = startDate, EndDate = endDate };
+            request.AddJsonBody(body);
+            return await ExecuteWrapperAsync(request);
+        }
+
         /// <summary>
         /// Utility function to wrap the request sending process and add the JWT data
         /// </summary>
@@ -100,7 +110,6 @@ namespace TimberyardClient.Client
 
             var response = await RestClient.ExecuteAsync(request);
             return response;
-
         }
 
     }
