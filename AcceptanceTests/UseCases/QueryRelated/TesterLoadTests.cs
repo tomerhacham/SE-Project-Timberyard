@@ -10,21 +10,21 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
-    public class StationsYieldTests : TimberyardTestCase
+    public class TesterLoadTests : TimberyardTestCase
     {
-        public StationsYieldTests() : base()
+        public TesterLoadTests() : base()
         { }
 
         [Theory]
-        [InlineData(2021, 2022, HttpStatusCode.OK, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is data in these dates
-        [InlineData(2017, 2018, HttpStatusCode.OK, new string[] { }, new double[] { })]                                                                                      // Happy: there is no data in these dates
-        [InlineData(2022, 2021, HttpStatusCode.BadRequest, new string[] { }, new double[] { })]                                                                                     // Bad: Invalid dates
-        public async void StationsYieldAcceptanceScenarios
-            (int startDate, int endDate, HttpStatusCode expectedStatusCode, string[] stationNames, double[] SuccessRatioValues)
+        [InlineData(2021, 2022, HttpStatusCode.OK, new string[] { "L5", "11", "7", "2T", "2X", "L4" },                       // happy : there is data
+           new int[] { 10, 10, 5, 3, 2, 2 },
+           new double[] { 3.199444, 1.059444, 0.162500, 0.551388, 0.944722, 0.039166 })]
+        [InlineData(2017, 2018, HttpStatusCode.OK, new string[] { }, new int[] { }, new double[] { })]                       // Happy: no records since no data between dates
+        [InlineData(2022, 2021, HttpStatusCode.BadRequest, new string[] { }, new int[] { }, new double[] { })]               // Bad: invalid dates
+        public async void TesterLoad_Scenarios_Test(int startDate, int endDate, HttpStatusCode expectedStatusCode, string[] stationNames, int[] numberOfRuns, double[] totalRunTime)
         {
-            IRestResponse response = await Client.CalculateStationsYield(new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
+            IRestResponse response = await Client.CalculateTesterLoad(new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(expectedStatusCode, response.StatusCode);
-
             QueryResult queryResult = JsonConvert.DeserializeObject<QueryResult>(response.Content);
             string[] columnNames = queryResult.ColumnNames;
             List<dynamic> records = queryResult.Records;
@@ -33,9 +33,8 @@ namespace AcceptanceTests.UseCases.QueryRelated
             {
                 if (columnNames.Length > 0)
                 {
-                    Assert.Equal(new string[] { "Station", "SuccessRatio" }, columnNames);
+                    Assert.Equal(new string[] { "Station", "NumberOfRuns", "TotalRunTimeHours" }, columnNames);
                 }
-
                 Assert.Equal(stationNames.Length, records.Count);
 
                 for (int i = 0; i < records.Count; i++)
@@ -43,8 +42,8 @@ namespace AcceptanceTests.UseCases.QueryRelated
                     string json = JsonConvert.SerializeObject(records[i]);
                     dynamic record = JsonConvert.DeserializeObject<ExpandoObject>(json);
                     Assert.Equal(stationNames[i], record.Station);
-                    Assert.Equal(SuccessRatioValues[i], record.SuccessRatio);
-                    Assert.True(0 <= record.SuccessRatio && record.SuccessRatio <= 100);
+                    Assert.Equal(numberOfRuns[i], record.NumberOfRuns);
+                    Assert.Equal(totalRunTime[i], record.TotalRunTimeHours);
                 }
             }
 

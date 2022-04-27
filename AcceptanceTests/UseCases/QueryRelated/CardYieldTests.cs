@@ -48,6 +48,7 @@ namespace AcceptanceTests
                     Assert.Equal(SuccessRatio_results[i], record.SuccessRatio);
                 }
             }
+
             if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
             {
                 Assert.Null(columnNames);

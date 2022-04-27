@@ -15,6 +15,7 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval);
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate);
     }
     public class TimberyardClient : ITimberyardClient
     {
@@ -25,6 +26,7 @@ namespace TimberyardClient.Client
         private readonly string STATION_AND_CARD_YIELD_ENDPOINT = "/api/Queries/StationAndCardYield";
         private readonly string NFF_ENDPOINT = "/api/Queries/NFF";
         private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
+        private readonly string CARD_TEST_DURATION_ENDPOINT = "/api/Queries/CardTestDuration";
         #endregion
 
         RestClient RestClient { get; }
@@ -46,7 +48,6 @@ namespace TimberyardClient.Client
         {
             var request = new RestRequest(CARD_YIELD_ENDPOINT, Method.POST);
             var body = new { Catalog = catalog, StartDate = startDate, EndDate = endDate };
-            //var jsonBody = JsonConvert.SerializeObject(body);
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
@@ -66,7 +67,7 @@ namespace TimberyardClient.Client
         }
         public async Task<IRestResponse> CalculateNoFailureFound(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
-            var request = new RestRequest(STATION_AND_CARD_YIELD_ENDPOINT, Method.POST);
+            var request = new RestRequest(NFF_ENDPOINT, Method.POST);
             var body = new { CardName = cardName, StartDate = startDate, EndDate = endDate, TimeInterval = timeInterval };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
@@ -75,6 +76,14 @@ namespace TimberyardClient.Client
         {
             var request = new RestRequest(TESTER_LOAD_ENDPOINT, Method.POST);
             var body = new { StartDate = startDate, EndDate = endDate };
+            request.AddJsonBody(body);
+            return await ExecuteWrapperAsync(request);
+        }
+
+        public async Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            var request = new RestRequest(CARD_TEST_DURATION_ENDPOINT, Method.POST);
+            var body = new { Catalog = catalog, StartDate = startDate, EndDate = endDate };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }

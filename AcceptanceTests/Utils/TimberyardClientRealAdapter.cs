@@ -42,5 +42,10 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CalculateTesterLoad(startDate, endDate);
         }
+
+        public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return RealClient.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
     }
 }
