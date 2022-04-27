@@ -14,7 +14,6 @@ namespace WebService.Utils.ExtentionMethods
             if (count > 1)
             {
                 //Compute the Average
-                /*List<double> doubleValues = (List<double>)values.Select(val => Convert.ToDouble(val));*/
                 double avg = values.Average();
 
                 //Perform the Sum of (value-avg)^2
