@@ -54,7 +54,7 @@ namespace AcceptanceTests.Utils
             var response = RealClient != null ? await RealClient.CalculateTesterLoad(startDate, endDate) : defaultResponse;
             return response;
         }
-        
+
         public async Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };

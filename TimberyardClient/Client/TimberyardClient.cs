@@ -19,7 +19,7 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CheckAlarmsCondition();
     }
-    
+
     public class TimberyardClient : ITimberyardClient
     {
         #region End-Points
@@ -36,7 +36,7 @@ namespace TimberyardClient.Client
         private readonly string CHECK_ALARM_CONDITION_ENDPOINT = "/api/Alarms/CheckAlarmsCondition";
         #endregion
 
-         RestClient RestClient { get; }
+        RestClient RestClient { get; }
         public UserCredentials UserCredentials { get; set; }
 
         public TimberyardClient(IOptions<UserCredentials> userCredentials, IOptions<ServiceSettings> serviceSettings)
