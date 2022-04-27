@@ -19,7 +19,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData("9901X_JTAG", 2021, 2022, true, 2 , new string[] { "L5" , "L5" }, new string[] { "75653", "73003" }, new string[] {   "CAPTURE",
+        [InlineData("9901X_JTAG", 2021, 2022, true, 2, new string[] { "L5", "L5" }, new string[] { "75653", "73003" }, new string[] {   "CAPTURE",
                                                                                 "IDENT",
                                                                                 "Program_SFL3710",
                                                                                 "QSPI Programming",
@@ -48,7 +48,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("", 2021, 2022, false, 0, new string[] { }, new string[] { }, new string[] { })]                                                                            // Bad: Invalid catalog
         public async void NFF_Scenarios_Test(string cardName, int startDate, int endDate, bool expectedResult, int expectedNumOfRecords, string[] stationNames, string[] operators, string[] failedTestNames)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01), 5* 60 * 60);
+            Result<QueryResult> queryResult = await QueriesController.CalculateNFF(cardName, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01), 5 * 60 * 60);
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {

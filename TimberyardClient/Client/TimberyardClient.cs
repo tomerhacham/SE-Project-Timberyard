@@ -17,7 +17,9 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate);
+        public Task<IRestResponse> CheckAlarmsCondition();
     }
+    
     public class TimberyardClient : ITimberyardClient
     {
         #region End-Points
@@ -29,6 +31,9 @@ namespace TimberyardClient.Client
         private readonly string TESTER_LOAD_ENDPOINT = "/api/Queries/TesterLoad";
         private readonly string CARD_TEST_DURATION_ENDPOINT = "/api/Queries/CardTestDuration";
         private readonly string BOUNDARIES_DURATION_ENDPOINT = "/api/Queries/Boundaries";
+
+        //Alarms
+        private readonly string CHECK_ALARM_CONDITION_ENDPOINT = "/api/Alarms/CheckAlarmsCondition";
         #endregion
 
          RestClient RestClient { get; }
@@ -81,6 +86,11 @@ namespace TimberyardClient.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
+        public async Task<IRestResponse> CheckAlarmsCondition()
+        {
+            var request = new RestRequest(CHECK_ALARM_CONDITION_ENDPOINT, Method.POST);
+            return await ExecuteWrapperAsync(request);
+        }
 
         public async Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
         {
@@ -111,6 +121,5 @@ namespace TimberyardClient.Client
             var response = await RestClient.ExecuteAsync(request);
             return response;
         }
-
     }
 }

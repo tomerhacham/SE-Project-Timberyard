@@ -52,5 +52,10 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CalculateBoundaries(catalog, startDate, endDate);
         }
+        
+        public Task<IRestResponse> CheckAlarmsCondition()
+        {
+            return RealClient.CheckAlarmsCondition();
+        }
     }
 }
