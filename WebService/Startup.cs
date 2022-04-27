@@ -48,8 +48,8 @@ namespace WebService
                     .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ISMTPClient, SMTPClient>()
-                    .AddSingleton<LogsAndTestsRepository>()
-                    .AddSingleton<AlarmsAndUsersRepository>()
+                    .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
+                    .AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>()
                     .AddSingleton<QueriesController>()
                     .AddSingleton<AlarmsController>()
                     .AddSingleton<SystemFacade>();

@@ -11,7 +11,19 @@ using WebService.Utils.Models;
 
 namespace WebService.Domain.DataAccess
 {
-    public class LogsAndTestsRepository
+    public interface ILogsAndTestsRepository
+    {
+        Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(NoFailureFound noFailureFound);
+        Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration);
+        Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad);
+        Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries);
+        Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime);
+    }
+
+    public class LogsAndTestsRepository : ILogsAndTestsRepository
     {
         //Properties
         public DatabaseSettings DatabaseSettings { get; set; }
