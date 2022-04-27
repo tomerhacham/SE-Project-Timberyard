@@ -16,15 +16,15 @@ namespace WebService.Domain.Business.Queries
             Logger = logger;
         }
 
-        public Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        public async Task<Result<QueryResult>> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
         {
-            /*            Result<QueryResult> inputValidation = IsValidInputs(catalog, startDate, endDate);
-                        if (!inputValidation.Status)
-                        {
-                            return inputValidation;
-                        }*/
-
-            throw new NotImplementedException();
+            Result<QueryResult> inputValidation = IsValidInputs(startDate, endDate, catalog: catalog);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            var query = new Boundaries(catalog, startDate, endDate);
+            return await query.Execute(LogsAndTestsRepository);
         }
 
         public async Task<Result<QueryResult>> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)

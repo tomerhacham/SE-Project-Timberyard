@@ -289,6 +289,20 @@ namespace WebService.Domain.DataAccess
 
         }
 
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
+        {
+            var sqlCommand =
+                @"
+                SELECT Tests.TestName, Tests.Min, Tests.Max, Tests.Received
+                From Logs Join Tests
+                On Tests.Type='Boundaries'
+                Where Catalog=@Catalog AND Date BETWEEN @StartDate AND @EndDate
+                ";
+            var queryParams = new { Catalog = boundaries.Catalog, StartDate = boundaries.StartDate, EndDate = boundaries.EndDate };
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
+
+        }
+
         public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
             var sqlCommand =

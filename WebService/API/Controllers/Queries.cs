@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.QueriesController;
+using WebService.Domain.Business.Queries;
 using WebService.Domain.Interface;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -127,23 +128,33 @@ namespace WebService.API.Controllers
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardTestDurationResponseExample))]
         public async Task<IActionResult> CardTestDuration([FromBody] CardYieldModel model)
         {
-            if (ModelState.IsValid)
+            var response = await SystemInterface.CalculateCardTestDuration(model.Catalog, model.StartDate, model.EndDate);
+            if (response.Status)
             {
-                var response = await SystemInterface.CalculateCardTestDuration(model.Catalog, model.StartDate, model.EndDate);
-                if (response.Status)
-                {
-                    return Ok(response.Data);
-                }
-                else
-                {
-                    return BadRequest(response.Message);
-                }
+                return Ok(response.Data);
             }
             else
             {
-                return BadRequest();
+                return BadRequest(response.Message);
             }
+        }
 
+        [Route("Boundaries")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(BoundariesRequestExample))]
+        [ProducesResponseType(typeof(BoundariesResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(BoundariesResponseExample))]
+        public async Task<IActionResult> Boundaries([FromBody] BoundariesModel model)
+        {
+            var response = await SystemInterface.CalculateBoundaries(model.Catalog, model.StartDate, model.EndDate);
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                return BadRequest(response.Message);
+            }
         }
     }
 }
