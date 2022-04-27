@@ -22,7 +22,7 @@ namespace AcceptanceTests
         [InlineData("X93677", 2021, 2022, HttpStatusCode.OK, 0, new string[] { }, new double[] { })]                                                                  // Happy : There are 0 records of the inputs out of Y records (catalog not exists)   
         [InlineData("", 2021, 2022, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                                // Bad : invalid catalog         
         [InlineData("X93655", 2022, 2021, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                          // Bad : invalid dates   // Bad : invalid dates         
-        public async void GoodAcceptenceScenarioes
+        public async void CardYieldAcceptenceScenarioes
             (string catalog, int startDate, int endDate, HttpStatusCode expectedStatusCode, int records_count, string[] CardName_results, double[] SuccessRatio_results)
         {
             IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
@@ -53,16 +53,6 @@ namespace AcceptanceTests
                 Assert.Null(columnNames);
                 Assert.Null(records);
             }
-        }
-
-        [Theory]
-        [InlineData("", 2021, 2022, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                                       // Bad : invalid catalog         
-        [InlineData("X93655", 2022, 2021, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                                 // Bad : invalid dates   
-        public async void BadAcceptenceScenarioes
-            (string catalog, int startDate, int endDate, HttpStatusCode query_result, int records_count, string[] CardName_results, double[] SuccessRatio_results)
-        {
-            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
-            Assert.Equal(query_result, response.StatusCode);
         }
 
     }
