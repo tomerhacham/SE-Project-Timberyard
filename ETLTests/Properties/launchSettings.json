@@ -1,12 +1,12 @@
 {
   "profiles": {
-    "Valid": {
+   "Valid": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\New\\Json_tests",
-        "Directories__HandeledLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\Handeled",
-        "Directories__FaultLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\Fault",
-        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard_Testing;",
+        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NewLogsRoot",
+        "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
+        "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
         "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
         "DatabaseSettings__DbPassword": "etl_process",
         "DatabaseSettings__DbUsername": "etl_process"
@@ -15,10 +15,10 @@
     "NonExisitngDirectory": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\New\\Json_tests",
-        "Directories__HandeledLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\Handeled",
-        "Directories__FaultLogsDirectory": "C:\\Users\\marke\\Desktop\\BGU\\2022 Forth Year\\Seminar SE Final Project\\Logs\\Fault",
-        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard_Testing;",
+        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NonExitingDirectory",
+        "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
+        "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
         "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
         "DatabaseSettings__DbPassword": "etl_process",
         "DatabaseSettings__DbUsername": "etl_process"
