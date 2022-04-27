@@ -21,6 +21,7 @@ namespace Timberyard_UnitTests.UnitTests
 
         #region Catalog
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_RaiseCondition()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -33,6 +34,7 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_DifferentCatalog()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -46,6 +48,7 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_PassTests()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -60,6 +63,7 @@ namespace Timberyard_UnitTests.UnitTests
 
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_NotReachThreshold()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 2, true, new List<string>() { "test.tests@domain.com" });
@@ -72,9 +76,11 @@ namespace Timberyard_UnitTests.UnitTests
             Assert.False(alarmResult);
         }
         #endregion
+
         #region Station
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_RaiseCondition()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -87,6 +93,7 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_DifferentCatalog()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -100,6 +107,7 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_PassTests()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -114,6 +122,7 @@ namespace Timberyard_UnitTests.UnitTests
 
 
         [Fact]
+        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_NotReachThreshold()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 2, true, new List<string>() { "test.tests@domain.com" });

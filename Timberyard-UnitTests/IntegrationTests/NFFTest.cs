@@ -19,6 +19,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
+        [Trait("Category", "Integration")]
         [InlineData("9901X_JTAG", 2021, 2022, true, 2, new string[] { "L5", "L5" }, new string[] { "75653", "73003" }, new string[] {   "CAPTURE",
                                                                                 "IDENT",
                                                                                 "Program_SFL3710",

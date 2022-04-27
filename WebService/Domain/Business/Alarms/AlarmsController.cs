@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
@@ -11,10 +12,10 @@ namespace WebService.Domain.Business.Alarms
     {
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
-        LogsAndTestsRepository LogsAndTestsRepository { get; }
-        AlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
+        ILogsAndTestsRepository LogsAndTestsRepository { get; }
+        IAlarmsRepository AlarmsAndUsersRepository { get; }
 
-        public AlarmsController(ISMTPClient smtpClient, ILogger logger, LogsAndTestsRepository logsAndTestsRepository, AlarmsAndUsersRepository alarmsAndUsersRepository)
+        public AlarmsController(ISMTPClient smtpClient, ILogger logger, ILogsAndTestsRepository logsAndTestsRepository, IAlarmsRepository alarmsAndUsersRepository)
         {
             SMTPClient = smtpClient;
             Logger = logger;
@@ -59,23 +60,30 @@ namespace WebService.Domain.Business.Alarms
         /// Function to deserialize all active alarms from the DB and instate each one of them.
         /// Each alarm will be check for raise condition and trigger notification if needed
         /// </summary>
-        public async void CheckForAlarmsCondition()
+        public async Task<int> CheckForAlarmsCondition()
         {
             var activeAlarmsResult = await AlarmsAndUsersRepository.GetAllActiveAlarms();
+            var activatedAlarms = 0;
             if (activeAlarmsResult.Status)
             {
                 var currentTime = DateTime.Now;
                 var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
                 if (logsQueryResult.Status && logsQueryResult.Data.Count > 0)
                 {
-                    Parallel.ForEach(activeAlarmsResult.Data, async (Alarm alarm) => await alarm.CheckCondition(logsQueryResult.Data, SMTPClient));
 
+                    Parallel.ForEach(activeAlarmsResult.Data, async (Alarm alarm) =>
+                    {
+                        var result = await alarm.CheckCondition(logsQueryResult.Data, SMTPClient);
+                        if (result)
+                        {
+                            Interlocked.Increment(ref activatedAlarms);
+                        }
+                    });
                 }
                 else { Logger.Warning(logsQueryResult.Message); }
             }
             else { Logger.Warning(activeAlarmsResult.Message); }
-
-
+            return activatedAlarms;
         }
     }
 }
