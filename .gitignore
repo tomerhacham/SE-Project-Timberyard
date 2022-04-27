@@ -451,3 +451,8 @@ ETL/Properties/launchSettings.json
 *.vpp.*
 *.lck
 
+ETLTests/Properties/launchSettings.json
+ETLTests/Properties/launchSettings.json
+Timberyard-UnitTests/appsettings.json
+WebService/appsettings.json
+WebService/Properties/launchSettings.json
