@@ -11,10 +11,10 @@ namespace WebService.Domain.Business.Alarms
     {
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
-        LogsAndTestsRepository LogsAndTestsRepository { get; }
+        ILogsAndTestsRepository LogsAndTestsRepository { get; }
         IAlarmsRepository AlarmsAndUsersRepository { get; }
 
-        public AlarmsController(ISMTPClient smtpClient, ILogger logger, LogsAndTestsRepository logsAndTestsRepository, IAlarmsRepository alarmsAndUsersRepository)
+        public AlarmsController(ISMTPClient smtpClient, ILogger logger, ILogsAndTestsRepository logsAndTestsRepository, IAlarmsRepository alarmsAndUsersRepository)
         {
             SMTPClient = smtpClient;
             Logger = logger;

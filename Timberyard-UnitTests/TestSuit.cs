@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Timberyard_UnitTests.Stubs;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
@@ -23,25 +24,44 @@ namespace Timberyard_UnitTests
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected ServiceProvider ConfigureServices(string profile)
+        protected ServiceProvider ConfigureServices(string profile, [Optional] bool inMemoryLogsAndTestRepository, [Optional] bool inMemoryAlarmsRepository)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                 .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
 
-                .AddSingleton<ISMTPClient>((sp) => {
+                .AddSingleton<ISMTPClient>((sp) =>
+                {
                     var SmtpClient = new Mock<ISMTPClient>();
                     SmtpClient.Setup(client => client.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
                             .ReturnsAsync(new Result<string>(true, "Email sent", ""));
-                    return SmtpClient.Object; })
-                .AddSingleton<LogsAndTestsRepository>()
-                .AddSingleton<IAlarmsRepository,InMemoryAlarmRepository>()
-                .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
-                .AddSingleton<QueriesController>()
-                .AddSingleton<AlarmsController>()
-                .BuildServiceProvider();
-            return serviceProvier;
+                    return SmtpClient.Object;
+                });
+
+            if (inMemoryAlarmsRepository)
+            {
+                serviceProvier.AddSingleton<IAlarmsRepository, InMemoryAlarmRepository>();
+            }
+            else
+            {
+                serviceProvier.AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>();
+            }
+
+            if (inMemoryLogsAndTestRepository)
+            {
+                serviceProvier.AddSingleton<ILogsAndTestsRepository, InMemoryLogsAndTestsRepository>();
+            }
+            else
+            {
+                serviceProvier.AddSingleton<ILogsAndTestsRepository,LogsAndTestsRepository>();
+            }
+
+            serviceProvier.AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
+            .AddSingleton<QueriesController>()
+            .AddSingleton<AlarmsController>();
+
+            return serviceProvier.BuildServiceProvider(); ;
         }
     }
 

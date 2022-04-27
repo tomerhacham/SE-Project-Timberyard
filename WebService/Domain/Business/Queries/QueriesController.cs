@@ -9,8 +9,8 @@ namespace WebService.Domain.Business.Queries
     public class QueriesController
     {
         ILogger Logger { get; }
-        public LogsAndTestsRepository LogsAndTestsRepository { get; }
-        public QueriesController(LogsAndTestsRepository logsAndTestsRepository, ILogger logger)
+        public ILogsAndTestsRepository LogsAndTestsRepository { get; }
+        public QueriesController(ILogsAndTestsRepository logsAndTestsRepository, ILogger logger)
         {
             LogsAndTestsRepository = logsAndTestsRepository;
             Logger = logger;
