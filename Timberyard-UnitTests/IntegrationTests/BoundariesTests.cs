@@ -22,9 +22,9 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         [Theory]
         [InlineData("X39337", 2021, 2022, true, new string[] { "Boundaries_Test2", "Boundaries_Test1" }, new double[] { 2, 1 }, new double[] { 6, 4 }, new double[] { 4, 2.24 }, new double[] { 1.41421, 0.749577 })]          // Happy : There are X records of the inputs out of Y records
-        [InlineData("X39337", 2020, 2019, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                  // Bad: invalid dates
-        [InlineData("", 2020, 2020, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                         // Bad: empty catalog
-        [InlineData("X12345", 2020, 2020, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]             // Bad: catalog                                                                                                                          
+        [InlineData("X39337", 2020, 2019, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                     // Bad: invalid dates
+        [InlineData("", 2021, 2022, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                           // Bad: empty catalog
+        [InlineData("X12345", 2021, 2022, true, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                      // Happy: No records for the given catalog                                                                                                                          
 
         public async void Boundaries_Scenarios_Test(string catalog, int startDate, int endDate, bool expectedResult, String[] testNames, double[] minValue, double[] maxValue, double[] average, double[] standardDeviation)
         {
@@ -32,7 +32,11 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, queryResult.Data.ColumnNames);
+                if (queryResult.Data.ColumnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, queryResult.Data.ColumnNames);
+                }
+
                 Assert.Equal(testNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
                 for (int i = 0; i < testNames.Length; i++)
