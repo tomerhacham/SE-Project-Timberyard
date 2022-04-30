@@ -5,11 +5,20 @@ using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TimberyardClient.Client;
 
 namespace TimberyardClient.Client
 {
+    public enum Field
+    {
+        Catalog,
+        Station
+    }
+
     public interface ITimberyardClient
     {
+        #region Queries Scenarios
+
         public Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateStationsYield(DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateStationAndCardYield(string station, string catalog, DateTime startDate, DateTime endDate);
@@ -17,7 +26,18 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate);
         public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate);
+
+        #endregion
+
+        #region Alarms Scenarios
+
+        public Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
+        public Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
+        public Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
         public Task<IRestResponse> CheckAlarmsCondition();
+
+        #endregion
+
     }
 
     public class TimberyardClient : ITimberyardClient
@@ -33,6 +53,9 @@ namespace TimberyardClient.Client
         private readonly string BOUNDARIES_DURATION_ENDPOINT = "/api/Queries/Boundaries";
 
         //Alarms
+        private readonly string ADD_NEW_ALARM_ENDPOINT = "/api/Alarms/AddNewAlarm";
+        private readonly string EDIT_ALARM_ENDPOINT = "/api/Alarms/EditAlarm";
+        private readonly string REMOVE_ALARM_ENDPOINT = "/api/Alarms/RemoveAlarm";
         private readonly string CHECK_ALARM_CONDITION_ENDPOINT = "/api/Alarms/CheckAlarmsCondition";
         #endregion
 
@@ -50,6 +73,8 @@ namespace TimberyardClient.Client
                 { "accept","application/json" }
             });
         }
+
+        #region Queries Scenarios
 
         public async Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
@@ -86,11 +111,6 @@ namespace TimberyardClient.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
-        public async Task<IRestResponse> CheckAlarmsCondition()
-        {
-            var request = new RestRequest(CHECK_ALARM_CONDITION_ENDPOINT, Method.POST);
-            return await ExecuteWrapperAsync(request);
-        }
 
         public async Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
         {
@@ -107,6 +127,43 @@ namespace TimberyardClient.Client
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
+
+        #endregion
+
+
+        #region Alarms Scenarios
+
+        public async Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var request = new RestRequest(ADD_NEW_ALARM_ENDPOINT, Method.POST);
+            var body = new { Name = name, Field = field, Objective = objective, Threshold = threshold, Receivers = receivers };
+            request.AddJsonBody(body);
+            return await ExecuteWrapperAsync(request);
+        }
+
+        public async Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var request = new RestRequest(EDIT_ALARM_ENDPOINT, Method.POST);
+            var body = new { Name = name, Field = field, Objective = objective, Threshold = threshold, Receivers = receivers };
+            request.AddJsonBody(body);
+            return await ExecuteWrapperAsync(request);
+        }
+
+        public async Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var request = new RestRequest(REMOVE_ALARM_ENDPOINT, Method.POST);
+            var body = new { Name = name, Field = field, Objective = objective, Threshold = threshold, Receivers = receivers };
+            request.AddJsonBody(body);
+            return await ExecuteWrapperAsync(request);
+        }
+
+        public async Task<IRestResponse> CheckAlarmsCondition()
+        {
+            var request = new RestRequest(CHECK_ALARM_CONDITION_ENDPOINT, Method.POST);
+            return await ExecuteWrapperAsync(request);
+        }
+
+        #endregion
 
         /// <summary>
         /// Utility function to wrap the request sending process and add the JWT data

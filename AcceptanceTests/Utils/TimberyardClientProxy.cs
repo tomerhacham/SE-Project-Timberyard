@@ -1,8 +1,10 @@
 ﻿using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using TimberyardClient.Client;
+
 
 namespace AcceptanceTests.Utils
 {
@@ -19,6 +21,7 @@ namespace AcceptanceTests.Utils
         //of them implement the same interface
         public ITimberyardClient RealClient { get; set; }
 
+        #region Queries Scenarios
 
         public async Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
@@ -68,11 +71,39 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
+        #endregion
+
+
+        #region Alsrms Scenarios
+
+        public async Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.AddNewAlarm(name, field, objective, threshold, receivers) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.EditAlarm(name, field, objective, threshold, receivers) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.RemoveAlarm(name, field, objective, threshold, receivers) : defaultResponse;
+            return response;
+        }
+
         public async Task<IRestResponse> CheckAlarmsCondition()
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
             var response = RealClient != null ? await RealClient.CheckAlarmsCondition() : defaultResponse;
             return response;
         }
+
+        #endregion
     }
 }

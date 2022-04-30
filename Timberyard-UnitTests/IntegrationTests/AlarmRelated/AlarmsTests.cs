@@ -60,7 +60,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             var inDataAlarm = AlarmsRepository.Data.Values.First();
             Assert.Equal("Edited", inDataAlarm.Name);
             Assert.Equal("Edited", inDataAlarm.Objective);
-            Assert.Equal(false, inDataAlarm.Active);
+            Assert.False(inDataAlarm.Active);
             Assert.Equal(new List<string>() { "tomer@tests.com" }, inDataAlarm.Receivers);
         }
 

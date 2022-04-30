@@ -1,5 +1,6 @@
 ﻿using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TimberyardClient.Client;
 
@@ -17,6 +18,8 @@ namespace AcceptanceTests.Utils
         {
             RealClient = GetConfiguratedClient();
         }
+
+        #region Queries Scenarios
 
         public Task<IRestResponse> CalculateCardYield(string catalog, DateTime startDate, DateTime endDate)
         {
@@ -53,9 +56,28 @@ namespace AcceptanceTests.Utils
             return RealClient.CalculateBoundaries(catalog, startDate, endDate);
         }
 
+        #endregion
+
+        #region Alarms Scenarios
+
+        public Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            return RealClient.AddNewAlarm(name, field, objective, threshold, receivers);
+        }
+        public Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            return RealClient.EditAlarm(name, field, objective, threshold, receivers);
+        }
+        public Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        {
+            return RealClient.RemoveAlarm(name, field, objective, threshold, receivers);
+        }
+
         public Task<IRestResponse> CheckAlarmsCondition()
         {
             return RealClient.CheckAlarmsCondition();
         }
+
+        #endregion
     }
 }

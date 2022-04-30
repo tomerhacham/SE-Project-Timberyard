@@ -59,6 +59,7 @@ namespace WebService.API.Controllers
                 return BadRequest(error);
             }
         }
+
         [Route("RemoveAlarm")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
