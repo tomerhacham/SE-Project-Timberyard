@@ -54,5 +54,10 @@ namespace Timberyard_UnitTests.Stubs
         {
             throw new NotImplementedException();
         }
+
+        public Task<Result<bool>> UpdateUser(UserDTO record)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

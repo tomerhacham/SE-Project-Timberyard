@@ -6,7 +6,7 @@ using WebService.Domain.Business.Alarms;
 
 namespace WebService.API.Controllers.Models
 {
-    public class AdminLoginModel
+    public class LoginModel
     {
         [ValidEmail]
         public string Email { get; set; }
@@ -20,11 +20,4 @@ namespace WebService.API.Controllers.Models
         public string Email { get; set; }
     }
 
-    public class RegularUserLoginModel
-    {
-        [ValidEmail]
-        public string Email { get; set; }
-        [StringIsNotNullOrEmpty]
-        public string VerificationCode { get; set; }
-    }
 }

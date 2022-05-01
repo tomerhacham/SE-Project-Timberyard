@@ -22,6 +22,7 @@ namespace WebService.Domain.DataAccess
         public Task<Result<Alarm>> UpdateAlarm(Alarm alarm);
         public Task<Result<Alarm>> DeleteAlarm(Alarm alarm);
         public Task<Result<UserDTO>> GetUserRecord(string email);
+        Task<Result<bool>> UpdateUser(UserDTO record);
     }
     public class AlarmsAndUsersRepository : IAlarmsRepository
     {
@@ -123,6 +124,11 @@ namespace WebService.Domain.DataAccess
         public Task<Result<UserDTO>> GetUserRecord(string email)
         {
             return Task.FromResult(new Result<UserDTO>(true, new UserDTO() { Email = email }, ""));
+        }
+
+        public Task<Result<bool>> UpdateUser(UserDTO record)
+        {
+            throw new NotImplementedException();
         }
 
 

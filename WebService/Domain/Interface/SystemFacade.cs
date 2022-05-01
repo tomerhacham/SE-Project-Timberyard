@@ -39,6 +39,7 @@ namespace WebService.Domain.Interface
         {
             return await QueriesController.CalculateStationAndCardYield(station, catalog, startDate, endDate);
         }
+
         public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
             return await QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
@@ -129,6 +130,10 @@ namespace WebService.Domain.Interface
         public async Task RequestVerificationCode(string email)
         {
             await AuthenticationController.RequestVerificationCode(email);
+        }
+        public async Task<Result<JWTtoken>> Login(string email, string password)
+        {
+            return await AuthenticationController.Login(email, password);
         }
 
         #endregion

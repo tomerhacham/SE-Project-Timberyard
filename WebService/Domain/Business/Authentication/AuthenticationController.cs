@@ -52,7 +52,7 @@ namespace WebService.Domain.Business.Authentication
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {
-                var record = recordResult.Data; 
+                var record = recordResult.Data;
                 var random_number = new Random().Next(100000, 999999).ToString();
                 var message = $"Use verification code {random_number} for Timberyard authentication";
                 Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
