@@ -119,9 +119,10 @@ namespace WebService.Domain.DataAccess
 
         #region Users
 
+        // TODO 
         public Task<Result<UserDTO>> GetUserRecord(string email)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new Result<UserDTO>(true, new UserDTO() { Email = email }, ""));
         }
 
 
