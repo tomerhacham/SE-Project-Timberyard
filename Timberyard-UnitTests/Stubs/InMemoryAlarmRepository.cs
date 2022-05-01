@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.DataAccess;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace Timberyard_UnitTests.Stubs
@@ -47,6 +48,11 @@ namespace Timberyard_UnitTests.Stubs
             Data[alarm.Id] = alarm;
             return new Result<Alarm>(true, alarm);
 
+        }
+
+        public Task<Result<UserDTO>> GetUserRecord(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

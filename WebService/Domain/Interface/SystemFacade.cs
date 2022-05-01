@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Alarms;
+using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 
@@ -12,10 +13,12 @@ namespace WebService.Domain.Interface
     {
         QueriesController QueriesController { get; }
         AlarmsController AlarmsController { get; }
-        public SystemFacade(QueriesController queriesController, AlarmsController alarmsController)
+        AuthenticationController AuthenticationController { get; }
+        public SystemFacade(QueriesController queriesController, AlarmsController alarmsController, AuthenticationController authenticationController)
         {
             QueriesController = queriesController;
             AlarmsController = alarmsController;
+            AuthenticationController = authenticationController;
         }
 
         #region Queries
@@ -27,6 +30,7 @@ namespace WebService.Domain.Interface
         {
             return await QueriesController.CalculateCardYield(catalog, startDate, endDate);
         }
+
         public async Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateStationsYield(startDate, endDate);
@@ -40,17 +44,19 @@ namespace WebService.Domain.Interface
             return await QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
         }
 
-        public async Task CheckAlarmsCondition()
-        {
-            AlarmsController.CheckForAlarmsCondition();
-        }
-
-
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateTesterLoad(startDate, endDate);
         }
+
+        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
+
         #endregion
+
+        #region Alarms
 
         public async Task<Result<FullAlarmModel>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
@@ -72,7 +78,6 @@ namespace WebService.Domain.Interface
             return new Result<FullAlarmModel>(alarmResult.Status, null, alarmResult.Message);
 
         }
-
         public async Task<Result<FullAlarmModel>> EditAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
             var editAlarmResult = await AlarmsController.EditAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
@@ -111,9 +116,22 @@ namespace WebService.Domain.Interface
             }
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
-        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+
+        public async Task CheckAlarmsCondition()
         {
-            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+            await AlarmsController.CheckForAlarmsCondition();
         }
+
+        #endregion
+
+        #region Authentication
+
+        public async Task RequestVerificationCode(string email)
+        {
+            await AuthenticationController.RequestVerificationCode(email);
+        }
+
+        #endregion
+
     }
 }

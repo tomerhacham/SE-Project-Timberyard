@@ -21,6 +21,7 @@ namespace WebService.Domain.DataAccess
         public Task<Result<Alarm>> InsertAlarm(Alarm alarm);
         public Task<Result<Alarm>> UpdateAlarm(Alarm alarm);
         public Task<Result<Alarm>> DeleteAlarm(Alarm alarm);
+        public Task<Result<UserDTO>> GetUserRecord(string email);
     }
     public class AlarmsAndUsersRepository : IAlarmsRepository
     {
@@ -115,5 +116,15 @@ namespace WebService.Domain.DataAccess
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
+
+        #region Users
+
+        public Task<Result<UserDTO>> GetUserRecord(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #endregion
     }
 }

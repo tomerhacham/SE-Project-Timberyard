@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text.Json;
 using WebService.API.ActionFilters;
 using WebService.Domain.Business.Alarms;
+using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
@@ -52,6 +53,7 @@ namespace WebService
                     .AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>()
                     .AddSingleton<QueriesController>()
                     .AddSingleton<AlarmsController>()
+                    .AddSingleton<AuthenticationController>()
                     .AddSingleton<SystemFacade>();
 
             services.AddControllers(options => options.Filters.Add(new UnhandledExceptionCheckFilter(new Logger("Timberyard-service"))))
