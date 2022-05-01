@@ -24,7 +24,7 @@ namespace WebService.Domain.Business.Queries
             TimeInterval = timeInterval;
         }
 
-        public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
+        public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
             {

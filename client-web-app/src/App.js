@@ -12,7 +12,7 @@ import Settings from './components/settings/Settings';
 import QueryPage from './components/queries/QueryPage';
 // Constants
 import {
-    CARD_YIELD_PATH, STATION_YIELD_PATH,
+    CARD_YIELD_PATH, STATION_YIELD_PATH, NFF_PATH,
     STATION_CARD_YIELD_PATH, SETTINGS_PATH, LOGIN_PATH
 } from './constants/constants';
 
@@ -35,6 +35,9 @@ const App = () => {
                   <Route path='' element={<QueryPage />} />
                 </Route>
                 <Route exact path={STATION_CARD_YIELD_PATH} element={<PrivateRoute />}>
+                  <Route path='' element={<QueryPage />} />
+                </Route>
+                <Route exact path={NFF_PATH} element={<PrivateRoute />}>
                   <Route path='' element={<QueryPage />} />
                 </Route>
                 <Route exact path='/' element={<Dashboard />} />

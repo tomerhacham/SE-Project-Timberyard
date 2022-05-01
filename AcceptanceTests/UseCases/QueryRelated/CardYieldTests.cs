@@ -3,7 +3,9 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
+using WebService.Domain.Business.Queries;
 using Xunit;
 
 namespace AcceptanceTests
@@ -15,25 +17,43 @@ namespace AcceptanceTests
         { }
 
         [Theory]
-        [InlineData(2020, 2022, "OA_HF", HttpStatusCode.OK, true)]          // Happy - catalog ID exists
-        [InlineData(2020, 2022, "OP_KLF", HttpStatusCode.OK, true)]         // Happy - catalog ID exists
-        [InlineData(2020, 2022, "CCH1", HttpStatusCode.OK, false)]            // Sad - catalog ID not exists
-        public async void GoodAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode, bool isEmptyContent)
+        [InlineData("X93655", 2021, 2022, HttpStatusCode.OK, 2, new string[] { "9901X_JTAG", "HIO400A_JTAG" }, new double[] { 70, 50 })]                              // Happy : There are X records of the inputs out of Y records 
+        [InlineData("XH8655", 2021, 2022, HttpStatusCode.OK, 1, new string[] { "XMCP-B_HIK" }, new double[] { 0 })]                                                   // Happy : There are 0 success records of the inputs out of Y records
+        [InlineData("X93677", 2021, 2022, HttpStatusCode.OK, 0, new string[] { }, new double[] { })]                                                                  // Happy : There are 0 records of the inputs out of Y records (catalog not exists)   
+        [InlineData("", 2021, 2022, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                                // Bad : invalid catalog         
+        [InlineData("X93655", 2022, 2021, HttpStatusCode.BadRequest, 0, new string[] { }, new double[] { })]                                                          // Bad : invalid dates   // Bad : invalid dates         
+        public async void CardYieldAcceptenceScenarioes
+            (string catalog, int startDate, int endDate, HttpStatusCode expectedStatusCode, int records_count, string[] CardName_results, double[] SuccessRatio_results)
         {
-            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
+            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(expectedStatusCode, response.StatusCode);
-            dynamic content = JsonConvert.DeserializeObject<dynamic>(response.Content);
-            Assert.Equal(isEmptyContent, content.Records > 0);
-        }
+            QueryResult queryResult = JsonConvert.DeserializeObject<QueryResult>(response.Content);
+            string[] columnNames = queryResult.ColumnNames;
+            List<dynamic> records = queryResult.Records;
 
-        [Theory]
-        [InlineData(2020, 2022, "", HttpStatusCode.BadRequest)]         // Bad - empty catalog ID
-        [InlineData(2022, 2020, "SomeCatalog", HttpStatusCode.BadRequest)]         // Bad - start date > end date
-        public async void BadAcceptenceScenarioes(int start, int end, string catalog, HttpStatusCode expectedStatusCode)
-        {
-            IRestResponse response = await Client.CalculateCardYield(catalog, new DateTime(start, 1, 10), new DateTime(end, 1, 10));
-            Assert.Equal(expectedStatusCode, response.StatusCode);
+            if (response.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                if (columnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "Catalog", "CardName", "SuccessRatio" }, columnNames);
+                }
+                Assert.Equal(records_count, records.Count);
 
+                for (int i = 0; i < records_count; i++)
+                {
+                    string json = JsonConvert.SerializeObject(records[i]);
+                    dynamic record = JsonConvert.DeserializeObject<ExpandoObject>(json);
+                    Assert.Equal(catalog, record.Catalog);
+                    Assert.Equal(CardName_results[i], record.CardName);
+                    Assert.Equal(SuccessRatio_results[i], record.SuccessRatio);
+                }
+            }
+
+            if (response.StatusCode.Equals(HttpStatusCode.BadRequest))
+            {
+                Assert.Null(columnNames);
+                Assert.Null(records);
+            }
         }
 
     }

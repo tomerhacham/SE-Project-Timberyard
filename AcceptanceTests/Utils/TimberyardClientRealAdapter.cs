@@ -1,7 +1,7 @@
-﻿using AcceptanceTests.Client;
-using RestSharp;
+﻿using RestSharp;
 using System;
 using System.Threading.Tasks;
+using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
 {
@@ -41,6 +41,21 @@ namespace AcceptanceTests.Utils
         public Task<IRestResponse> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return RealClient.CalculateTesterLoad(startDate, endDate);
+        }
+
+        public Task<IRestResponse> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return RealClient.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
+
+        public Task<IRestResponse> CalculateBoundaries(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return RealClient.CalculateBoundaries(catalog, startDate, endDate);
+        }
+
+        public Task<IRestResponse> CheckAlarmsCondition()
+        {
+            return RealClient.CheckAlarmsCondition();
         }
     }
 }

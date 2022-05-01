@@ -19,15 +19,20 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData(2021, 2021, true, new string[] { "04", "11", "1P", "1T", "2L", "7S", "8D", "B2", "C2", "L4" }, new double[] { 100, 91.666666666666, 0, 94.736842105263, 0, 0, 100, 33.333333333333, 100, 60 })]
-        [InlineData(2021, 2020, false, new string[] { }, new double[] { })]
+        [Trait("Category", "Integration")]
+        [InlineData(2021, 2022, true, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is data in these dates
+        [InlineData(2017, 2018, true, new string[] { }, new double[] { })]                                                                                      // Happy: there is no data in these dates
+        [InlineData(2022, 2021, false, new string[] { }, new double[] { })]                                                                                     // Bad: Invalid dates
         public async void StationsYield_Scenarios_Test(int startDate, int endDate, bool expectedResult, string[] stationNames, double[] SuccessRatioValues)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateStationsYield(new DateTime(startDate, 01, 01), new DateTime(endDate, 01, 03));
+            Result<QueryResult> queryResult = await QueriesController.CalculateStationsYield(new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "Station", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                if (queryResult.Data.ColumnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "Station", "SuccessRatio" }, queryResult.Data.ColumnNames);
+                }
                 Assert.Equal(stationNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
                 for (int i = 0; i < stationNames.Length; i++)

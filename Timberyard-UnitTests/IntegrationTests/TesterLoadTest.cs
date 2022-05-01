@@ -19,17 +19,22 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [InlineData(2021, 2021, true, new string[] { "1T", "L4", "04", "2L", "1P", "11", "8D", "19", "B2", "C2", "7S", "1Y" },
-            new int[] { 20, 19, 14, 14, 13, 13, 9, 7, 6, 4, 1, 1 },
-            new double[] { 10.440277, 2.946944, 3.220833, 0.803333, 2.149722, 1.568055, 5.912222, 0.413888, 0.586666, 1.570277, 0.718333, 0.419166 })]
-        [InlineData(2021, 2020, false, new string[] { }, new int[] { }, new double[] { })]
+        [Trait("Category", "Integration")]
+        [InlineData(2021, 2022, true, new string[] { "L5", "11", "7", "2T", "2X", "L4" },                       // happy : there is data
+            new int[] { 10, 10, 5, 3, 2, 2 },
+            new double[] { 3.199444, 1.059444, 0.162500, 0.551388, 0.944722, 0.039166 })]
+        [InlineData(2017, 2018, true, new string[] { }, new int[] { }, new double[] { })]                       // happy : no data between dates                                             // Happy: no records since no data between dates
+        [InlineData(2022, 2021, false, new string[] { }, new int[] { }, new double[] { })]                      // bad: Invalid dates                                                // Bad: invalid dates
         public async void TesterLoad_Scenarios_Test(int startDate, int endDate, bool expectedResult, string[] stationNames, int[] numberOfRuns, double[] totalRunTime)
         {
-            Result<QueryResult> queryResult = await QueriesController.CalculateTesterLoad(new DateTime(startDate, 01, 01), new DateTime(endDate, 01, 03));
+            Result<QueryResult> queryResult = await QueriesController.CalculateTesterLoad(new DateTime(startDate, 12, 01), new DateTime(endDate, 12, 01));
             Assert.Equal(expectedResult, queryResult.Status);
             if (expectedResult)
             {
-                Assert.Equal(new string[] { "Station", "NumberOfRuns", "TotalRunTimeHours" }, queryResult.Data.ColumnNames);
+                if (queryResult.Data.ColumnNames.Length > 0)
+                {
+                    Assert.Equal(new string[] { "Station", "NumberOfRuns", "TotalRunTimeHours" }, queryResult.Data.ColumnNames);
+                }
                 Assert.Equal(stationNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
                 for (int i = 0; i < stationNames.Length; i++)

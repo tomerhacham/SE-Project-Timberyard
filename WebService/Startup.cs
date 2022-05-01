@@ -12,7 +12,9 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using WebService.API.ActionFilters;
+using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Domain.Interface;
 using WebService.Utils;
@@ -43,9 +45,13 @@ namespace WebService
 
             //Dependency injection
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                    .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
-                    .AddSingleton<LogsAndTestsRepository>()
+                    .AddSingleton<ISMTPClient, SMTPClient>()
+                    .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
+                    .AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>()
                     .AddSingleton<QueriesController>()
+                    .AddSingleton<AlarmsController>()
                     .AddSingleton<SystemFacade>();
 
             services.AddControllers(options => options.Filters.Add(new UnhandledExceptionCheckFilter(new Logger("Timberyard-service"))))
