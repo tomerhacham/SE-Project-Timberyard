@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace WebService.Utils.ExtentionMethods
@@ -23,6 +25,14 @@ namespace WebService.Utils.ExtentionMethods
                 ret = Math.Sqrt(sum / count);
             }
             return ret;
+        }
+
+        public static string HashString(this string value)
+        {
+            var sha256 = new SHA256CryptoServiceProvider();
+            var hash_bytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(value));
+
+            return Encoding.ASCII.GetString(hash_bytes);
         }
     }
 }

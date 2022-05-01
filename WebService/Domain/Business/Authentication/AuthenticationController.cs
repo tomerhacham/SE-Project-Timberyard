@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
+using WebService.Utils.ExtentionMethods;
 
 namespace WebService.Domain.Business.Authentication
 {
@@ -22,16 +24,14 @@ namespace WebService.Domain.Business.Authentication
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
         }
 
-        public async Task<Result<JWTtoken>> SystemAdminLogin(string email, string password)
+        public async Task<Result<JWTtoken>> Login(string email, string password)
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                var sha256 = new SHA256CryptoServiceProvider();
-                var hash_pass = sha256.ComputeHash(Encoding.ASCII.GetBytes(record.Password));
 
-                if (password.Equals(Encoding.ASCII.GetString(hash_pass)))
+                if (password.HashString().Equals(record.Password))
                 {
                     JWTtoken token = GenerateToken(record);
                     return new Result<JWTtoken>(true, token, "Login success");
@@ -52,9 +52,13 @@ namespace WebService.Domain.Business.Authentication
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {
+                var record = recordResult.Data; 
                 var random_number = new Random().Next(100000, 999999).ToString();
                 var message = $"Use verification code {random_number} for Timberyard authentication";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { recordResult.Data.Email }));
+                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
+                record.Password = random_number.HashString();
+                Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
+
                 return new Result<bool>(true, true, "Verification code send successfuly");
             }
 
