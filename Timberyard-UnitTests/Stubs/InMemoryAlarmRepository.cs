@@ -59,5 +59,15 @@ namespace Timberyard_UnitTests.Stubs
         {
             throw new NotImplementedException();
         }
+
+        public Task<Result<bool>> AddUser(UserDTO record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<bool>> RemoveUser(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

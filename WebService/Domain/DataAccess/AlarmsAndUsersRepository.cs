@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -46,6 +47,7 @@ namespace WebService.Domain.DataAccess
             DatabaseSettings.ConnectionString = builder.ToString();
         }
 
+        #region Alarm
         public async Task<Result<List<Alarm>>> GetAllActiveAlarms()
         {
             var sqlCommand = @"select * from Alarms where Active=1";
@@ -119,28 +121,73 @@ namespace WebService.Domain.DataAccess
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
+        #endregion
 
         #region Authentication 
-
-        // TODO - implement 
-        public Task<Result<UserDTO>> GetUserRecord(string email)
+        public async Task<Result<UserDTO>> GetUserRecord(string email)
         {
-            throw new NotImplementedException();
+            var sqlCommand =
+                @"
+                SELECT *
+                from Users
+                where Email=@Email";
+            var queryParams = new { Email = email };
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var user_record = await connection.QueryAsync<UserDTO>(sqlCommand, queryParams);
+                return user_record.Count() > 0 ? new Result<UserDTO>(true, user_record.First()) : new Result<UserDTO>(false, null, $"User with email {email} was not found in data base");
+            }
+            catch (Exception e)
+            {
+                return new Result<UserDTO>(false, null, "There was a problem with the DataBase");
+            }
         }
 
-        public Task<Result<bool>> UpdateUser(UserDTO record)
+        public async Task<Result<bool>> UpdateUser(UserDTO record)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var returnVal = await connection.UpdateAsync(record) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {record.Email} was not found in data base");
+                return returnVal;
+            }
+            catch (Exception e)
+            {
+                return new Result<bool>(false, false, "There was a problem with the DataBase");
+            }
         }
 
-        public Task<Result<bool>> RemoveUser(string email)
+        public async Task<Result<bool>> RemoveUser(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var returnVal = await connection.DeleteAsync(email) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {email} was not found in data base");
+                return returnVal;
+            }
+            catch (Exception e)
+            {
+                return new Result<bool>(false, false, "There was a problem with the DataBase");
+            }
         }
 
-        public Task<Result<bool>> AddUser(UserDTO record)
+        public async Task<Result<bool>> AddUser(UserDTO user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                await connection.InsertAsync(user);
+                return new Result<bool>(true, true);
+            }
+            catch (Exception e)
+            {
+                return new Result<bool>(false, false, "There was a problem with the DataBase");
+            }
         }
 
 

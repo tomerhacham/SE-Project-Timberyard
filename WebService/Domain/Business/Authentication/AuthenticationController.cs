@@ -72,7 +72,8 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
-            UserDTO user = new UserDTO(email);
+            UserDTO user = new UserDTO() { Email = email, Role = Role.RegularUser };
+
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
