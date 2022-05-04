@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 using WebService.Utils.ExtentionMethods;
 
@@ -31,7 +32,7 @@ namespace WebService.Domain.Business.Authentication
             {
                 var record = recordResult.Data;
 
-                if (password.HashString().Equals(record.Password))
+                if (password.HashString().Equals(record.Password) && DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0)
                 {
                     JWTtoken token = GenerateToken(record);
                     return new Result<JWTtoken>(true, token, "Login success");
@@ -57,6 +58,8 @@ namespace WebService.Domain.Business.Authentication
                 var message = $"Use verification code {random_number} for Timberyard authentication";
                 Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
                 record.Password = random_number.HashString();
+                record.ExperationTimeStamp = DateTime.Now.AddMinutes(5);
+
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
 
                 return new Result<bool>(true, true, "Verification code send successfuly");
@@ -64,6 +67,28 @@ namespace WebService.Domain.Business.Authentication
 
             Logger.Warning(recordResult.Message);
             return new Result<bool>(false, false, recordResult.Message);
+        }
+
+        public async Task<Result<bool>> AddUser(string email)
+        {
+            // create new User
+            UserDTO user = new UserDTO(email);
+            Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
+            if (!result.Status)
+            {
+                Logger.Warning(result.Message);
+            }
+            return result;
+        }
+
+        public async Task<Result<bool>> RemoveUser(string email)
+        {
+            Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
+            if (!result.Status)
+            {
+                Logger.Warning(result.Message);
+            }
+            return result;
         }
 
         private JWTtoken GenerateToken(DataAccess.DTO.UserDTO record)

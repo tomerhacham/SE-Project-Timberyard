@@ -79,6 +79,7 @@ namespace WebService.Domain.Interface
             return new Result<FullAlarmModel>(alarmResult.Status, null, alarmResult.Message);
 
         }
+
         public async Task<Result<FullAlarmModel>> EditAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
             var editAlarmResult = await AlarmsController.EditAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
@@ -135,6 +136,18 @@ namespace WebService.Domain.Interface
         {
             return await AuthenticationController.Login(email, password);
         }
+
+        public async Task<Result<bool>> AddUser(string email)
+        {
+            return await AuthenticationController.AddUser(email);
+        }
+
+        public async Task<Result<bool>> RemoveUser(string email)
+        {
+            return await AuthenticationController.RemoveUser(email);
+        }
+
+
 
         #endregion
 
