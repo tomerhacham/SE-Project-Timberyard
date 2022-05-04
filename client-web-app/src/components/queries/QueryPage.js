@@ -1,29 +1,25 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { some, keys } from 'lodash';
 import { Container, Avatar, Typography, TextField, Button, Grid, Box } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import EvStationIcon from '@mui/icons-material/EvStation';
 import GppBadIcon from '@mui/icons-material/GppBad';
+import FenceIcon from '@mui/icons-material/Fence';
 import { QueryPost } from '../../api/Api';
 import QueryTable from './QueryTable';
 import BarChart from './graph/BarChart';
 import Loader from '../../generic-components/Loader';
 import { dataToTable } from '../../utils/helperFunctions';
-import queriesJson from '../../json/queriesPages.json';
 import { queriesInputBoxSx } from '../../theme';
-import { 
-    CARD_YIELD_PATH, STATION_YIELD_PATH, 
-    STATION_CARD_YIELD_PATH, CARD_YIELD_ID, NFF_PATH,
-    CARD_YIELD_ICON, STATION_YIELD_ICON,
-    STATION_CARD_YIELD_ICON, NFF_ICON
+import {  
+    CARD_YIELD_ID, CARD_YIELD_ICON, STATION_YIELD_ICON,
+    STATION_CARD_YIELD_ICON, NFF_ICON, BOUNDARIES_ICON
 } from '../../constants/constants';
 
-const QueryPage = () => {
-    const location = useLocation();
-
-    const [queryElement, setQueryElement] = useState(null);
+const QueryPage = ({ data }) => {
+    const [queryElement, setQueryElement] = useState(data);
     const { id, title, fields, url, icon } = queryElement ?? {};
 
     const [userInput, setUserInput] = useState({});
@@ -65,6 +61,8 @@ const QueryPage = () => {
                 return <EvStationIcon />;
             case NFF_ICON:
                 return <GppBadIcon />;
+            case BOUNDARIES_ICON:
+                return <FenceIcon />;
             default:
                 return <SdCardIcon />;
         }
@@ -121,29 +119,17 @@ const QueryPage = () => {
     }, [tableData]);
 
     useEffect(() => {
+        setQueryElement(data);
+    }, [data]);
+
+    useEffect(() => {
+        // reset fields on page change
         setShowQuery(false);
         setLoading(false);
         setTableData(null);
         setChartData(null);
         setUserInput({});
-
-        switch (location.pathname) {
-            case CARD_YIELD_PATH:
-                setQueryElement(queriesJson.cardYield);
-                break;
-            case STATION_YIELD_PATH:
-                setQueryElement(queriesJson.stationYield);
-                break;
-            case STATION_CARD_YIELD_PATH:
-                setQueryElement(queriesJson.stationCardYield);
-                break;
-            case NFF_PATH:
-                setQueryElement(queriesJson.nff);
-                break;
-            default:
-                console.log('error in location');
-        }
-    }, [location.pathname]);
+    }, [queryElement]);
 
     return (
         <Box 
@@ -176,5 +162,20 @@ const QueryPage = () => {
         </Box>
     )
 }
+
+QueryPage.propTypes = {
+    data: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired,
+        fields: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired,
+            required: PropTypes.bool,
+            type: PropTypes.string.isRequired,
+            autoFocus: PropTypes.bool
+        }))
+    })
+};
 
 export default QueryPage;

@@ -113,5 +113,32 @@
             }
         ],
         "icon": "GppBad"
+    },
+    "boundaries": {
+        "id": "boundaries",
+        "title": "Boundaries",
+        "url": "/Queries/Boundaries",
+        "fields": [
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "FenceIcon"
     }
 }
