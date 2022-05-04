@@ -152,6 +152,14 @@ namespace WebService.Domain.Interface
         {
             return await AuthenticationController.ChangeSystemAdminPassword(email, newPassword, oldPassword);
         }
+        public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
+        {
+            return await AuthenticationController.AddSystemAdmin(newSystemAdminEmail);
+        }
+        public async Task<Result<bool>> ForgetPassword(string email)
+        {
+            return await AuthenticationController.ForgetPassword(email);
+        }
 
 
 

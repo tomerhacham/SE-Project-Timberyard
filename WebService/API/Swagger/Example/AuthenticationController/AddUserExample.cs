@@ -7,7 +7,7 @@ using WebService.API.Controllers.Models;
 
 namespace WebService.API.Swagger.Example.AuthenticationController
 {
-    public class ChangeSystemAdminPassword : IExamplesProvider<object>
+    public class AddUserExample : IExamplesProvider<object>
     {
         public object GetExamples()
         {

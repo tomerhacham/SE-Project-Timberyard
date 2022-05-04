@@ -32,7 +32,9 @@ namespace WebService.Domain.Business.Authentication
             {
                 var record = recordResult.Data;
 
-                if (password.HashString().Equals(record.Password) && DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0)
+                bool condition = record.Role == Role.RegularUser ? DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0 : true;
+
+                if (password.HashString().Equals(record.Password) && condition)
                 {
                     JWTtoken token = GenerateToken(record);
                     return new Result<JWTtoken>(true, token, "Login success");
@@ -97,9 +99,9 @@ namespace WebService.Domain.Business.Authentication
             UserDTO user = record.Data;
             if (user != null)
             {
-                if (user.Password == oldPassword)
+                if (user.Password == oldPassword.HashString())
                 {
-                    user.Password = newPassword;
+                    user.Password = newPassword.HashString();
                     return await AlarmsAndUsersRepository.UpdateUser(user);
                 }
 
@@ -111,9 +113,45 @@ namespace WebService.Domain.Business.Authentication
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
+        public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
+        {
+            // create new User
+            var random_number = new Random().Next(100000, 999999).ToString();
+            var message = $"You added as system admin on Timberyard ! your temporary passord is {random_number} for Timberyard authentication.";
+            Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
+            string tempPassword = random_number.HashString();
+
+            UserDTO user = new UserDTO(newSystemAdminEmail, tempPassword);
+            Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
+            if (!result.Data)
+            {
+                Logger.Warning(result.Message);
+            }
+            return result;
+        }
+        public async Task<Result<bool>> ForgetPassword(string email)
+        {
+            var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
+            UserDTO user = recordResult.Data;
+
+            if (user != null)
+            {
+                var random_number = new Random().Next(100000, 999999).ToString();
+                var message = $"Your temporary passord is {random_number} for Timberyard authentication.";
+                Task.Run(async () => await SMTPClient.SendEmail("Timberyard forget password authentication", message, new List<string>() { email }));
+                user.Password = random_number.HashString();
+                return await AlarmsAndUsersRepository.UpdateUser(user);
+            }
+
+            Logger.Warning("User doesn't exist");
+            return new Result<bool>(false, false, "User doesn't exist");
+        }
+
         private JWTtoken GenerateToken(DataAccess.DTO.UserDTO record)
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

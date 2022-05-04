@@ -7,13 +7,13 @@ using WebService.API.Controllers.Models;
 
 namespace WebService.API.Swagger.Example.AuthenticationController
 {
-    public class RemoveUser : IExamplesProvider<object>
+    public class ForgetPasswordExample : IExamplesProvider<object>
     {
         public object GetExamples()
         {
-            return new UserCRUDModel()
+            return new ForgetPasswordModel()
             {
-                Email = "ExampleEmail@test.com",
+                Email = "ForgetPassword@test.com",
             };
         }
     }
