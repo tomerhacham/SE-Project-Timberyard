@@ -99,6 +99,7 @@ namespace WebService.Domain.Interface
             }
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
+
         public async Task<Result<FullAlarmModel>> RemoveAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
             var editAlarmResult = await AlarmsController.RemoveAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
@@ -145,6 +146,11 @@ namespace WebService.Domain.Interface
         public async Task<Result<bool>> RemoveUser(string email)
         {
             return await AuthenticationController.RemoveUser(email);
+        }
+
+        public async Task<Result<bool>> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        {
+            return await AuthenticationController.ChangeSystemAdminPassword(email, newPassword, oldPassword);
         }
 
 

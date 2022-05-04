@@ -86,5 +86,23 @@ namespace WebService.API.Controllers
             }
         }
 
+        [Route("ChangeSystemAdminPassword")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(ChangeSystemAdminPassword))]
+        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
+        {
+            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
+            if (result.Status)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+
     }
 }

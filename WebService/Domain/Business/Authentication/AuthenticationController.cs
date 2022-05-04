@@ -74,7 +74,7 @@ namespace WebService.Domain.Business.Authentication
             // create new User
             UserDTO user = new UserDTO(email);
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
-            if (!result.Status)
+            if (!result.Data)
             {
                 Logger.Warning(result.Message);
             }
@@ -84,11 +84,31 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> RemoveUser(string email)
         {
             Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
-            if (!result.Status)
+            if (!result.Data)
             {
                 Logger.Warning(result.Message);
             }
             return result;
+        }
+
+        public async Task<Result<bool>> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        {
+            Result<UserDTO> record = await AlarmsAndUsersRepository.GetUserRecord(email);
+            UserDTO user = record.Data;
+            if (user != null)
+            {
+                if (user.Password == oldPassword)
+                {
+                    user.Password = newPassword;
+                    return await AlarmsAndUsersRepository.UpdateUser(user);
+                }
+
+                Logger.Warning("User password don't match");
+                return new Result<bool>(false, false, "User password don't match");
+            }
+
+            Logger.Warning("User doesn't exist");
+            return new Result<bool>(false, false, "User doesn't exist");
         }
 
         private JWTtoken GenerateToken(DataAccess.DTO.UserDTO record)
