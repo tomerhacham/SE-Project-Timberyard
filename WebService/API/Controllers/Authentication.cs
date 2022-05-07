@@ -52,7 +52,7 @@ namespace WebService.API.Controllers
 
         [Route("AddUser")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(AddUser))]
+        [SwaggerRequestExample(typeof(object), typeof(AddUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> AddUser([FromBody] UserCRUDModel model)
@@ -70,12 +70,66 @@ namespace WebService.API.Controllers
 
         [Route("RemoveUser")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(RemoveUser))]
+        [SwaggerRequestExample(typeof(object), typeof(RemoveUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> RemoveUser([FromBody] UserCRUDModel model)
         {
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
+            if (result.Status)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+
+        [Route("ChangeSystemAdminPassword")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(ChangeSystemAdminPasswordExample))]
+        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
+        {
+            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
+            if (result.Status)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+
+        [Route("AddSystemAdmin")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(AddSystemAdminExample))]
+        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> AddSystemAdmin([FromBody] SystemAdminModel model)
+        {
+            Result<bool> result = await SystemInterface.AddSystemAdmin(model.SystemAdminEmail);
+            if (result.Status)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
+
+        [Route("ForgetPassword")]
+        [HttpPost]
+        [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
+        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        public async Task<IActionResult> RemoveSystemAdmin([FromBody] ForgetPasswordModel model)
+        {
+            Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
             if (result.Status)
             {
                 return Ok(result.Data);

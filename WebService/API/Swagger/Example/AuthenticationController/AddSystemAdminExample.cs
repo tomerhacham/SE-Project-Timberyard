@@ -7,13 +7,13 @@ using WebService.API.Controllers.Models;
 
 namespace WebService.API.Swagger.Example.AuthenticationController
 {
-    public class AddUser : IExamplesProvider<object>
+    public class AddSystemAdminExample : IExamplesProvider<object>
     {
         public object GetExamples()
         {
-            return new UserCRUDModel()
+            return new SystemAdminModel()
             {
-                Email = "ExampleEmail@test.com",
+                SystemAdminEmail = "newSystemAdminEmail@test.com",
             };
         }
     }
