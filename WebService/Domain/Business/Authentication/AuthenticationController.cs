@@ -76,7 +76,7 @@ namespace WebService.Domain.Business.Authentication
             // create new User
             UserDTO user = new UserDTO(email);
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
-            if (!result.Data)
+            if (!result.Status)
             {
                 Logger.Warning(result.Message);
             }
@@ -86,7 +86,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> RemoveUser(string email)
         {
             Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
-            if (!result.Data)
+            if (!result.Status)
             {
                 Logger.Warning(result.Message);
             }
@@ -96,9 +96,9 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
         {
             Result<UserDTO> record = await AlarmsAndUsersRepository.GetUserRecord(email);
-            UserDTO user = record.Data;
-            if (user != null)
+            if (record.Status)
             {
+                UserDTO user = record.Data;
                 if (user.Password == oldPassword.HashString())
                 {
                     user.Password = newPassword.HashString();
@@ -123,7 +123,7 @@ namespace WebService.Domain.Business.Authentication
 
             UserDTO user = new UserDTO(newSystemAdminEmail, tempPassword);
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
-            if (!result.Data)
+            if (!result.Status)
             {
                 Logger.Warning(result.Message);
             }
@@ -132,10 +132,10 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> ForgetPassword(string email)
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
-            UserDTO user = recordResult.Data;
 
-            if (user != null)
+            if (recordResult.Status)
             {
+                UserDTO user = recordResult.Data;
                 var random_number = new Random().Next(100000, 999999).ToString();
                 var message = $"Your temporary passord is {random_number} for Timberyard authentication.";
                 Task.Run(async () => await SMTPClient.SendEmail("Timberyard forget password authentication", message, new List<string>() { email }));
