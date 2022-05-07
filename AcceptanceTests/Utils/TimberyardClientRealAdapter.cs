@@ -64,13 +64,13 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.AddNewAlarm(name, field, objective, threshold, receivers);
         }
-        public Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public Task<IRestResponse> EditAlarm(int Id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
-            return RealClient.EditAlarm(name, field, objective, threshold, receivers);
+            return RealClient.EditAlarm(Id, name, field, objective, threshold, active, receivers);
         }
-        public Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public Task<IRestResponse> RemoveAlarm(int Id)
         {
-            return RealClient.RemoveAlarm(name, field, objective, threshold, receivers);
+            return RealClient.RemoveAlarm(Id);
         }
 
         public Task<IRestResponse> CheckAlarmsCondition()

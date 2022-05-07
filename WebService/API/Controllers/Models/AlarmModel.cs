@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Converters;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using WebService.API.Controllers.ModelValidation;
@@ -29,7 +30,7 @@ namespace WebService.API.Controllers.Models
         [StringIsNotNullOrEmpty]
         public string Objective { get; set; }
         [EnumDataType(typeof(Field))]
-        [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
         public Field Field { get; set; }
         [PositiveNumber]
         public int Threshold { get; set; }

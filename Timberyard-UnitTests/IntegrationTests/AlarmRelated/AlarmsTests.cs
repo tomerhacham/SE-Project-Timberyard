@@ -77,12 +77,10 @@ namespace Timberyard_UnitTests.IntegrationTests
                 Assert.True(insertionResult.Status);
                 Assert.Equal(i, AlarmsRepository.Data.Count);
             }
-            var alarmToDelete = new Alarm("Discard", Field.Catalog, "Discard", 1, true, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            alarmToDelete.Id = 1;
-            var removeResult = await AlarmsController.RemoveAlarm(alarmToDelete);
+
+            var removeResult = await AlarmsController.RemoveAlarm(1);
             Assert.True(removeResult.Status);
             Assert.Equal(totalAlarms - 1, AlarmsRepository.Data.Count);
-            Assert.False(AlarmsRepository.Data.TryGetValue(removeResult.Data.Id, out Alarm alarm));
         }
 
         #endregion

@@ -32,8 +32,8 @@ namespace TimberyardClient.Client
         #region Alarms Scenarios
 
         public Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
-        public Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
-        public Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers);
+        public Task<IRestResponse> EditAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers);
+        public Task<IRestResponse> RemoveAlarm(int id);
         public Task<IRestResponse> CheckAlarmsCondition();
 
         #endregion
@@ -141,18 +141,18 @@ namespace TimberyardClient.Client
             return await ExecuteWrapperAsync(request);
         }
 
-        public async Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public async Task<IRestResponse> EditAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
             var request = new RestRequest(EDIT_ALARM_ENDPOINT, Method.POST);
-            var body = new { Name = name, Field = field, Objective = objective, Threshold = threshold, Receivers = receivers };
+            var body = new { Id = id, Name = name, Field = field, Objective = objective, Threshold = threshold, Active = active, Receivers = receivers };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
 
-        public async Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public async Task<IRestResponse> RemoveAlarm(int id)
         {
             var request = new RestRequest(REMOVE_ALARM_ENDPOINT, Method.POST);
-            var body = new { Name = name, Field = field, Objective = objective, Threshold = threshold, Receivers = receivers };
+            var body = new { Id = id };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }

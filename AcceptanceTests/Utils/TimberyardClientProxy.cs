@@ -83,17 +83,17 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
-        public async Task<IRestResponse> EditAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public async Task<IRestResponse> EditAlarm(int Id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
-            var response = RealClient != null ? await RealClient.EditAlarm(name, field, objective, threshold, receivers) : defaultResponse;
+            var response = RealClient != null ? await RealClient.EditAlarm(Id, name, field, objective, threshold, active, receivers) : defaultResponse;
             return response;
         }
 
-        public async Task<IRestResponse> RemoveAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
+        public async Task<IRestResponse> RemoveAlarm(int Id)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
-            var response = RealClient != null ? await RealClient.RemoveAlarm(name, field, objective, threshold, receivers) : defaultResponse;
+            var response = RealClient != null ? await RealClient.RemoveAlarm(Id) : defaultResponse;
             return response;
         }
 
