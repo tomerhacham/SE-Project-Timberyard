@@ -59,15 +59,16 @@ namespace WebService.API.Controllers
                 return BadRequest(error);
             }
         }
+
         [Route("RemoveAlarm")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
-        [ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
-        public async Task<IActionResult> RemoveAlarm([FromBody] FullAlarmModel model)
+        //[SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
+        //[ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
+        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
+        public async Task<IActionResult> RemoveAlarm([FromBody] int Id)
         {
 
-            var response = await SystemInterface.RemoveAlarm(model.Id, model.Name, model.Field, model.Objective, model.Threshold, model.Active, model.Receivers);
+            var response = await SystemInterface.RemoveAlarm(Id);
             if (response.Status)
             {
                 return Ok();
