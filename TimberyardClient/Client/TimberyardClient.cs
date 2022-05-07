@@ -152,7 +152,7 @@ namespace TimberyardClient.Client
         public async Task<IRestResponse> RemoveAlarm(int id)
         {
             var request = new RestRequest(REMOVE_ALARM_ENDPOINT, Method.POST);
-            var body = new { Id = id };
+            var body = id;
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
