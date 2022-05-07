@@ -189,8 +189,6 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
-
-
         #endregion
     }
 }
