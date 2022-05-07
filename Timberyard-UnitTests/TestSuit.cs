@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Timberyard_UnitTests.Stubs;
 using WebService.Domain.Business.Alarms;
+using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
@@ -41,11 +42,11 @@ namespace Timberyard_UnitTests
 
             if (inMemoryAlarmsRepository)
             {
-                serviceProvier.AddSingleton<IAlarmsRepository, InMemoryAlarmRepository>();
+                serviceProvier.AddSingleton<IAlarmsAndUsersRepository, InMemoryAlarmsAndUsersRepository>();
             }
             else
             {
-                serviceProvier.AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>();
+                serviceProvier.AddSingleton<IAlarmsAndUsersRepository, AlarmsAndUsersRepository>();
             }
 
             if (inMemoryLogsAndTestRepository)
@@ -59,7 +60,8 @@ namespace Timberyard_UnitTests
 
             serviceProvier.AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
             .AddSingleton<QueriesController>()
-            .AddSingleton<AlarmsController>();
+            .AddSingleton<AlarmsController>()
+            .AddSingleton<AuthenticationController>();
 
             return serviceProvier.BuildServiceProvider();
         }

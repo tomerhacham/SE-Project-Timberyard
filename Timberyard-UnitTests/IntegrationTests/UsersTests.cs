@@ -19,11 +19,11 @@ namespace Timberyard_UnitTests.IntegrationTests
     {
         Mock<ISMTPClient> SmtpClient { get; set; }
         AlarmsController AlarmsController { get; set; }
-        IAlarmsRepository Repository { get; set; }
+        IAlarmsAndUsersRepository Repository { get; set; }
         public UsersTests()
         {
             var serviceProvider = ConfigureServices("IntegrationTests");
-            Repository = serviceProvider.GetService<IAlarmsRepository>();
+            Repository = serviceProvider.GetService<IAlarmsAndUsersRepository>();
         }
 
         [Fact]

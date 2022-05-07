@@ -32,6 +32,13 @@ namespace WebService.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// if user logged in sccessfuly, return JWT token. else, return empty string  
+        /// </returns>
         [Route("Login")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(LoginExample))]
@@ -40,14 +47,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             Result<JWTtoken> result = await SystemInterface.Login(model.Email, model.Password);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Data);
         }
 
         [Route("AddUser")]
@@ -58,14 +58,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> AddUser([FromBody] UserCRUDModel model)
         {
             Result<bool> result = await SystemInterface.AddUser(model.Email);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Status);
         }
 
         [Route("RemoveUser")]
@@ -76,14 +69,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> RemoveUser([FromBody] UserCRUDModel model)
         {
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Status);
         }
 
         [Route("ChangeSystemAdminPassword")]
@@ -94,14 +80,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
             Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Status);
         }
 
         [Route("AddSystemAdmin")]
@@ -112,14 +91,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> AddSystemAdmin([FromBody] SystemAdminModel model)
         {
             Result<bool> result = await SystemInterface.AddSystemAdmin(model.SystemAdminEmail);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Status);
         }
 
         [Route("ForgetPassword")]
@@ -127,17 +99,10 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> RemoveSystemAdmin([FromBody] ForgetPasswordModel model)
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel model)
         {
             Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
-            if (result.Status)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
+            return Ok(result.Status);
         }
 
     }

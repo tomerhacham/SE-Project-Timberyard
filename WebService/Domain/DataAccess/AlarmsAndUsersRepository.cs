@@ -15,7 +15,7 @@ using WebService.Utils.Models;
 
 namespace WebService.Domain.DataAccess
 {
-    public interface IAlarmsRepository
+    public interface IAlarmsAndUsersRepository
     {
         public Task<Result<List<Alarm>>> GetAllActiveAlarms();
         public Task<Result<List<Alarm>>> GetAllAlarms();
@@ -23,11 +23,11 @@ namespace WebService.Domain.DataAccess
         public Task<Result<Alarm>> UpdateAlarm(Alarm alarm);
         public Task<Result<Alarm>> DeleteAlarm(Alarm alarm);
         public Task<Result<UserDTO>> GetUserRecord(string email);
-        Task<Result<bool>> UpdateUser(UserDTO record);
-        Task<Result<bool>> AddUser(UserDTO record);
-        Task<Result<bool>> RemoveUser(string email);
+        public Task<Result<bool>> UpdateUser(UserDTO record);
+        public Task<Result<bool>> AddUser(UserDTO record);
+        public Task<Result<bool>> RemoveUser(string email);
     }
-    public class AlarmsAndUsersRepository : IAlarmsRepository
+    public class AlarmsAndUsersRepository : IAlarmsAndUsersRepository
     {
         //Properties
         DatabaseSettings DatabaseSettings { get; }

@@ -50,7 +50,7 @@ namespace WebService
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ISMTPClient, SMTPClient>()
                     .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
-                    .AddSingleton<IAlarmsRepository, AlarmsAndUsersRepository>()
+                    .AddSingleton<IAlarmsAndUsersRepository, AlarmsAndUsersRepository>()
                     .AddSingleton<QueriesController>()
                     .AddSingleton<AlarmsController>()
                     .AddSingleton<AuthenticationController>()
@@ -99,15 +99,13 @@ namespace WebService
                 c.IncludeXmlComments(xmlPath);
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
+            #endregion
 
             services.AddMvc(config =>
             {
                 config.Filters.Add(new ModelStateCheckFilter());
             });
-
-
         }
-        #endregion
 
 
 

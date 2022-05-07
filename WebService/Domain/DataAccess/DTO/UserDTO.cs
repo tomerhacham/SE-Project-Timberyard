@@ -22,19 +22,5 @@ namespace WebService.Domain.DataAccess.DTO
         public Role Role { get; set; }
         public DateTime ExperationTimeStamp { get; set; }
 
-        // Create new regular user
-        public UserDTO(string email)
-        {
-            Email = email;
-            Role = Role.RegularUser;
-        }
-
-        // Create Admin user
-        public UserDTO(string email, string password)
-        {
-            Email = email;
-            Password = password;
-            Role = Role.Admin;
-        }
     }
 }

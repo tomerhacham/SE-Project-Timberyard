@@ -18,13 +18,13 @@ namespace Timberyard_UnitTests.IntegrationTests
     {
         Mock<ISMTPClient> SmtpClient { get; set; }
         AlarmsController AlarmsController { get; set; }
-        InMemoryAlarmRepository AlarmsRepository { get; set; }
+        InMemoryAlarmsAndUsersRepository AlarmsRepository { get; set; }
         InMemoryLogsAndTestsRepository LogsAndTestsRepository { get; set; }
         public AlarmsTests()
         {
             var serviceProvider = ConfigureServices("IntegrationTests", inMemoryAlarmsRepository: true, inMemoryLogsAndTestRepository: true);
             AlarmsController = serviceProvider.GetService<AlarmsController>();
-            AlarmsRepository = serviceProvider.GetService<IAlarmsRepository>() as InMemoryAlarmRepository;
+            AlarmsRepository = serviceProvider.GetService<IAlarmsAndUsersRepository>() as InMemoryAlarmsAndUsersRepository;
             LogsAndTestsRepository = serviceProvider.GetService<ILogsAndTestsRepository>() as InMemoryLogsAndTestsRepository;
         }
 
@@ -34,10 +34,10 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void AddNewAlarmTest()
         {
             var result = await AlarmsController.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 15, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            Assert.NotEmpty(AlarmsRepository.Data);
-            Assert.Single(AlarmsRepository.Data);
-            Assert.Equal("TestAlarm", AlarmsRepository.Data.Values.First().Name);
-            Assert.Equal("TestCatalog", AlarmsRepository.Data.Values.First().Objective);
+            Assert.NotEmpty(AlarmsRepository.Alarms);
+            Assert.Single(AlarmsRepository.Alarms);
+            Assert.Equal("TestAlarm", AlarmsRepository.Alarms.Values.First().Name);
+            Assert.Equal("TestCatalog", AlarmsRepository.Alarms.Values.First().Objective);
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace Timberyard_UnitTests.IntegrationTests
             var editResult = await AlarmsController.EditAlarm(clonedAlarm);
 
             Assert.True(editResult.Status);
-            Assert.Single(AlarmsRepository.Data);
-            var inDataAlarm = AlarmsRepository.Data.Values.First();
+            Assert.Single(AlarmsRepository.Alarms);
+            var inDataAlarm = AlarmsRepository.Alarms.Values.First();
             Assert.Equal("Edited", inDataAlarm.Name);
             Assert.Equal("Edited", inDataAlarm.Objective);
             Assert.Equal(false, inDataAlarm.Active);
@@ -75,14 +75,14 @@ namespace Timberyard_UnitTests.IntegrationTests
                 alarmToInsert.Id = i;
                 var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
                 Assert.True(insertionResult.Status);
-                Assert.Equal(i, AlarmsRepository.Data.Count);
+                Assert.Equal(i, AlarmsRepository.Alarms.Count);
             }
             var alarmToDelete = new Alarm("Discard", Field.Catalog, "Discard", 1, true, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
             alarmToDelete.Id = 1;
             var removeResult = await AlarmsController.RemoveAlarm(alarmToDelete);
             Assert.True(removeResult.Status);
-            Assert.Equal(totalAlarms - 1, AlarmsRepository.Data.Count);
-            Assert.False(AlarmsRepository.Data.TryGetValue(removeResult.Data.Id, out Alarm alarm));
+            Assert.Equal(totalAlarms - 1, AlarmsRepository.Alarms.Count);
+            Assert.False(AlarmsRepository.Alarms.TryGetValue(removeResult.Data.Id, out Alarm alarm));
         }
 
         #endregion

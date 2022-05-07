@@ -16,9 +16,9 @@ namespace WebService.Domain.Business.Authentication
     {
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
-        IAlarmsRepository AlarmsAndUsersRepository { get; }
+        IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
 
-        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsRepository alarmsAndUsersRepository)
+        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository)
         {
             SMTPClient = sMTPClient;
             Logger = logger;
@@ -122,7 +122,7 @@ namespace WebService.Domain.Business.Authentication
             Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
             string tempPassword = random_number.HashString();
 
-            UserDTO user = new UserDTO(newSystemAdminEmail, tempPassword);
+            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
