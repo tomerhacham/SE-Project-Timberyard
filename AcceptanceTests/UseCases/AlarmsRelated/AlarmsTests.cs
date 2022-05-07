@@ -94,46 +94,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
             Assert.Equal(HttpStatusCode.BadRequest, AttemptToEditAlarmResponse.StatusCode);
         }
 
-        #endregion
-
-
-        #region Check Alarm Condition Scenarios
-
-        [Fact]
-        [Trait("Category", "Acceptance")]
-        public async void CheckForAlarmsConditionTest_NoActiveAlarms()
-        {
-            // Inserting log from the last 24 hours
-            // Notice there is no alarm in the database, hence we expect to zero alarms to be set on
-
-            IRestResponse response = await Client.CheckAlarmsCondition();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic content = JsonConvert.DeserializeObject<dynamic>(response.Content);
-
-            // ADD CHECKS 
-        }
-
-        [Fact]
-        [Trait("Category", "Acceptance")]
-        public async void CheckForAlarmsConditionTest_NoRecordsInLast24Hours()
-        { }
-
-        [Fact]
-        [Trait("Category", "Acceptance")]
-        public async void CheckForAlarmsConditionTest_DidNotReachedThreshold()
-        { }
-
-        [Fact]
-        [Trait("Category", "Integration")]
-        public async void CheckForAlarmsConditionTest_ReachingThreshold()
-        { }
-
-        [Fact]
-        [Trait("Category", "Integration")]
-        public async void CheckForAlarmsConditionTest_2AlarmsReachingThreshold()
-        { }
-
-        #endregion
+        #endregion        
 
     }
 }
