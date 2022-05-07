@@ -13,10 +13,16 @@ using Field = TimberyardClient.Client.Field;
 
 namespace AcceptanceTests.UseCases.AlarmsRelated
 {
-    public class AlarmsTests : TimberyardTestCase
+    public class AlarmsTests : TimberyardTestCase , IDisposable
     {
         public AlarmsTests() : base()
         { }
+
+        public void Dispose()
+        {
+            // TODO - Delete all alarms that are in the tests data base
+            // TODO - Delete all Logs that where added in these tests 
+        }
 
         #region CRUD Alarms Scenarios
 
@@ -94,7 +100,131 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
             Assert.Equal(HttpStatusCode.BadRequest, AttemptToEditAlarmResponse.StatusCode);
         }
 
-        #endregion        
+        #endregion
+
+
+        #region Check Alarm Condition Scenarios
+
+        [Fact]
+        [Trait("Category", "Acceptance")]
+        public async void CheckForAlarmsConditionTest_NoActiveAlarms()
+        {
+            // add alarm
+            IRestResponse alarm_response = await Client.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 1, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm_response.StatusCode);
+            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(alarm_response.Content);
+
+            //change active to false
+            IRestResponse editAlarmResponse = await Client.EditAlarm(alarm_result.Id, alarm_result.Name, (Field)alarm_result.Field, alarm_result.Objective, alarm_result.Threshold, false, alarm_result.Receivers);
+            Assert.Equal(HttpStatusCode.OK, editAlarmResponse.StatusCode);
+
+            // check that the number of active alarms is 0
+            IRestResponse response = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            int activatedAlarms = JsonConvert.DeserializeObject<int>(response.Content);
+            Assert.Equal(0, activatedAlarms);
+
+            // TODO - add 2 logs with the same catalog as alarm
+
+            // check that the number of active alarms is still 0 although there are logs that satisfy the alarm condition
+            IRestResponse responseSecondAttempt = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, responseSecondAttempt.StatusCode);
+            int activatedAlarmsSecondAttempt = JsonConvert.DeserializeObject<int>(responseSecondAttempt.Content);
+            Assert.Equal(0, activatedAlarmsSecondAttempt);
+        }
+
+        [Fact]
+        [Trait("Category", "Acceptance")]
+        public async void CheckForAlarmsConditionTest_NoRecordsInLast24Hours()
+        {
+            // add alarm
+            IRestResponse alarm_response = await Client.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 1, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm_response.StatusCode);
+
+            // TODO - check that there are no logs added in the last 24 hours
+
+
+            // check that the number of active alarms is 0
+            IRestResponse response = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            int activatedAlarms = JsonConvert.DeserializeObject<int>(response.Content);
+            Assert.Equal(0, activatedAlarms);
+        }
+
+        [Fact]
+        [Trait("Category", "Acceptance")]
+        public async void CheckForAlarmsConditionTest_DidNotReachedThreshold()
+        {
+            // add alarm
+            IRestResponse alarm_response = await Client.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 3, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm_response.StatusCode);
+            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(alarm_response.Content);
+
+            // check that the number of active alarms is 0
+            IRestResponse response = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            int activatedAlarms = JsonConvert.DeserializeObject<int>(response.Content);
+            Assert.Equal(0, activatedAlarms);
+
+            // TODO - add 2 logs with the same catalog as alarm
+
+            // check that the number of active alarms is 0 because we did not reach threshold
+            IRestResponse responseSecondAttempt = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, responseSecondAttempt.StatusCode);
+            int activatedAlarmsSecondAttempt = JsonConvert.DeserializeObject<int>(responseSecondAttempt.Content);
+            Assert.Equal(0, activatedAlarmsSecondAttempt);
+        }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async void CheckForAlarmsConditionTest_ReachingThreshold()
+        {
+            // add alarm
+            IRestResponse alarm_response = await Client.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 2, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm_response.StatusCode);
+            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(alarm_response.Content);
+
+            // check that the number of active alarms is 0
+            IRestResponse response = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            int activatedAlarms = JsonConvert.DeserializeObject<int>(response.Content);
+            Assert.Equal(0, activatedAlarms);
+
+            // TODO - add 2 logs with the same catalog as alarm
+
+            // check that the number of active alarms is 1 since we reached threshold
+            IRestResponse responseSecondAttempt = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, responseSecondAttempt.StatusCode);
+            int activatedAlarmsSecondAttempt = JsonConvert.DeserializeObject<int>(responseSecondAttempt.Content);
+            Assert.Equal(1, activatedAlarmsSecondAttempt);
+        }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async void CheckForAlarmsConditionTest_2AlarmsReachingThreshold()
+        {
+            // add 2 alarms
+            IRestResponse alarm1_response = await Client.AddNewAlarm("TestAlarm1", Field.Catalog, "TestCatalog1", 1, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm1_response.StatusCode);
+            IRestResponse alarm2_response = await Client.AddNewAlarm("TestAlarm2", Field.Catalog, "TestCatalog2", 1, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
+            Assert.Equal(HttpStatusCode.OK, alarm2_response.StatusCode);
+
+            // check that the number of active alarms is 0
+            IRestResponse response = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            int activatedAlarms = JsonConvert.DeserializeObject<int>(response.Content);
+            Assert.Equal(0, activatedAlarms);
+
+            // TODO - add 2 logs for each alarm with the same catalog as their alarm
+
+            // check that the number of active alarms are 2 since we reached threshold for each alarm
+            IRestResponse responseSecondAttempt = await Client.CheckAlarmsCondition();
+            Assert.Equal(HttpStatusCode.OK, responseSecondAttempt.StatusCode);
+            int activatedAlarmsSecondAttempt = JsonConvert.DeserializeObject<int>(responseSecondAttempt.Content);
+            Assert.Equal(2, activatedAlarmsSecondAttempt);
+        }
+
+        #endregion
 
     }
 }
