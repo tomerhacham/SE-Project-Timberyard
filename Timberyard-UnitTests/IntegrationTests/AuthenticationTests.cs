@@ -161,6 +161,31 @@ namespace Timberyard_UnitTests.IntegrationTests
         [Fact]
         public async void ForgetPassword()
         {
+            string email = "forgetPassword@timberyard.com";
+            var insert_result = await AuthenticationController.AddUser(email);
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+
+            var result = await AuthenticationController.ForgetPassword(email);
+            Assert.True(result.Status);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.NotEqual(user.Password, UsersRepository.Users[email].Password);
+        }
+
+        [Fact]
+        public async void ForgetPassword_notExists()
+        {
+            string email = "forgetPassword_notExists@timberyard.com";
+            bool result = UsersRepository.Users.ContainsKey(email);
+
+            if (!result)
+            {
+                Assert.False(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+                var forget_result = await AuthenticationController.ForgetPassword(email);
+
+                Assert.False(forget_result.Status);
+                Assert.False(UsersRepository.Users.ContainsKey(email));
+            }
         }
 
         #endregion
