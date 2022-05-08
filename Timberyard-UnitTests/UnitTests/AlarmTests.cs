@@ -35,7 +35,6 @@ namespace Timberyard_UnitTests.UnitTests
 
         #region CRUD Alarms Scenarios
         [Theory]
-        [Trait("Category", "Unit")]
         [InlineData(true, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]       // Happy : There are X records of the inputs out of Y records 
         [InlineData(false, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]         // Sad : List of receivers contains an invalid email 
         [InlineData(false, "TestAlarm", Field.Catalog, "TestCatalog", -10, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]     // Bad : Negative threshold
@@ -58,7 +57,6 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Theory]
-        [Trait("Category", "Unit")]
         [InlineData(true, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, false, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                                  // Happy : There are X records of the inputs out of Y records 
         [InlineData(false, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, true, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]                             // Sad : List of receivers contains an invalid email 
         [InlineData(false, "TestEditAlarm", Field.Catalog, "TestCatalog", -10, true, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                         // Bad : Negative threshold
@@ -94,7 +92,6 @@ namespace Timberyard_UnitTests.UnitTests
 
         #region Catalog
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_RaiseCondition()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -107,7 +104,6 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_DifferentCatalog()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -121,7 +117,6 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_PassTests()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -134,9 +129,7 @@ namespace Timberyard_UnitTests.UnitTests
             Assert.False(alarmResult);
         }
 
-
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestCatalog_FalseCondition_NotReachThreshold()
         {
             var alarm = new Alarm("Test alarm", Field.Catalog, "TestCatalog", 2, true, new List<string>() { "test.tests@domain.com" });
@@ -153,7 +146,6 @@ namespace Timberyard_UnitTests.UnitTests
         #region Station
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_RaiseCondition()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -166,7 +158,6 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_DifferentCatalog()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -180,7 +171,6 @@ namespace Timberyard_UnitTests.UnitTests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_PassTests()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 1, true, new List<string>() { "test.tests@domain.com" });
@@ -193,9 +183,7 @@ namespace Timberyard_UnitTests.UnitTests
             Assert.False(alarmResult);
         }
 
-
         [Fact]
-        [Trait("Category", "Unit")]
         public async void CheckConditionTestStation_FalseCondition_NotReachThreshold()
         {
             var alarm = new Alarm("Test alarm", Field.Station, "TestStation", 2, true, new List<string>() { "test.tests@domain.com" });
