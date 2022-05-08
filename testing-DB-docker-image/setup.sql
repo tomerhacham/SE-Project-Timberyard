@@ -141,21 +141,13 @@ ALTER ROLE [db_owner] ADD MEMBER [etl_process]
 GO
 ALTER ROLE [db_owner] ADD MEMBER [timberyard_service]
 GO
-/****** Object:  Table [dbo].[AccessEmails]    Script Date: 11/04/2022 13:57:49 ******/
-SET ANSI_NULLS ON
+
+
+/****** Create table structure ******/
+
+USE [Timberyard]
 GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[AccessEmails](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Email] [varchar](max) NOT NULL,
- CONSTRAINT [PK_AccessEmails] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Alarms]    Script Date: 11/04/2022 13:57:49 ******/
+/****** Object:  Table [dbo].[Alarms]    Script Date: 08/05/2022 20:22:52 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -174,7 +166,7 @@ CREATE TABLE [dbo].[Alarms](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Logs]    Script Date: 11/04/2022 13:57:49 ******/
+/****** Object:  Table [dbo].[Logs]    Script Date: 08/05/2022 20:22:52 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -204,22 +196,7 @@ CREATE TABLE [dbo].[Logs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SystemAdmins]    Script Date: 11/04/2022 13:57:49 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[SystemAdmins](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Email] [varchar](max) NOT NULL,
-	[Password] [varchar](max) NOT NULL,
- CONSTRAINT [PK_SystemAdmins] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Tests]    Script Date: 11/04/2022 13:57:49 ******/
+/****** Object:  Table [dbo].[Tests]    Script Date: 08/05/2022 20:22:52 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -243,6 +220,22 @@ CREATE TABLE [dbo].[Tests](
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 08/05/2022 20:22:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[Email] [varchar](255) NOT NULL,
+	[Password] [varchar](255) NOT NULL,
+	[Role] [int] NOT NULL,
+	[ExperationTimeStamp] [timestamp] NOT NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[Email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[Logs]  WITH CHECK ADD  CONSTRAINT [FK_Logs_Logs] FOREIGN KEY([Id])
 REFERENCES [dbo].[Logs] ([Id])
