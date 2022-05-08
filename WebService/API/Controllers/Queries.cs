@@ -24,6 +24,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("CardYield")]
+        [Authorize]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
         [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]

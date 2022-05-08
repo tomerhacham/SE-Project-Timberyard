@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Authentication;
+using WebService.Domain.DataAccess.DTO;
 
-namespace WebApi.Helpers
+namespace WebService.API.Middlewares
 {
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string Secret = "Secret";
+        private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
 
         public JwtMiddleware(RequestDelegate next)
         {
@@ -50,8 +51,8 @@ namespace WebApi.Helpers
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var email = int.Parse(jwtToken.Claims.First(x => x.Type == "Email").Value);
-                var role = int.Parse(jwtToken.Claims.First(x => x.Type == "Role").Value);
+                var email = jwtToken.Claims.First(x => x.Type == "Email").Value;
+                var role = Enum.Parse(typeof(Role), jwtToken.Claims.First(x => x.Type == "Role").Value);
 
                 // attach user to context on successful jwt validation
                 context.Items["Email"] = email;

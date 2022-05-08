@@ -8,8 +8,8 @@ namespace WebService.Domain.DataAccess.DTO
 {
     public enum Role
     {
-        Admin,
-        RegularUser
+        RegularUser,
+        Admin
     }
 
     [Table("Users")]

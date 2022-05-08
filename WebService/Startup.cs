@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using WebService.API.ActionFilters;
+using WebService.API.Middlewares;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
@@ -97,6 +98,34 @@ namespace WebService
                 c.ExampleFilters();
                 c.EnableAnnotations();
                 c.IncludeXmlComments(xmlPath);
+
+                if (true)
+                {
+                    c.AddSecurityDefinition("bearer",
+                        new OpenApiSecurityScheme
+                        {
+                            Description =
+                                "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                            Name = "Authorization",
+                            In = ParameterLocation.Header,
+                            Type = SecuritySchemeType.ApiKey
+                        });
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme, Id = "bearer"
+                                }
+                            },
+                            new string[] { }
+                        }
+                    });
+                }
+
+
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
             #endregion
@@ -133,7 +162,9 @@ namespace WebService
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
+
 
             app.UseEndpoints(endpoints =>
             {

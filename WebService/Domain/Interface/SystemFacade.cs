@@ -120,6 +120,11 @@ namespace WebService.Domain.Interface
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
 
+        internal async Task<JWTtoken> GetToken(string email)
+        {
+            return AuthenticationController.GetToken(email);
+        }
+
         public async Task CheckAlarmsCondition()
         {
             await AlarmsController.CheckForAlarmsCondition();

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
 using WebService.API.Swagger.Example.AuthenticationController;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Domain.Interface;
 using WebService.Utils;
 
@@ -51,6 +53,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("AddUser")]
+        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(AddUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -103,6 +106,13 @@ namespace WebService.API.Controllers
         {
             Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
             return Ok(result.Status);
+        }
+
+        [Route("gettoken")]
+        [HttpGet]
+        public async Task<IActionResult> GetToken([Required] string email)
+        {
+            return Ok(await SystemInterface.GetToken(email));
         }
 
     }

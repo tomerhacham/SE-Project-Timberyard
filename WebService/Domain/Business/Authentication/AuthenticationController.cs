@@ -20,7 +20,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
-        private const string Secret = "Secret";
+        private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
 
         public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository)
         {
@@ -152,6 +152,11 @@ namespace WebService.Domain.Business.Authentication
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
+        internal JWTtoken GetToken(string email)
+        {
+            return GenerateToken(new UserDTO() { Email = email, Role = Role.Admin });
+        }
+
         private JWTtoken GenerateToken(UserDTO record)
         {
             // generate token that is valid for 7 days
@@ -167,7 +172,7 @@ namespace WebService.Domain.Business.Authentication
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var strToken =  tokenHandler.WriteToken(token);
+            var strToken = tokenHandler.WriteToken(token);
             return new JWTtoken() { Token = strToken };
         }
 
