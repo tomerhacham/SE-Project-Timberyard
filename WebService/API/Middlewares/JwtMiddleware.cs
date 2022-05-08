@@ -16,7 +16,7 @@ namespace WebService.API.Middlewares
         private readonly RequestDelegate _next;
         private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
 
-        public JwtMiddleware(RequestDelegate next)
+        public JwtMiddleware(RequestDelegate next )
         {
             _next = next;
 
