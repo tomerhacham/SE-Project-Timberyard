@@ -16,16 +16,10 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var email = context.HttpContext.Items["Email"];
-        var role = context.HttpContext.Items["Role"];
-        if (email == string.Empty)
+        var email = (string)context.HttpContext.Items["Email"];
+        var role = (int)context.HttpContext.Items["Role"];
+        if (string.IsNullOrEmpty(email) || (int)AuthorizedRole - role < 0)
         {
-            // not logged in
-            context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
-        }
-        else if (!AuthorizedRole.Equals(role))
-        {
-            // Role is not authorized
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }
