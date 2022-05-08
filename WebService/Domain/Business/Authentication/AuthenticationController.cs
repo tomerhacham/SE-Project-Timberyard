@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -17,6 +20,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
+        private const string Secret = "Secret";
 
         public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository)
         {
@@ -148,9 +152,23 @@ namespace WebService.Domain.Business.Authentication
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
-        private JWTtoken GenerateToken(DataAccess.DTO.UserDTO record)
+        private JWTtoken GenerateToken(UserDTO record)
         {
-            throw new NotImplementedException();
+            // generate token that is valid for 7 days
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] {
+                    new Claim("Email", record.Email),
+                    new Claim("Role", record.Role.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var strToken =  tokenHandler.WriteToken(token);
+            return new JWTtoken() { Token = strToken };
         }
 
 
