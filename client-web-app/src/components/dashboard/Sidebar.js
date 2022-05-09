@@ -13,10 +13,13 @@ import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import FenceIcon from '@mui/icons-material/Fence';
+import TimelapseIcon from '@mui/icons-material/Timelapse';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { 
-  CARD_YIELD_PATH, STATION_YIELD_PATH, 
-  STATION_CARD_YIELD_PATH, NFF_PATH
+  CARD_YIELD_PATH, STATION_YIELD_PATH, NFF_PATH,
+  STATION_CARD_YIELD_PATH, BOUNDARIES_PATH, 
+  TESTER_LOAD_PATH, CARD_TEST_DURATION_PATH
 } from '../../constants/constants';
 
 const Sidebar = ({ open, onClose }) => {
@@ -51,8 +54,18 @@ const Sidebar = ({ open, onClose }) => {
         },
         {
           primary: 'Boundaries',
-          to: '/boundaries',
+          to: BOUNDARIES_PATH,
           icon: <FenceIcon />
+        },
+        {
+          primary: 'Tester Load',
+          to: TESTER_LOAD_PATH,
+          icon: <TimelapseIcon />
+        },
+        {
+          primary: 'Card Test Duration',
+          to: CARD_TEST_DURATION_PATH,
+          icon: <AvTimerIcon />
         }
     ];
       
@@ -170,8 +183,8 @@ const Sidebar = ({ open, onClose }) => {
 }
 
 Sidebar.propTypes = {
-    onClose: PropTypes.func,
-    open: PropTypes.bool
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
 };
 
 export default Sidebar;

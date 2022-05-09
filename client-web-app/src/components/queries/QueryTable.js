@@ -1,50 +1,41 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import {
-    DataGrid,
-    GridToolbarContainer,
-    GridToolbarExport,
-    gridClasses,
-} from '@mui/x-data-grid';
-
-// const rows = [
-//   { id: 1, col1: 'Hello', col2: 'World' },
-//   { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-//   { id: 3, col1: 'MUI', col2: 'is Amazing' },
-// ];
-
-// const columns = [
-//   { field: 'col1', headerName: 'Column 1', width: 150 },
-//   { field: 'col2', headerName: 'Column 2', width: 150 },
-// ];
-
-function CustomToolbar() {
-    return (
-        <GridToolbarContainer className={gridClasses.toolbarContainer}>
-            <GridToolbarExport />
-        </GridToolbarContainer>
-    );
-}
+import Button from '@mui/material/Button';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const QueryTable = ({ rows, columns }) => {
+    const gridRef = useRef();
+
+    const defaultColDef = {
+        resizable: true,
+        sortable: true,
+        filter: true,
+    };
+
+    const onBtnExport = useCallback(() => {
+        gridRef.current.api.exportDataAsCsv();
+    }, []);
+
     return (
-        <div id='query-table' style={{ height: 400, width: '100%' }}>
-            <div style={{ display: 'flex', height: '100%' }}>
-                <div style={{ flexGrow: 1 }}>
-                    <DataGrid
-                        rows={rows} 
-                        columns={columns}
-                        components={{ Toolbar: CustomToolbar }}
-                    />
-                </div>
-            </div>
+        <div className='ag-theme-alpine' style={{ height: 400, width: '100%' }}>
+            <Button onClick={onBtnExport} startIcon={<FileDownloadIcon />}>
+                Export to CSV
+            </Button>
+            <AgGridReact
+                ref={gridRef}
+                rowData={rows}
+                columnDefs={columns}
+                defaultColDef={defaultColDef}></AgGridReact>
         </div>
-    )
-}
+    );
+};
 
 QueryTable.propTypes = {
     rows: PropTypes.array,
-    columns: PropTypes.array
+    columns: PropTypes.array,
 };
 
 export default QueryTable;
