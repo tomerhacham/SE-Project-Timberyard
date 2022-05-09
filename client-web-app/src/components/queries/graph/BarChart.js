@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -8,8 +8,8 @@ import {
     Title,
     Tooltip,
     Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -21,25 +21,24 @@ ChartJS.register(
 );
 
 const BarChart = ({ data }) => {
-    const records = data.records;
-    const cards_names = records.map((r) => r.CardName);
-    const SuccessRatio = records.map((r) => r.SuccessRatio);
+    const cardsNames = data.map((record) => record.CardName);
+    const SuccessRatios = data.map((record) => record.SuccessRatio);
     return (
         <Bar
             data={{
                 datasets: [
                     {
-                        backgroundColor: ["rgba(80, 72, 229, 0.8)"],
+                        backgroundColor: ['rgba(80, 72, 229, 0.8)'],
                         barPercentage: 0.9,
                         barThickness: 30,
                         borderRadius: 6,
                         categoryPercentage: 0.5,
-                        data: SuccessRatio,
-                        label: "Success ratio",
+                        data: SuccessRatios,
+                        label: 'Success ratio',
                         maxBarThickness: 50,
                     },
                 ],
-                labels: cards_names,
+                labels: cardsNames,
             }}
             height={400}
             width={600}
@@ -51,9 +50,12 @@ const BarChart = ({ data }) => {
 };
 
 BarChart.propTypes = {
-    data: PropTypes.shape({
-        records: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    }),
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            CardName: PropTypes.string.isRequired,
+            SuccessRatio: PropTypes.number.isRequired,
+        })
+    ),
 };
 
 export default BarChart;

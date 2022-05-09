@@ -24,7 +24,7 @@
                 "type": "date"
             }
         ],
-        "icon": "SdCard"
+        "icon": "SdCardIcon"
     },
     "stationYield": {
         "id": "stationYield",
@@ -46,7 +46,7 @@
                 "autoFocus": false
             }
         ],
-        "icon": "LocalGasStation"
+        "icon": "LocalGasStationIcon"
     },
     "stationCardYield": {
         "id": "stationCardYield",
@@ -79,7 +79,7 @@
                 "type": "date"
             }
         ],
-        "icon": "EvStation"
+        "icon": "EvStationIcon"
     },
     "nff": {
         "id": "nff",
@@ -105,14 +105,14 @@
                 "label": "End Date",
                 "type": "date"
             },
-			{
+            {
                 "id": "timeInterval",
                 "required": true,
                 "label": "Time Interval",
                 "type": "number"
             }
         ],
-        "icon": "GppBad"
+        "icon": "GppBadIcon"
     },
     "boundaries": {
         "id": "boundaries",
@@ -140,5 +140,53 @@
             }
         ],
         "icon": "FenceIcon"
+    },
+    "testerLoad": {
+        "id": "testerLoad",
+        "title": "Tester Load",
+        "url": "/Queries/TesterLoad",
+        "fields": [
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date",
+                "autoFocus": true
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "TimelapseIcon"
+    },
+    "cardTestDuration": {
+        "id": "cardTestDuration",
+        "title": "Card Test Duration",
+        "url": "/Queries/CardTestDuration",
+        "fields": [
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "AvTimerIcon"
     }
 }
