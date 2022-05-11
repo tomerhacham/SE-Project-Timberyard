@@ -1,0 +1,20 @@
+{
+    "columnNames": ["Station", "NumberOfRuns", "TotalRunTimeHours"],
+    "records": [
+        {
+            "Station": "1P",
+            "NumberOfRuns": 2,
+            "TotalRunTimeHours": 0.368333
+        },
+        {
+            "Station": "L4",
+            "NumberOfRuns": 19,
+            "TotalRunTimeHours": 2.946944
+        },
+        {
+            "Station": "04",
+            "NumberOfRuns": 14,
+            "TotalRunTimeHours": 3.220833
+        }
+    ]
+}

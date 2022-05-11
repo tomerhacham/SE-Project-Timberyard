@@ -18,10 +18,10 @@ namespace Timberyard_UnitTests.Stubs
             Data = new Dictionary<int, Alarm>();
         }
 
-        public async Task<Result<Alarm>> DeleteAlarm(Alarm alarm)
+        public async Task<Result<bool>> DeleteAlarm(int Id)
         {
-            var result = Data.Remove(alarm.Id);
-            return new Result<Alarm>(result, alarm);
+            var result = Data.Remove(Id);
+            return new Result<bool>(true, true);
         }
 
         public async Task<Result<List<Alarm>>> GetAllActiveAlarms()
