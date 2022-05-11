@@ -47,4 +47,33 @@ jobs:
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Unit Tests-ETL
-      run: dotnet test '.\ETLTests\ETLTests.csproj'   
+      run: dotnet test '.\ETLTests\ETLTests.csproj'
+    - name: Unit Tests-Web Service
+      run: dotnet test '.\Timberyard-UnitTests\TimberyardTests.csproj' --filter Category=Unit
+  
+  integrationtests:      
+    needs: build
+    name:  Integration Tests
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        dotnet-version: 3.1.x
+    - name: Install formater
+      run: dotnet tool install --global dotnet-format
+    - name: Initialize MS-SQL Server
+      run: 
+        docker compose -f .\testing-DB-docker-image\docker-compose.yaml up -d
+        start-sleep -s 90
+    - name: Integration Tests-Web Service
+      run: 
+        $env:DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
+        $env:DatabaseSettings__DbServer="LOCALHOST\\SQLEXPRESS"
+        $env:DatabaseSettings__DbPassword="timberyard_service"
+        $env:DatabaseSettings__DbUsername="timberyard_service"
+        $env:SMPTClientSettings__Host="localhost"
+        $env:SMPTClientSettings__Port="25"
+        $env:SMPTClientSettings__SenderAddress="Timberyard"
+        dotnet test '.\Timberyard-UnitTests\TimberyardTests.csproj' --filter Category=Integration
+    - name: Shutdown MS-SQL Server
+      run:  docker compose -f .\testing-DB-docker-image\docker-compose.yaml down
