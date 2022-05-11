@@ -11,9 +11,9 @@ jobs:
     name:  Linter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 3.1.x
     - name: Install formater
@@ -26,7 +26,7 @@ jobs:
     name:  Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
@@ -41,7 +41,7 @@ jobs:
     name:  Unit Tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Install formater
@@ -56,7 +56,7 @@ jobs:
     name:  Integration Tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Install formater
