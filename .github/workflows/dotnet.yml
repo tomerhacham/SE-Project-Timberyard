@@ -19,7 +19,7 @@ jobs:
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Run formater
-      run: $env:DOTNET_ROOT/tools/dotnet-format --check --verbosity diagnostic
+      run: /home/runner/.dotnet/tools/dotnet-format --check --verbosity diagnostic
 
   build:
     needs: linter
