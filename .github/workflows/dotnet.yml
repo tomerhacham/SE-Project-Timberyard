@@ -63,7 +63,7 @@ jobs:
       run: dotnet tool install --global dotnet-format
     - name: Initialize MS-SQL Server
       run: 
-        docker compose -f .\testing-DB-docker-image\docker-compose.yaml up -d
+        docker compose --file .\testing-DB-docker-image\docker-compose.yaml up -d
         start-sleep -s 90
     - name: Integration Tests-Web Service
       run: 
