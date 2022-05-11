@@ -52,7 +52,7 @@ jobs:
       run: dotnet test '.\Timberyard-UnitTests\TimberyardTests.csproj' --filter Category=Unit
   
   integrationtests:      
-    needs: build
+    needs: unittests
     name:  Integration Tests
     runs-on: windows-latest
     steps:
