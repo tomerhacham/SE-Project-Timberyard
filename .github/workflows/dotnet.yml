@@ -62,9 +62,9 @@ jobs:
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Initialize MS-SQL Server
-      run: 
-        docker-compose --file .\testing-DB-docker-image\docker-compose.yaml up -d
-        start-sleep -s 90
+      run: docker-compose --file .\testing-DB-docker-image\docker-compose.yaml up -d
+    - name: Wait for server to init
+      run: start-sleep -s 90
     - name: Integration Tests-Web Service
       run: 
         $env:DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
