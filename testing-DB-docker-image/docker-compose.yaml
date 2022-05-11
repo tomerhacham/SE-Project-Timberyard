@@ -1,15 +1,7 @@
 version: '3.4'
 services:
   timeryard-mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    volumes:
-      - "./sql-scripts/setup.sql:/docker-entrypoint-initdb.d/1.sql"
-    entrypoint:
-      - ./entrypoint.sh
+    build: ./Db
     ports:
       - "3360:1433"
     restart: always
-    environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: Password1!
-      MSSQL_PID: Express
