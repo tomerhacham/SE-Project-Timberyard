@@ -7,22 +7,7 @@ on:
     branches: [ main, Development ]
 
 jobs:
-  linter:
-    name:  Linter
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 3.1.x
-    - name: Install formater
-      run: dotnet tool install --global dotnet-format
-    - name: Run formater
-      run: /home/runner/.dotnet/tools/dotnet-format --check --verbosity diagnostic
-
   build:
-    needs: linter
     name:  Build
     runs-on: ubuntu-latest
     steps:
@@ -31,8 +16,6 @@ jobs:
         dotnet-version: 3.1.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Install formater
-      run: dotnet tool install --global dotnet-format
     - name: Build
       run: dotnet build --no-restore
 
@@ -44,8 +27,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
-    - name: Install formater
-      run: dotnet tool install --global dotnet-format
     - name: Unit Tests-ETL
       run: dotnet test './ETLTests/ETLTests.csproj'
     - name: Unit Tests-Web Service
@@ -59,8 +40,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
-    - name: Install formater
-      run: dotnet tool install --global dotnet-format
     - name: Initialize MS-SQL Server
       run: docker-compose --file ./testing-DB-docker-image/docker-compose.yaml up -d
     - name: Wait for server to init
