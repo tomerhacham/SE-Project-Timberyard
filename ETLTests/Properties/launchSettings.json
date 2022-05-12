@@ -3,7 +3,7 @@
     "Valid": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NewLogsRoot",
+        "Directories__NewLogsDirectory": "../../../Resources/NewLogsRoot",
         "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
         "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
         "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
@@ -15,7 +15,7 @@
     "NonExisitngDirectory": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NonExitingDirectory",
+        "Directories__NewLogsDirectory": "../../../Resources/NonExitingDirectory",
         "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
         "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
         "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
@@ -27,7 +27,7 @@
     "FaultLog": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\FaultLogs",
+        "Directories__NewLogsDirectory": "../../../Resources/FaultLogs",
         "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
         "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
         "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
@@ -39,7 +39,7 @@
     "FaultDBSettings": {
       "commandName": "Project",
       "environmentVariables": {
-        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\NewLogsRoot",
+        "Directories__NewLogsDirectory": "../../../Resources/NewLogsRoot",
         "Directories__HandeledLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\HandeledLogs",
         "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
         "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
