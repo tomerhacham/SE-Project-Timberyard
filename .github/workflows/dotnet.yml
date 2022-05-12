@@ -9,24 +9,24 @@ on:
 jobs:
   linter:
     name:  Linter
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 3.1.x
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Run formater
-      run: dotnet-format --check --verbosity diagnostic
+      run: /home/runner/.dotnet/tools/dotnet-format --check --verbosity diagnostic
 
   build:
     needs: linter
     name:  Build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
@@ -39,41 +39,41 @@ jobs:
   unittests:      
     needs: build
     name:  Unit Tests
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Unit Tests-ETL
-      run: dotnet test '.\ETLTests\ETLTests.csproj'
+      run: dotnet test './ETLTests/ETLTests.csproj'
     - name: Unit Tests-Web Service
-      run: dotnet test '.\Timberyard-UnitTests\TimberyardTests.csproj' --filter Category=Unit
+      run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Unit
   
   integrationtests:      
     needs: unittests
     name:  Integration Tests
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Initialize MS-SQL Server
-      run: docker-compose --file .\testing-DB-docker-image\docker-compose.yaml up -d
+      run: docker-compose --file ./testing-DB-docker-image/docker-compose.yaml up -d
     - name: Wait for server to init
-      run: start-sleep -s 90
+      run: sleep 90s
     - name: Integration Tests-Web Service
       run: 
-        $env:DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
-        $env:DatabaseSettings__DbServer="LOCALHOST\\SQLEXPRESS"
-        $env:DatabaseSettings__DbPassword="timberyard_service"
-        $env:DatabaseSettings__DbUsername="timberyard_service"
-        $env:SMPTClientSettings__Host="localhost"
-        $env:SMPTClientSettings__Port="25"
-        $env:SMPTClientSettings__SenderAddress="Timberyard"
-        dotnet test '.\Timberyard-UnitTests\TimberyardTests.csproj' --filter Category=Integration
+        export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
+        export DatabaseSettings__DbServer="LOCALHOST\\SQLEXPRESS"
+        export DatabaseSettings__DbPassword="timberyard_service"
+        export DatabaseSettings__DbUsername="timberyard_service"
+        export SMPTClientSettings__Host="localhost"
+        export SMPTClientSettings__Port="25"
+        export SMPTClientSettings__SenderAddress="Timberyard"
+        dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration
     - name: Shutdown MS-SQL Server
-      run:  docker-compose --file .\testing-DB-docker-image\docker-compose.yaml down
+      run:  docker-compose --file ./testing-DB-docker-image/docker-compose.yaml down
