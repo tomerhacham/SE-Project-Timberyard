@@ -49,5 +49,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet-format" />
+  </Target>
 
 </Project>

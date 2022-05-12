@@ -27,4 +27,9 @@
     <ProjectReference Include="..\ETL\ETL.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet-format" />
+  </Target>
+
+
 </Project>
