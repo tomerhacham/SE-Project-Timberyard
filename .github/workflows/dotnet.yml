@@ -45,7 +45,7 @@ jobs:
     - name: Wait for server to init
       run: sleep 90s
     - name: Integration Tests-Web Service
-      run: 
+      run: |
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
         export DatabaseSettings__DbServer="LOCALHOST\\SQLEXPRESS"
         export DatabaseSettings__DbPassword="timberyard_service"
