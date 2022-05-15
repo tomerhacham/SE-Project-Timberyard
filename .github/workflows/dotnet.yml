@@ -28,9 +28,9 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Unit Tests-ETL
-      run: dotnet test './ETLTests/ETLTests.csproj'
+      run: dotnet test './ETLTests/ETLTests.csproj' -l "console;verbosity=detailed"
     - name: Unit Tests-Web Service
-      run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Unit
+      run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Unit -l "console;verbosity=detailed"
   
   integrationtests:      
     needs: unittests
@@ -53,6 +53,6 @@ jobs:
         export SMPTClientSettings__Host="localhost"
         export SMPTClientSettings__Port="25"
         export SMPTClientSettings__SenderAddress="Timberyard"
-        dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration ---logger "console;verbosity=detailed"
+        dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration -l "console;verbosity=detailed"
     - name: Shutdown MS-SQL Server
       run:  docker-compose --file ./testing-DB-docker-image/docker-compose.yaml down
