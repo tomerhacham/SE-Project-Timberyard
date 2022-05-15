@@ -82,7 +82,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
-            UserDTO user = new UserDTO() { Email = email, Role = Role.RegularUser, ExperationTimeStamp = DateTime.UtcNow };
+            UserDTO user = new UserDTO() { Email = email, Password = String.Empty, Role = Role.RegularUser, ExperationTimeStamp = DateTime.UtcNow };
 
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
