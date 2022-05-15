@@ -47,12 +47,10 @@ jobs:
     - name: Integration Tests-Web Service
       run: |
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
-        export DatabaseSettings__DbServer="localhost, 3360"
+        export DatabaseSettings__DbServer="127.0.0.1,3360"
         export DatabaseSettings__DbPassword="timberyard_service"
         export DatabaseSettings__DbUsername="timberyard_service"
         export SMPTClientSettings__Host="localhost"
         export SMPTClientSettings__Port="25"
         export SMPTClientSettings__SenderAddress="Timberyard"
         dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration -l "console;verbosity=detailed"
-    - name: Shutdown MS-SQL Server
-      run:  docker-compose --file ./testing-DB-docker-image/docker-compose.yaml down
