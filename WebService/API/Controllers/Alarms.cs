@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Domain.Interface;
 
 namespace WebService.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Role.Admin)]
     [ApiController]
     public class Alarms : ControllerBase
     {
