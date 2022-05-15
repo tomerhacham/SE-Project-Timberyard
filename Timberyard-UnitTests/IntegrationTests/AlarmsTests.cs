@@ -94,7 +94,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         {
             // Inserting log from the last 24 hours
             // Notice there is no alarm in the database, hence we expect to zero alarms to be set on
-            LogsAndTestsRepository.Data.Add(1, new Log() { Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(0, activatedAlarms);
         }
@@ -120,7 +120,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             alarmToInsert.Id = 1;
             var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(0, activatedAlarms);
         }
@@ -133,7 +133,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             alarmToInsert.Id = 1;
             var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(1, activatedAlarms);
         }
@@ -148,7 +148,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.True(insertionResult.Status);
             insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert2);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", Station = "TestStation", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", Station = "TestStation", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(2, activatedAlarms);
         }

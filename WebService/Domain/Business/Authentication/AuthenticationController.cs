@@ -40,7 +40,7 @@ namespace WebService.Domain.Business.Authentication
             {
                 var record = recordResult.Data;
 
-                bool condition = record.Role == Role.RegularUser ? DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0 : true;
+                bool condition = record.Role == Role.RegularUser ? DateTime.UtcNow.CompareTo(record.ExperationTimeStamp) < 0 : true;
 
                 if (password.HashString().Equals(record.Password) && condition)
                 {
@@ -68,7 +68,7 @@ namespace WebService.Domain.Business.Authentication
                 var message = $"Use verification code {random_number} for Timberyard authentication";
                 Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
                 record.Password = random_number.HashString();
-                record.ExperationTimeStamp = DateTime.Now.AddMinutes(5);
+                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(5);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
 
@@ -82,7 +82,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
-            UserDTO user = new UserDTO() { Email = email, Role = Role.RegularUser };
+            UserDTO user = new UserDTO() { Email = email, Role = Role.RegularUser, ExperationTimeStamp = DateTime.UtcNow };
 
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
@@ -130,7 +130,7 @@ namespace WebService.Domain.Business.Authentication
             Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
             string tempPassword = random_number.HashString();
 
-            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin };
+            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {

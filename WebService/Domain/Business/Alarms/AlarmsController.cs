@@ -66,7 +66,7 @@ namespace WebService.Domain.Business.Alarms
             var activatedAlarms = 0;
             if (activeAlarmsResult.Status)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.UtcNow;
                 var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
                 if (logsQueryResult.Status && logsQueryResult.Data.Count > 0)
                 {
