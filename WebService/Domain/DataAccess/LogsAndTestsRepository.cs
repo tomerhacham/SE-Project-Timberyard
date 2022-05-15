@@ -343,6 +343,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning("Exception in logs and test repository", e);
                 return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }
