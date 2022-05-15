@@ -36,7 +36,7 @@ namespace WebService.Utils.ExtentionMethods
 
             return Encoding.ASCII.GetString(hash_bytes);
         }
-                /// <summary>
+        /// <summary>
         /// Utility function to validate a list of emails
         /// </summary>
         /// <see cref="https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>

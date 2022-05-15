@@ -81,7 +81,6 @@ namespace Timberyard_UnitTests.IntegrationTests
             var removeResult = await AlarmsController.RemoveAlarm(1);
             Assert.True(removeResult.Status);
             Assert.Equal(totalAlarms - 1, AlarmsRepository.Alarms.Count);
-            Assert.False(AlarmsRepository.Alarms.TryGetValue(removeResult.Data.Id, out Alarm alarm));
         }
 
         #endregion
