@@ -8,18 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.DataAccess.DTO;
+using WebService.Utils;
+using WebService.Utils.Models;
 
 namespace WebService.API.Middlewares
 {
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
+        private readonly string Secret;
+        private readonly ILogger Logger;
 
-        public JwtMiddleware(RequestDelegate next )
+        public JwtMiddleware(RequestDelegate next, IOptions<AuthenticationSettings> settings, ILogger logger)
         {
             _next = next;
-
+            Secret = settings.Value.Secret;
+            Logger = logger;
         }
 
         public async Task Invoke(HttpContext context, AuthenticationController authController)

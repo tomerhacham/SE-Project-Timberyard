@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,6 +13,7 @@ using WebService.Domain.DataAccess;
 using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 using WebService.Utils.ExtentionMethods;
+using WebService.Utils.Models;
 
 namespace WebService.Domain.Business.Authentication
 {
@@ -20,13 +22,15 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
-        private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
+        private readonly string Secret;
 
-        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository)
+
+        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository, IOptions<AuthenticationSettings> settings)
         {
             SMTPClient = sMTPClient;
             Logger = logger;
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
+            Secret = settings.Value.Secret;
         }
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
