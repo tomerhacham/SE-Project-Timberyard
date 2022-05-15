@@ -43,7 +43,7 @@ jobs:
     - name: Initialize MS-SQL Server
       run: docker-compose --file ./testing-DB-docker-image/docker-compose.yaml up -d
     - name: Wait for server to init
-      run: sleep 90s
+      run: sleep 120s
     - name: Integration Tests-Web Service
       run: |
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
