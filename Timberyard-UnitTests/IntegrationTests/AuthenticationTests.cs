@@ -13,6 +13,8 @@ using System.Linq;
 using ETL.DataObjects;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.DataAccess.DTO;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
@@ -22,6 +24,9 @@ namespace Timberyard_UnitTests.IntegrationTests
         Mock<ISMTPClient> SmtpClient { get; set; }
         AuthenticationController AuthenticationController { get; set; }
         InMemoryAlarmsAndUsersRepository UsersRepository { get; set; }
+
+        private readonly String Secret;
+
         public AuthenticationTests()
         {
             var serviceProvider = ConfigureServices("IntegrationTests", inMemoryAlarmsRepository: true, inMemoryLogsAndTestRepository: true);
@@ -77,6 +82,87 @@ namespace Timberyard_UnitTests.IntegrationTests
                 Assert.False(UsersRepository.Users.ContainsKey(emailToRemove));
             }
         }
+        [Fact]
+        public async void ChangeSystemAdminPassword_worngPass()
+        {
+            string email = "ChangeSystemAdminPassword_worngPass@timberyard.com";
+            var insert_result = await AuthenticationController.AddSystemAdmin(email);
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            string pass_generated = UsersRepository.Users[email].Password;
+            Assert.NotEmpty(pass_generated);
+
+            // put old password to be "worngPass" that cant be generated when adding new system admin
+            var remove_result = await AuthenticationController.ChangeSystemAdminPassword(email, "worngPass", "123456");
+            Assert.False(remove_result.Status);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+            Assert.Equal(pass_generated, user.Password);
+        }
+
+        #endregion
+
+        #region Login and Password
+        [Fact]
+        public async void Login()
+        {
+            string email = "login@timberyard.com";
+            string password = "testPass";
+            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password });
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
+            Assert.Equal(password, newUser.Password);
+
+            var result = await AuthenticationController.Login(email, password);
+            Assert.True(result.Status);
+            Assert.NotNull(result.Data);
+
+            JWTtoken token = result.Data;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("");
+            tokenHandler.ValidateToken(token.Token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var emailFromToken = jwtToken.Claims.First(x => x.Type == "Email").Value;
+            Assert.Equal(email, emailFromToken);
+        }
+
+        [Fact]
+        public async void Login_worngPass()
+        {
+            string email = "loginWorngPass@timberyard.com";
+            string password = "testPass";
+            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password });
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
+            Assert.Equal(password, newUser.Password);
+
+            string worng_password = "worngPass";
+            var result = await AuthenticationController.Login(email, worng_password);
+            Assert.False(result.Status);
+            Assert.Null(result.Data);
+            Assert.Equal(password, UsersRepository.Users[email].Password);
+        }
+
+        [Fact]
+        public async void Login_notExists()
+        {
+            string email = "notExists@timberyard.com";
+            string password = "testPass";
+            Assert.False(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+
+            var result = await AuthenticationController.Login(email, password);
+            Assert.False(result.Status);
+            Assert.Null(result.Data);
+        }
 
         [Fact]
         public async void AddSystemAdmin()
@@ -102,7 +188,7 @@ namespace Timberyard_UnitTests.IntegrationTests
 
             string pass = UsersRepository.Users[email].Password;
             var update_result = await AuthenticationController.ChangeSystemAdminPassword(email, "TestPass", pass);
-
+            Assert.True(update_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO userEdited));
             Assert.NotNull(userEdited);
             Assert.Equal("TestPass", userEdited.Password);
@@ -122,41 +208,6 @@ namespace Timberyard_UnitTests.IntegrationTests
             }
         }
 
-        [Fact]
-        public async void ChangeSystemAdminPassword_worngPass()
-        {
-            string email = "ChangeSystemAdminPassword_worngPass@timberyard.com";
-            var insert_result = await AuthenticationController.AddSystemAdmin(email);
-            Assert.True(insert_result.Status);
-            Assert.True(UsersRepository.Users.ContainsKey(email));
-            string pass_generated = UsersRepository.Users[email].Password;
-            Assert.NotEmpty(pass_generated);
-
-            // put old password to be "worngPass" that cant be generated when adding new system admin
-            var remove_result = await AuthenticationController.ChangeSystemAdminPassword(email, "worngPass", "123456");
-            Assert.False(remove_result.Status);
-            Assert.True(UsersRepository.Users.ContainsKey(email));
-            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
-            Assert.Equal(pass_generated, user.Password);
-        }
-
-        #endregion
-
-        #region Login and Password
-        [Fact]
-        public async void Login()
-        {
-        }
-
-        [Fact]
-        public async void Login_worngPass()
-        {
-        }
-
-        [Fact]
-        public async void RequestVerificationCode()
-        {
-        }
 
         [Fact]
         public async void ForgetPassword()
