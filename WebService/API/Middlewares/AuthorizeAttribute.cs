@@ -17,9 +17,9 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var email = (string)context.HttpContext.Items["Email"];
-        var role = (int)context.HttpContext.Items["Role"];
-        if (string.IsNullOrEmpty(email) || role - (int)AuthorizedRole < 0)
+        if (!(bool)context.HttpContext.Items["ValidLifetime"]
+            || string.IsNullOrEmpty((string)context.HttpContext.Items["Email"])
+            || (int)context.HttpContext.Items["Role"] - (int)AuthorizedRole < 0)
         {
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }

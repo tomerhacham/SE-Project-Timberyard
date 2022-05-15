@@ -61,11 +61,13 @@ namespace WebService.API.Middlewares
                 // attach user to context on successful jwt validation
                 context.Items["Email"] = email;
                 context.Items["Role"] = role;
+                context.Items["ValidLifetime"] = true;
             }
-            catch
+            catch (Exception e)
             {
                 // do nothing if jwt validation fails
                 // user is not attached to context so request won't have access to secure routes
+                context.Items["ValidLifetime"] = false;
             }
         }
     }

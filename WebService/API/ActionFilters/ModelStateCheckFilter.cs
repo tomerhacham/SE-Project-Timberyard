@@ -26,7 +26,7 @@ namespace WebService.API.ActionFilters
         /// <param name="context"></param>
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            Logger.Info(context.Result?.ToString());
+            //Logger.Info(context.Result?.ToString());
         }
 
         /// <summary>
