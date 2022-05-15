@@ -18,13 +18,13 @@ namespace Timberyard_UnitTests.IntegrationTests
     {
         Mock<ISMTPClient> SmtpClient { get; set; }
         AlarmsController AlarmsController { get; set; }
-        InMemoryAlarmRepository AlarmsRepository { get; set; }
+        InMemoryAlarmsAndUsersRepository AlarmsRepository { get; set; }
         InMemoryLogsAndTestsRepository LogsAndTestsRepository { get; set; }
         public AlarmsTests()
         {
             var serviceProvider = ConfigureServices("IntegrationTests", inMemoryAlarmsRepository: true, inMemoryLogsAndTestRepository: true);
             AlarmsController = serviceProvider.GetService<AlarmsController>();
-            AlarmsRepository = serviceProvider.GetService<IAlarmsRepository>() as InMemoryAlarmRepository;
+            AlarmsRepository = serviceProvider.GetService<IAlarmsAndUsersRepository>() as InMemoryAlarmsAndUsersRepository;
             LogsAndTestsRepository = serviceProvider.GetService<ILogsAndTestsRepository>() as InMemoryLogsAndTestsRepository;
         }
 
@@ -34,10 +34,10 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void AddNewAlarmTest()
         {
             var result = await AlarmsController.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 15, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            Assert.NotEmpty(AlarmsRepository.Data);
-            Assert.Single(AlarmsRepository.Data);
-            Assert.Equal("TestAlarm", AlarmsRepository.Data.Values.First().Name);
-            Assert.Equal("TestCatalog", AlarmsRepository.Data.Values.First().Objective);
+            Assert.NotEmpty(AlarmsRepository.Alarms);
+            Assert.Single(AlarmsRepository.Alarms);
+            Assert.Equal("TestAlarm", AlarmsRepository.Alarms.Values.First().Name);
+            Assert.Equal("TestCatalog", AlarmsRepository.Alarms.Values.First().Objective);
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace Timberyard_UnitTests.IntegrationTests
             var editResult = await AlarmsController.EditAlarm(clonedAlarm);
 
             Assert.True(editResult.Status);
-            Assert.Single(AlarmsRepository.Data);
-            var inDataAlarm = AlarmsRepository.Data.Values.First();
+            Assert.Single(AlarmsRepository.Alarms);
+            var inDataAlarm = AlarmsRepository.Alarms.Values.First();
             Assert.Equal("Edited", inDataAlarm.Name);
             Assert.Equal("Edited", inDataAlarm.Objective);
             Assert.False(inDataAlarm.Active);
@@ -75,12 +75,12 @@ namespace Timberyard_UnitTests.IntegrationTests
                 alarmToInsert.Id = i;
                 var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
                 Assert.True(insertionResult.Status);
-                Assert.Equal(i, AlarmsRepository.Data.Count);
+                Assert.Equal(i, AlarmsRepository.Alarms.Count);
             }
 
             var removeResult = await AlarmsController.RemoveAlarm(1);
             Assert.True(removeResult.Status);
-            Assert.Equal(totalAlarms - 1, AlarmsRepository.Data.Count);
+            Assert.Equal(totalAlarms - 1, AlarmsRepository.Alarms.Count);
         }
 
         #endregion
@@ -92,7 +92,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         {
             // Inserting log from the last 24 hours
             // Notice there is no alarm in the database, hence we expect to zero alarms to be set on
-            LogsAndTestsRepository.Data.Add(1, new Log() { Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(0, activatedAlarms);
         }
@@ -118,7 +118,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             alarmToInsert.Id = 1;
             var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(0, activatedAlarms);
         }
@@ -131,7 +131,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             alarmToInsert.Id = 1;
             var insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(1, activatedAlarms);
         }
@@ -146,7 +146,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.True(insertionResult.Status);
             insertionResult = await AlarmsRepository.InsertAlarm(alarmToInsert2);
             Assert.True(insertionResult.Status);
-            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", Station = "TestStation", FinalResult = "FAIL", Date = DateTime.Now });
+            LogsAndTestsRepository.Data.Add(1, new Log() { Catalog = "TestCatalog", Station = "TestStation", FinalResult = "FAIL", Date = DateTime.UtcNow });
             var activatedAlarms = await AlarmsController.CheckForAlarmsCondition();
             Assert.Equal(2, activatedAlarms);
         }

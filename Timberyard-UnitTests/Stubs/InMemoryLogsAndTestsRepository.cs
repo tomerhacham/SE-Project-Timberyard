@@ -19,12 +19,16 @@ namespace Timberyard_UnitTests.Stubs
         {
             Data = new Dictionary<int, Log>();
         }
+
+        #region Alarms
         public async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
             var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).Select(log => log.GetDTO()).ToList();
             return new Result<List<LogDTO>>(true, logs);
         }
+        #endregion
 
+        #region Queries
         public Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield)
         {
             throw new NotImplementedException();
@@ -59,5 +63,7 @@ namespace Timberyard_UnitTests.Stubs
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Domain.Interface;
 
 namespace WebService.API.Controllers
@@ -22,6 +23,7 @@ namespace WebService.API.Controllers
 
         [Route("AddNewAlarm")]
         [HttpPost]
+        [Authorize(Role.Admin)]
         [SwaggerRequestExample(typeof(object), typeof(AddNewAlarmRequestExample))]
         [ProducesResponseType(typeof(AddNewAlarmResponseExample), StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AddNewAlarmResponseExample))]
@@ -42,6 +44,7 @@ namespace WebService.API.Controllers
 
         [Route("EditAlarm")]
         [HttpPost]
+        [Authorize(Role.Admin)]
         [SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
         [ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(FullAlarmRequestExample))]
@@ -62,6 +65,7 @@ namespace WebService.API.Controllers
 
         [Route("RemoveAlarm")]
         [HttpPost]
+        [Authorize(Role.Admin)]
         //[SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
         //[ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]

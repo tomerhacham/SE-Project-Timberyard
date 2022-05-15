@@ -13,6 +13,7 @@ using WebService.Domain.Interface;
 namespace WebService.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class Queries : ControllerBase
     {

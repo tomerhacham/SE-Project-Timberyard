@@ -18,7 +18,7 @@ namespace Timberyard_UnitTests.UnitTests
     {
         Mock<ISMTPClient> SmtpClient { get; set; }
         AlarmsController AlarmsController { get; set; }
-        InMemoryAlarmRepository AlarmsRepository { get; set; }
+        InMemoryAlarmsAndUsersRepository AlarmsRepository { get; set; }
         InMemoryLogsAndTestsRepository LogsAndTestsRepository { get; set; }
 
         public AlarmTests()
@@ -29,7 +29,7 @@ namespace Timberyard_UnitTests.UnitTests
 
             var serviceProvider = ConfigureServices("UnitTests", inMemoryAlarmsRepository: true, inMemoryLogsAndTestRepository: true);
             AlarmsController = serviceProvider.GetService<AlarmsController>();
-            AlarmsRepository = serviceProvider.GetService<IAlarmsRepository>() as InMemoryAlarmRepository;
+            AlarmsRepository = serviceProvider.GetService<InMemoryAlarmsAndUsersRepository>() as InMemoryAlarmsAndUsersRepository;
             LogsAndTestsRepository = serviceProvider.GetService<ILogsAndTestsRepository>() as InMemoryLogsAndTestsRepository;
         }
 

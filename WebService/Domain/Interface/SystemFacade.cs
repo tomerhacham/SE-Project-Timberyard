@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Alarms;
+using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 
@@ -12,10 +13,12 @@ namespace WebService.Domain.Interface
     {
         QueriesController QueriesController { get; }
         AlarmsController AlarmsController { get; }
-        public SystemFacade(QueriesController queriesController, AlarmsController alarmsController)
+        AuthenticationController AuthenticationController { get; }
+        public SystemFacade(QueriesController queriesController, AlarmsController alarmsController, AuthenticationController authenticationController)
         {
             QueriesController = queriesController;
             AlarmsController = alarmsController;
+            AuthenticationController = authenticationController;
         }
 
         #region Queries
@@ -27,6 +30,7 @@ namespace WebService.Domain.Interface
         {
             return await QueriesController.CalculateCardYield(catalog, startDate, endDate);
         }
+
         public async Task<Result<QueryResult>> CalculateStationsYield(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateStationsYield(startDate, endDate);
@@ -35,22 +39,25 @@ namespace WebService.Domain.Interface
         {
             return await QueriesController.CalculateStationAndCardYield(station, catalog, startDate, endDate);
         }
+
         public async Task<Result<QueryResult>> CalculateNFF(string cardName, DateTime startDate, DateTime endDate, int timeInterval)
         {
             return await QueriesController.CalculateNFF(cardName, startDate, endDate, timeInterval);
         }
 
-        public async Task CheckAlarmsCondition()
-        {
-            AlarmsController.CheckForAlarmsCondition();
-        }
-
-
         public async Task<Result<QueryResult>> CalculateTesterLoad(DateTime startDate, DateTime endDate)
         {
             return await QueriesController.CalculateTesterLoad(startDate, endDate);
         }
+
+        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+        {
+            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+        }
+
         #endregion
+
+        #region Alarms
 
         public async Task<Result<FullAlarmModel>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
@@ -96,9 +103,56 @@ namespace WebService.Domain.Interface
         {
             return await AlarmsController.RemoveAlarm(id);
         }
-        public Task<Result<QueryResult>> CalculateCardTestDuration(string catalog, DateTime startDate, DateTime endDate)
+
+        internal async Task<JWTtoken> GetToken(string email)
         {
-            return QueriesController.CalculateCardTestDuration(catalog, startDate, endDate);
+            return AuthenticationController.GetToken(email);
         }
+
+        public async Task CheckAlarmsCondition()
+        {
+            await AlarmsController.CheckForAlarmsCondition();
+        }
+
+        #endregion
+
+        #region Authentication
+
+        public async Task RequestVerificationCode(string email)
+        {
+            await AuthenticationController.RequestVerificationCode(email);
+        }
+        public async Task<Result<JWTtoken>> Login(string email, string password)
+        {
+            return await AuthenticationController.Login(email, password);
+        }
+
+        public async Task<Result<bool>> AddUser(string email)
+        {
+            return await AuthenticationController.AddUser(email);
+        }
+
+        public async Task<Result<bool>> RemoveUser(string email)
+        {
+            return await AuthenticationController.RemoveUser(email);
+        }
+
+        public async Task<Result<bool>> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        {
+            return await AuthenticationController.ChangeSystemAdminPassword(email, newPassword, oldPassword);
+        }
+        public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
+        {
+            return await AuthenticationController.AddSystemAdmin(newSystemAdminEmail);
+        }
+        public async Task<Result<bool>> ForgetPassword(string email)
+        {
+            return await AuthenticationController.ForgetPassword(email);
+        }
+
+
+
+        #endregion
+
     }
 }

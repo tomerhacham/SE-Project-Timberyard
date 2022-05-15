@@ -1,57 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace WebService.Utils.ExtentionMethods
+namespace WebService.API.Controllers.ModelValidation
 {
-    public static class Extensions
+    public class ValidEmailAttribute : ValidationAttribute
     {
-        public static double StdDev(this IEnumerable<double> values)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double ret = 0;
-            int count = values.Count();
-            if (count > 1)
+            string email = (string)value;
+            if (!IsValidEmail(email))
             {
-                //Compute the Average
-                double avg = values.Average();
-
-                //Perform the Sum of (value-avg)^2
-                double sum = values.Sum(d => (d - avg) * (d - avg));
-
-                //Put it all together
-                ret = Math.Sqrt(sum / count);
+                return new ValidationResult($"This email address {email} is not valid");
             }
-            return ret;
-        }
 
-        public static string HashString(this string value)
-        {
-            var sha256 = new SHA256CryptoServiceProvider();
-            var hash_bytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(value));
-
-            return Encoding.ASCII.GetString(hash_bytes);
-        }
-        /// <summary>
-        /// Utility function to validate a list of emails
-        /// </summary>
-        /// <see cref="https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
-        /// <param name="emails"></param>
-        /// <returns></returns>
-        public static bool IsValidEmail(List<string> emails)
-        {
-            foreach (var email in emails)
-            {
-                if (!IsValidEmail(email))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return ValidationResult.Success;
         }
 
         /// <summary>
@@ -60,7 +27,7 @@ namespace WebService.Utils.ExtentionMethods
         /// <see cref="https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
         /// <param name="email"></param>
         /// <returns></returns>
-        public static bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
