@@ -181,8 +181,16 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                await connection.InsertAsync(user);
-                return new Result<bool>(true, true);
+                using var transaction = await connection.BeginTransactionAsync();
+                var userRecord = await connection.GetAsync<UserDTO>(user.Email, transaction);
+                var status = false;
+                if (userRecord == default)
+                {
+                    await connection.InsertAsync(user, transaction);
+                    status = true;
+                }
+                await transaction.CommitAsync();
+                return new Result<bool>(status, status, status ? "Succeed" : "User already exists");
             }
             catch (Exception e)
             {
