@@ -23,7 +23,6 @@ namespace WebService.API.Controllers
         }
 
         [Route("RequestVerificationCode")]
-        [Authorize]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(RequestVerificationCodeExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -43,7 +42,6 @@ namespace WebService.API.Controllers
         /// if user logged in sccessfuly, return JWT token. else, return empty string  
         /// </returns>
         [Route("Login")]
-        [Authorize]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(LoginExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]

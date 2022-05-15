@@ -133,7 +133,7 @@ namespace WebService
 
             services.AddMvc(config =>
             {
-                config.Filters.Add(new ModelStateCheckFilter());
+                config.Filters.Add(new ModelStateCheckFilter(new Logger("Timberyard-service")));
             });
         }
 

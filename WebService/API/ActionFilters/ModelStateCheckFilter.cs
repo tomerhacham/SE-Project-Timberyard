@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
+using WebService.Utils;
 
 namespace WebService.API.ActionFilters
 {
@@ -11,11 +12,22 @@ namespace WebService.API.ActionFilters
     /// </summary>
     public sealed class ModelStateCheckFilter : IActionFilter
     {
+        public readonly ILogger Logger;
+
+        public ModelStateCheckFilter(ILogger logger)
+        {
+            Logger = logger;
+        }
+
+
         /// <summary>
         /// Method been called after exection of the action has been completed
         /// </summary>
         /// <param name="context"></param>
-        public void OnActionExecuted(ActionExecutedContext context) { }
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            Logger.Info(context.Result?.ToString());
+        }
 
         /// <summary>
         /// Method been called in the begining of the execution of thr action

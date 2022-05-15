@@ -9,12 +9,10 @@ using WebService.Utils;
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     Role AuthorizedRole { get; }
-    ILogger Logger { get; }
 
-    public AuthorizeAttribute(Role authorizedRole = Role.RegularUser, ILogger logger)
+    public AuthorizeAttribute(Role authorizedRole = Role.RegularUser)
     {
         AuthorizedRole = authorizedRole;
-        Logger = logger;
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
@@ -23,7 +21,6 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         var role = (int)context.HttpContext.Items["Role"];
         if (string.IsNullOrEmpty(email) || role - (int)AuthorizedRole < 0)
         {
-            Logger.Warning("Unauthorized to do this action (user might not logged in or don't have permission)");
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }
