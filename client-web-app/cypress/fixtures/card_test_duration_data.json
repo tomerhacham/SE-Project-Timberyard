@@ -1,0 +1,20 @@
+{
+    "columnNames": ["Operator", "NetTimeAvg", "TotalTimeAvg"],
+    "records": [
+        {
+            "Operator": "73531",
+            "NetTimeAvg": 686,
+            "TotalTimeAvg": 1696
+        },
+        {
+            "Operator": "73003",
+            "NetTimeAvg": 602,
+            "TotalTimeAvg": 605
+        },
+        {
+            "Operator": "71220",
+            "NetTimeAvg": 605,
+            "TotalTimeAvg": 607
+        }
+    ]
+}

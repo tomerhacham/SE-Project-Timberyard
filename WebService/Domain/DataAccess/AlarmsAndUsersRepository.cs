@@ -21,7 +21,7 @@ namespace WebService.Domain.DataAccess
         public Task<Result<List<Alarm>>> GetAllAlarms();
         public Task<Result<Alarm>> InsertAlarm(Alarm alarm);
         public Task<Result<Alarm>> UpdateAlarm(Alarm alarm);
-        public Task<Result<Alarm>> DeleteAlarm(Alarm alarm);
+        public Task<Result<bool>> DeleteAlarm(int Id);
         public Task<Result<UserDTO>> GetUserRecord(string email);
         public Task<Result<bool>> UpdateUser(UserDTO record);
         public Task<Result<bool>> AddUser(UserDTO record);
@@ -107,18 +107,18 @@ namespace WebService.Domain.DataAccess
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
-        public async Task<Result<Alarm>> DeleteAlarm(Alarm alarm)
+        public async Task<Result<bool>> DeleteAlarm(int Id)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(alarm.GetDTO(true)) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the deletion of alarm {alarm.Id}");
+                var returnVal = await connection.DeleteAsync(new AlarmDTO() { Id = Id }) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"There was a problem during the deletion of alarm {Id}");
                 return returnVal;
             }
             catch (Exception e)
             {
-                return new Result<Alarm>(false, null, "There was a problem with the DataBase");
+                return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
         #endregion

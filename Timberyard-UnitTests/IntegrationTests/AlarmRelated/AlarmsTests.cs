@@ -60,7 +60,7 @@ namespace Timberyard_UnitTests.IntegrationTests
             var inDataAlarm = AlarmsRepository.Alarms.Values.First();
             Assert.Equal("Edited", inDataAlarm.Name);
             Assert.Equal("Edited", inDataAlarm.Objective);
-            Assert.Equal(false, inDataAlarm.Active);
+            Assert.False(inDataAlarm.Active);
             Assert.Equal(new List<string>() { "tomer@tests.com" }, inDataAlarm.Receivers);
         }
 
@@ -77,9 +77,8 @@ namespace Timberyard_UnitTests.IntegrationTests
                 Assert.True(insertionResult.Status);
                 Assert.Equal(i, AlarmsRepository.Alarms.Count);
             }
-            var alarmToDelete = new Alarm("Discard", Field.Catalog, "Discard", 1, true, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            alarmToDelete.Id = 1;
-            var removeResult = await AlarmsController.RemoveAlarm(alarmToDelete);
+
+            var removeResult = await AlarmsController.RemoveAlarm(1);
             Assert.True(removeResult.Status);
             Assert.Equal(totalAlarms - 1, AlarmsRepository.Alarms.Count);
             Assert.False(AlarmsRepository.Alarms.TryGetValue(removeResult.Data.Id, out Alarm alarm));

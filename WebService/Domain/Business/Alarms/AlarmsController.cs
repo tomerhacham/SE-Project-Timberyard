@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
+using WebService.Utils.ExtentionMethods;
 
 namespace WebService.Domain.Business.Alarms
 {
@@ -34,6 +35,11 @@ namespace WebService.Domain.Business.Alarms
         /// <returns></returns>
         public async Task<Result<Alarm>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
+            Result<Alarm> inputValidation = IsValidInputs(field, threshold, receivers);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
             var newAlarm = new Alarm(name, field, objective, threshold, true, receivers);
             return await AlarmsAndUsersRepository.InsertAlarm(newAlarm);
         }
@@ -44,6 +50,11 @@ namespace WebService.Domain.Business.Alarms
         /// <returns></returns>
         public async Task<Result<Alarm>> EditAlarm(Alarm alarmToEdit)
         {
+            Result<Alarm> inputValidation = IsValidInputs(alarmToEdit.Field, alarmToEdit.Threshold, alarmToEdit.Receivers);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
             return await AlarmsAndUsersRepository.UpdateAlarm(alarmToEdit);
         }
         /// <summary>
@@ -51,10 +62,9 @@ namespace WebService.Domain.Business.Alarms
         /// </summary>
         /// <param name="alarmToRemove"></param>
         /// <returns></returns>
-        public async Task<Result<Alarm>> RemoveAlarm(Alarm alarmToRemove)
+        public async Task<Result<bool>> RemoveAlarm(int Id)
         {
-            return await AlarmsAndUsersRepository.DeleteAlarm(alarmToRemove);
-
+            return await AlarmsAndUsersRepository.DeleteAlarm(Id);
         }
         /// <summary>
         /// Function to deserialize all active alarms from the DB and instate each one of them.
@@ -84,6 +94,23 @@ namespace WebService.Domain.Business.Alarms
             }
             else { Logger.Warning(activeAlarmsResult.Message); }
             return activatedAlarms;
+        }
+
+        private Result<Alarm> IsValidInputs(Field field, int threshold, List<string> receivers)
+        {
+            if (field < 0 || (int)field >= Enum.GetNames(typeof(Field)).Length)
+            {
+                return new Result<Alarm>(false, null, "Invalid field\n");
+            }
+            if (threshold < 0)
+            {
+                return new Result<Alarm>(false, null, "Invalid threshold. Threshold can not be a negative number\n");
+            }
+            if (!Extensions.IsValidEmail(receivers))
+            {
+                return new Result<Alarm>(false, null, "One or more of the entered emails are invalid\n");
+            }
+            return new Result<Alarm>(true, null, "All inputs are valid\n");
         }
     }
 }

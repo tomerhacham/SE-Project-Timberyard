@@ -1,0 +1,34 @@
+{
+    "columnNames": [
+        "TestName",
+        "Min",
+        "Max",
+        "Average",
+        "StandardDeviation",
+        "Received"
+    ],
+    "records": [
+        {
+            "TestName": "Boundaries_Test2",
+            "Min": 2,
+            "Max": 6,
+            "Average": 4,
+            "StandardDeviation": 1.4142135623730951,
+            "Received": [
+                6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2,
+                2, 2, 2, 2
+            ]
+        },
+        {
+            "TestName": "Boundaries_Test1",
+            "Min": 1,
+            "Max": 4,
+            "Average": 2.2399999999999998,
+            "StandardDeviation": 0.7495776588630872,
+            "Received": [
+                2.5, 2.5, 2.5, 2.5, 2.5, 1.22, 1.22, 1.22, 1.22, 1.22, 3, 3, 3,
+                3, 3
+            ]
+        }
+    ]
+}
