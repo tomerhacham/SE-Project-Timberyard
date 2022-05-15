@@ -11,9 +11,10 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     Role AuthorizedRole { get; }
     ILogger Logger { get;  }
 
-    public AuthorizeAttribute(Role authorizedRole = Role.RegularUser)
+    public AuthorizeAttribute(Role authorizedRole = Role.RegularUser, ILogger logger)
     {
         AuthorizedRole = authorizedRole;
+        Logger = logger;
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
