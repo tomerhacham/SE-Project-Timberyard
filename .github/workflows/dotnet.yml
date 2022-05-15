@@ -53,6 +53,6 @@ jobs:
         export SMPTClientSettings__Host="localhost"
         export SMPTClientSettings__Port="25"
         export SMPTClientSettings__SenderAddress="Timberyard"
-        dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration
+        dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration ---logger "console;verbosity=detailed"
     - name: Shutdown MS-SQL Server
       run:  docker-compose --file ./testing-DB-docker-image/docker-compose.yaml down
