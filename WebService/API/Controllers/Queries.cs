@@ -13,6 +13,7 @@ using WebService.Domain.Interface;
 namespace WebService.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class Queries : ControllerBase
     {
@@ -24,7 +25,6 @@ namespace WebService.API.Controllers
         }
 
         [Route("CardYield")]
-        [Authorize]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
         [ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using WebService.Domain.DataAccess.DTO;
+using WebService.Utils;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
@@ -16,9 +17,9 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var email = (string)context.HttpContext.Items["Email"];
-        var role = (int)context.HttpContext.Items["Role"];
-        if (string.IsNullOrEmpty(email) || (int)AuthorizedRole - role < 0)
+        if (!(bool)context.HttpContext.Items["ValidLifetime"]
+            || string.IsNullOrEmpty((string)context.HttpContext.Items["Email"])
+            || (int)context.HttpContext.Items["Role"] - (int)AuthorizedRole < 0)
         {
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }

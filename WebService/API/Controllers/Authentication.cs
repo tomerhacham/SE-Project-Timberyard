@@ -65,6 +65,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("RemoveUser")]
+        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(RemoveUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -76,6 +77,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("ChangeSystemAdminPassword")]
+        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ChangeSystemAdminPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -87,6 +89,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("AddSystemAdmin")]
+        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(AddSystemAdminExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -98,6 +101,7 @@ namespace WebService.API.Controllers
         }
 
         [Route("ForgetPassword")]
+        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -108,7 +112,7 @@ namespace WebService.API.Controllers
             return Ok(result.Status);
         }
 
-        [Route("gettoken")]
+        [Route("getToken")]
         [HttpGet]
         public async Task<IActionResult> GetToken([Required] string email)
         {

@@ -8,18 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.DataAccess.DTO;
+using WebService.Utils;
+using WebService.Utils.Models;
 
 namespace WebService.API.Middlewares
 {
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string Secret = "ThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongThisIsALongString";
+        private readonly string Secret;
+        private readonly ILogger Logger;
 
-        public JwtMiddleware(RequestDelegate next )
+        public JwtMiddleware(RequestDelegate next, IOptions<AuthenticationSettings> settings, ILogger logger)
         {
             _next = next;
-
+            Secret = settings.Value.Secret;
+            Logger = logger;
         }
 
         public async Task Invoke(HttpContext context, AuthenticationController authController)
@@ -57,11 +61,13 @@ namespace WebService.API.Middlewares
                 // attach user to context on successful jwt validation
                 context.Items["Email"] = email;
                 context.Items["Role"] = role;
+                context.Items["ValidLifetime"] = true;
             }
-            catch
+            catch (Exception e)
             {
                 // do nothing if jwt validation fails
                 // user is not attached to context so request won't have access to secure routes
+                context.Items["ValidLifetime"] = false;
             }
         }
     }
