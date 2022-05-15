@@ -334,18 +334,18 @@ namespace WebService.Domain.DataAccess
         /// <returns></returns>
         private async Task<Result<List<T>>> ExecuteQuery<T>(string sqlCommand, object queryParams)
         {
-            try
-            {
+/*            try
+            {*/
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
                 var objects = await connection.QueryAsync<T>(sqlCommand, queryParams);
                 return new Result<List<T>>(true, objects.AsList());
-            }
+/*            }
             catch (Exception e)
             {
                 Logger.Warning("Exception in logs and test repository", e);
                 return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
-            }
+            }*/
         }
 
 
