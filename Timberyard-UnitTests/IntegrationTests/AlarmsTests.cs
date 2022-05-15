@@ -16,7 +16,6 @@ namespace Timberyard_UnitTests.IntegrationTests
 {
     public class AlarmsTests : TestSuit
     {
-        Mock<ISMTPClient> SmtpClient { get; set; }
         AlarmsController AlarmsController { get; set; }
         InMemoryAlarmsAndUsersRepository AlarmsRepository { get; set; }
         InMemoryLogsAndTestsRepository LogsAndTestsRepository { get; set; }

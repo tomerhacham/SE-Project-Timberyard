@@ -34,5 +34,13 @@ namespace WebService.Utils.ExtentionMethods
 
             return Encoding.ASCII.GetString(hash_bytes);
         }
+
+        public static string DeHashString(this string value)
+        {
+            var sha256 = new SHA256CryptoServiceProvider();
+            var hash_bytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(value));
+
+            return Encoding.ASCII.GetString(hash_bytes);
+        }
     }
 }

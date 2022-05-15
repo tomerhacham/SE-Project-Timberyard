@@ -22,6 +22,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
+
         private readonly string Secret;
 
 
@@ -108,7 +109,8 @@ namespace WebService.Domain.Business.Authentication
             if (record.Status)
             {
                 UserDTO user = record.Data;
-                if (user.Password == oldPassword.HashString())
+                string hash_pass = oldPassword.HashString();
+                if (user.Password == hash_pass)
                 {
                     user.Password = newPassword.HashString();
                     return await AlarmsAndUsersRepository.UpdateUser(user);
@@ -124,6 +126,7 @@ namespace WebService.Domain.Business.Authentication
 
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
+            await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
             // create new User
             var random_number = new Random().Next(100000, 999999).ToString();
             var message = $"You added as system admin on Timberyard ! your temporary passord is {random_number} for Timberyard authentication.";

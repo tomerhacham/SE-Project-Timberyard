@@ -30,6 +30,7 @@ namespace Timberyard_UnitTests
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                .Configure<AuthenticationSettings>(config.GetSection("AuthenticationSettings"))
                 .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
 
                 .AddSingleton<ISMTPClient>((sp) =>
