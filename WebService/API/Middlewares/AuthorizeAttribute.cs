@@ -17,7 +17,8 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (!(bool)context.HttpContext.Items["ValidLifetime"]
+        if (context.HttpContext.Items.Count == 0
+            || !(bool)context.HttpContext.Items["ValidLifetime"]
             || string.IsNullOrEmpty((string)context.HttpContext.Items["Email"])
             || (int)context.HttpContext.Items["Role"] - (int)AuthorizedRole < 0)
         {

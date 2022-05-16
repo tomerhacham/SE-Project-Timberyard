@@ -37,11 +37,11 @@ namespace WebService.Domain.Business.Authentication
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
         {
-            Result<JWTtoken> CheckForDefaultSystemAdmin(string email,string password)
+            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
             {
-                if(email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
+                if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
                 {
-                    return new Result<JWTtoken>(true,GenerateToken(new UserDTO { Email= DefaultSystemAdmin.Email , Role=Role.Admin}),"Login succees")
+                    return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
                 }
                 else
                 {
