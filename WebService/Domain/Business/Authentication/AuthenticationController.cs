@@ -141,7 +141,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> ForgetPassword(string email)
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
-
+            //TODO: verify that the record is system admin indeed
             if (recordResult.Status)
             {
                 UserDTO user = recordResult.Data;
