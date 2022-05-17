@@ -88,7 +88,7 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(NFFRequestExample))]
         [ProducesResponseType(typeof(NFFResponseExample), StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(NFFResponseExample))]
-        public async Task<IActionResult> NoFailureFound([FromBody] NoFailureFoundModel model)
+        public async Task<IActionResult> NoFailureFound([FromBody] CardNameDatesTimeintervalModel model)
         {
 
             var response = await SystemInterface.CalculateNFF(model.CardName, model.StartDate, model.EndDate, model.TimeInterval);

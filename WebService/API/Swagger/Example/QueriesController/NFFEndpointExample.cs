@@ -10,7 +10,7 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            return new NoFailureFoundModel() { CardName = "XMCP-B", StartDate = new DateTime(2020, 11, 30), EndDate = new DateTime(2022, 11, 30), TimeInterval = 5 * 60 * 60 };
+            return new CardNameDatesTimeintervalModel() { CardName = "XMCP-B", StartDate = new DateTime(2020, 11, 30), EndDate = new DateTime(2022, 11, 30), TimeInterval = 5 * 60 * 60 };
         }
     }
     public class NFFResponseExample : IExamplesProvider<object>

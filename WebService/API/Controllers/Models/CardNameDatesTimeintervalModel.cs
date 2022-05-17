@@ -4,13 +4,10 @@ using WebService.API.Controllers.ModelValidation;
 
 namespace WebService.API.Controllers.Models
 {
-    public class StationAndCardYieldModel
-
+    public class CardNameDatesTimeintervalModel
     {
         [StringIsNotNullOrEmpty]
-        public string Station { get; set; }
-        [StringIsNotNullOrEmpty]
-        public string Catalog { get; set; }
+        public string CardName { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -18,7 +15,10 @@ namespace WebService.API.Controllers.Models
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [DateGreaterEqualThanAttribute("StartDate")]
+        [DateGreaterEqualThan("StartDate")]
         public DateTime EndDate { get; set; }
+
+        [PositiveNumber]
+        public int TimeInterval { get; set; }
     }
 }
