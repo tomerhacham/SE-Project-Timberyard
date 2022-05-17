@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { some, keys } from 'lodash';
+import { some, keys, startCase } from 'lodash';
 import {
     Container,
     Avatar,
@@ -74,7 +74,7 @@ const QueryPage = ({ data }) => {
         data.columnNames.map((headerName) =>
             columns.push({
                 field: headerName,
-                headerName,
+                headerName: startCase(headerName),
                 flex: 1,
                 cellRenderer:
                     id === BOUNDARIES_ID &&

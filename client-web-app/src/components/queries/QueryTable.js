@@ -20,7 +20,7 @@ const QueryTable = ({ rows, columns }) => {
     }, []);
 
     return (
-        <div className='ag-theme-alpine' style={{ height: 400, width: '100%' }}>
+        <div className='ag-theme-alpine' style={{ height: 345, width: '100%' }}>
             <Button onClick={onBtnExport} startIcon={<FileDownloadIcon />}>
                 Export to CSV
             </Button>
