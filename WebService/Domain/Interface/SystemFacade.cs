@@ -154,6 +154,8 @@ namespace WebService.Domain.Interface
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             return await AuthenticationController.GetAllUsers();
+        }
+
         internal async Task<JWTtoken> GetToken(string email)
         {
             return AuthenticationController.GetToken(email);
