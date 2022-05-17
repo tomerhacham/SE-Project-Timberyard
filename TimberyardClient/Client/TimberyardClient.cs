@@ -4,6 +4,7 @@ using RestSharp;
 using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TimberyardClient.Client;
@@ -244,11 +245,28 @@ namespace TimberyardClient.Client
         /// <returns></returns>
         private async Task<IRestResponse> ExecuteWrapperAsync(IRestRequest request)
         {
-            //TODO: add JWT data whem implemented
-            //E.g request.AddOrUpdateHeader("Authorization", $"Bearer {JWTToken}");
-
             var response = await RestClient.ExecuteAsync(request);
             return response;
+        }
+
+        /// <summary>
+        /// Util function to add default auth header and token to each request after succesfull authentication
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task Authenticate()
+        {
+            var response = await Login(UserCredentials.Email, UserCredentials.Password);
+            if(response.StatusCode.Equals(HttpStatusCode.OK) && JsonConvert.DeserializeObject<JWTToken>(response.Content) is { } jwtToken)
+            {
+                RestClient.AddDefaultHeader("Authorization", $"Bearer {jwtToken.Token}");
+
+            }
+            else
+            {
+                throw new Exception("Authnetication process has failed");
+            }
         }
     }
 }
