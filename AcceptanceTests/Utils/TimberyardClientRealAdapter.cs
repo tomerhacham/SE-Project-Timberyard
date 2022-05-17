@@ -114,6 +114,11 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.ForgetPassword(email);
         }
+
+        public async Task Authenticate()
+        {
+            await RealClient.Authenticate();
+        }
         #endregion
     }
 }

@@ -10,10 +10,13 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
+    [Trait("Category", "Acceptance")]
     public class NFFTests : TimberyardTestCase
     {
         public NFFTests() : base()
-        { }
+        {
+            Client.Authenticate();
+        }
 
         [Theory]
         [InlineData("9901X_JTAG", 2021, 2022, HttpStatusCode.OK, 2, new string[] { "L5", "L5" }, new string[] { "75653", "73003" }, new string[] {   "CAPTURE",

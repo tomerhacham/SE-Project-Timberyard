@@ -17,7 +17,9 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
     public class AlarmsTests : TimberyardTestCase
     {
         public AlarmsTests() : base()
-        { }
+        {
+            Client.Authenticate();
+        }
 
         #region CRUD Alarms Scenarios
 

@@ -10,10 +10,13 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
+    [Trait("Category", "Acceptance")]
     public class BoundariesTests : TimberyardTestCase
     {
         public BoundariesTests() : base()
-        { }
+        {
+            Client.Authenticate();
+        }
 
         [Theory]
         [InlineData("X39337", 2021, 2022, HttpStatusCode.OK, new string[] { "Boundaries_Test2", "Boundaries_Test1" }, new double[] { 2, 1 }, new double[] { 6, 4 }, new double[] { 4, 2.24 }, new double[] { 1.41421, 0.749577 })]          // Happy : There are X records of the inputs out of Y records

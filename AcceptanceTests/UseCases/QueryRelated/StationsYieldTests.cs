@@ -10,10 +10,13 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
+    [Trait("Category", "Acceptance")]
     public class StationsYieldTests : TimberyardTestCase
     {
         public StationsYieldTests() : base()
-        { }
+        {
+            Client.Authenticate();
+        }
 
         [Theory]
         [InlineData(2021, 2022, HttpStatusCode.OK, new string[] { "11", "2T", "2X", "L4", "L5" }, new double[] { 60, 0, 50, 50, 70 })]                                       // Happy: there is data in these dates

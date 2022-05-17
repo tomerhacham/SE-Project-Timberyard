@@ -155,6 +155,14 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
+        public async Task Authenticate()
+        {
+            if (RealClient != null)
+            {
+                await RealClient.Authenticate();
+            }
+        }
+
         #endregion
     }
 }
