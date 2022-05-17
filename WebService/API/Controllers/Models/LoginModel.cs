@@ -13,11 +13,4 @@ namespace WebService.API.Controllers.Models
         [StringIsNotNullOrEmpty]
         public string Password { get; set; }
     }
-
-    public class RequestVerificationCodeModel
-    {
-        [ValidEmail]
-        public string Email { get; set; }
-    }
-
 }

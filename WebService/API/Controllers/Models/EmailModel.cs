@@ -6,9 +6,9 @@ using WebService.API.Controllers.ModelValidation;
 
 namespace WebService.API.Controllers.Models
 {
-    public class SystemAdminModel
+    public class EmailModel
     {
         [ValidEmail]
-        public string SystemAdminEmail { get; set; }
+        public string Email { get; set; }
     }
 }
