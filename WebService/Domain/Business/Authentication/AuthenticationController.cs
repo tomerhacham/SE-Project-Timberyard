@@ -23,18 +23,38 @@ namespace WebService.Domain.Business.Authentication
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
         private readonly string Secret;
+        private readonly DefaultSystemAdmin DefaultSystemAdmin;
 
 
-        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository, IOptions<AuthenticationSettings> settings)
+        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository, IOptions<AuthenticationSettings> settings, IOptions<DefaultSystemAdmin> defaultSystemAdmin)
         {
             SMTPClient = sMTPClient;
             Logger = logger;
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
             Secret = settings.Value.Secret;
+            DefaultSystemAdmin = defaultSystemAdmin.Value;
         }
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
         {
+            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
+            {
+                if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
+                {
+                    return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
+                }
+                else
+                {
+                    return new Result<JWTtoken>(false, null);
+                }
+            }
+            var isDefaultSysAdmin = CheckForDefaultSystemAdmin(email, password);
+            //Default system admin is logging in
+            if (isDefaultSysAdmin.Status)
+            {
+                return isDefaultSysAdmin;
+            }
+
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {

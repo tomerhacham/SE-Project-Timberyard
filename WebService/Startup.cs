@@ -49,6 +49,7 @@ namespace WebService
             services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
                     .Configure<AuthenticationSettings>(config.GetSection("AuthenticationSettings"))
                     .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
+                    .Configure<DefaultSystemAdmin>(config.GetSection("DefaultSystemAdmin"))
                     .AddSingleton<ILogger>(sp => new Logger("Timberyard-service"))
                     .AddSingleton<ISMTPClient, SMTPClient>()
                     .AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>()
