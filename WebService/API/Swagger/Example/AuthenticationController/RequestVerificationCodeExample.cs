@@ -8,7 +8,7 @@ namespace WebService.API.Swagger.Example.AlarmsController
     {
         public object GetExamples()
         {
-            return new RequestVerificationCodeModel()
+            return new EmailModel()
             {
                 Email = "ExampleEmail@test.com"
             };

@@ -11,7 +11,7 @@ namespace WebService.API.Swagger.Example.AuthenticationController
     {
         public object GetExamples()
         {
-            return new UserCRUDModel()
+            return new EmailModel()
             {
                 Email = "ExampleEmail@test.com",
             };

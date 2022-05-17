@@ -43,7 +43,7 @@ namespace TimberyardClient.Client
         public Task<IRestResponse> Login(string email, string password);
         public Task<IRestResponse> AddUser(string email);
         public Task<IRestResponse> RemoveUser(string email);
-        public Task<IRestResponse> ChangeSystemAdminPassword(string email,string newPassword, string oldPassword);
+        public Task<IRestResponse> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword);
         public Task<IRestResponse> AddSystemAdmin(string email);
         public Task<IRestResponse> ForgetPassword(string email);
         #endregion
@@ -188,21 +188,21 @@ namespace TimberyardClient.Client
         public async Task<IRestResponse> RequestVerificationCode(string email)
         {
             var request = new RestRequest(REMOVE_ALARM_ENDPOINT, Method.POST);
-            var body = new { Email = email};
+            var body = new { Email = email };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
         public async Task<IRestResponse> Login(string email, string password)
         {
             var request = new RestRequest(LOGIN_ENDPOINT, Method.POST);
-            var body = new { Email = email , Password =password};
+            var body = new { Email = email, Password = password };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
         public async Task<IRestResponse> AddUser(string email)
         {
             var request = new RestRequest(ADD_USER_ENDPOINT, Method.POST);
-            var body = new { Email = email};
+            var body = new { Email = email };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
@@ -216,14 +216,14 @@ namespace TimberyardClient.Client
         public async Task<IRestResponse> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
         {
             var request = new RestRequest(REMOVE_USER_ENDPOINT, Method.POST);
-            var body = new { Email = email, OldPassword=oldPassword, NewPassword = newPassword };
+            var body = new { Email = email, OldPassword = oldPassword, NewPassword = newPassword };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }
         public async Task<IRestResponse> AddSystemAdmin(string email)
         {
             var request = new RestRequest(ADD_SYSTEM_ADMIN_ENDPOINT, Method.POST);
-            var body = new { Email = email};
+            var body = new { Email = email };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);
         }

@@ -11,9 +11,9 @@ namespace WebService.API.Swagger.Example.AuthenticationController
     {
         public object GetExamples()
         {
-            return new SystemAdminModel()
+            return new EmailModel()
             {
-                SystemAdminEmail = "newSystemAdminEmail@test.com",
+                Email = "newSystemAdminEmail@test.com",
             };
         }
     }

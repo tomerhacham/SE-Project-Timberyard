@@ -10,7 +10,7 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            return new StationsYieldModel() { StartDate = new DateTime(2021, 10, 19), EndDate = new DateTime(2021, 10, 19) };
+            return new DatesModel() { StartDate = new DateTime(2021, 10, 19), EndDate = new DateTime(2021, 10, 19) };
         }
 
     }
