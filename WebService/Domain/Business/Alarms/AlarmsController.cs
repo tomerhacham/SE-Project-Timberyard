@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
@@ -66,6 +67,16 @@ namespace WebService.Domain.Business.Alarms
         {
             return await AlarmsAndUsersRepository.DeleteAlarm(Id);
         }
+
+        /// <summary>
+        /// Returning all the system alarms
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<Alarm>>> GetAllAlarms()
+        {
+            return await AlarmsAndUsersRepository.GetAllAlarms();
+        }
+
         /// <summary>
         /// Function to deserialize all active alarms from the DB and instate each one of them.
         /// Each alarm will be check for raise condition and trigger notification if needed

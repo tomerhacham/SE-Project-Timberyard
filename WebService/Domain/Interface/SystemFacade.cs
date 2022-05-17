@@ -100,14 +100,15 @@ namespace WebService.Domain.Interface
             }
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
+
         public async Task<Result<bool>> RemoveAlarm(int id)
         {
             return await AlarmsController.RemoveAlarm(id);
         }
 
-        internal async Task<JWTtoken> GetToken(string email)
+        public async Task<Result<List<Alarm>>> GetAllAlarms()
         {
-            return AuthenticationController.GetToken(email);
+            return await AlarmsController.GetAllAlarms();
         }
 
         public async Task CheckAlarmsCondition()
@@ -153,9 +154,11 @@ namespace WebService.Domain.Interface
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             return await AuthenticationController.GetAllUsers();
+        internal async Task<JWTtoken> GetToken(string email)
+        {
+            return AuthenticationController.GetToken(email);
         }
 
         #endregion
-
     }
 }
