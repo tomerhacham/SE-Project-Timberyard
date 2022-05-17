@@ -22,7 +22,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
-        private readonly IOptions<AuthenticationSettings> Settings;        
+        private readonly IOptions<AuthenticationSettings> Settings;
         private readonly DefaultSystemAdmin DefaultSystemAdmin;
 
 

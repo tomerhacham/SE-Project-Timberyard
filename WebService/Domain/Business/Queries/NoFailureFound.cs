@@ -65,7 +65,7 @@ namespace WebService.Domain.Business.Queries
             catch (Exception exception)
             {
                 return new Result<QueryResult>(false, null, exception.ToString());
-            }            
+            }
         }
     }
 }

@@ -59,7 +59,7 @@ namespace WebService.Domain.Business.Queries
                 }
                 return new Result<QueryResult>(true, new QueryResult(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, aggregatedData), "\n");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return new Result<QueryResult>(false, null, exception.ToString());
             }
