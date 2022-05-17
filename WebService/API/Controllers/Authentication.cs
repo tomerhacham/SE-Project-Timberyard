@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
@@ -117,6 +118,15 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> GetToken([Required] string email)
         {
             return Ok(await SystemInterface.GetToken(email));
+        }
+
+        [Route("GetAllUsers")]
+        [Authorize(Role.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            Result<List<UserDTO>> result = await SystemInterface.GetAllUsers();
+            return Ok(result.Data);
         }
 
     }
