@@ -34,7 +34,9 @@
         "AuthenticationSettings__Minutes": "5",
         "SMPTClientSettings__Host": "localhost",
         "SMPTClientSettings__Port": "25",
-        "SMPTClientSettings__SenderAddress": "Timberyard@test.com"
+        "SMPTClientSettings__SenderAddress": "Timberyard@test.com",
+        "DefaultSystemAdmin__Email": "admin@timberyard.rbbn.com",
+        "DefaultSystemAdmin__Password": "Password!123"
       }
     }
   }
