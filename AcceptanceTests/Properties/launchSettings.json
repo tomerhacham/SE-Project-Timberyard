@@ -4,8 +4,8 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "UserCredentials__Email": "tomer@ribbon.com",
-        "UserCredentials__Password": "password",
+        "UserCredentials__Email": "admin@timberyard.rbbn.com",
+        "UserCredentials__Password": "Password!123",
         "ServiceSettings__Url": "https://localhost:5001"
       }
     }

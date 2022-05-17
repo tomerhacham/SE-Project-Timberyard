@@ -1,6 +1,6 @@
 ﻿namespace TimberyardClient.Client
 {
-    internal class JWTToken
+    public class JWTToken
     {
         public string Token { get; set; }
 
