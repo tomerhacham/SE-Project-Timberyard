@@ -101,7 +101,6 @@ namespace WebService.API.Controllers
         }
 
         [Route("ForgetPassword")]
-        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
