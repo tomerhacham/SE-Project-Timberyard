@@ -77,7 +77,43 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CheckAlarmsCondition();
         }
+        #endregion
 
+        #region Authentication Scenarios
+        public Task<IRestResponse> RequestVerificationCode(string email)
+        {
+            return RealClient.RequestVerificationCode(email);
+        }
+
+        public Task<IRestResponse> Login(string email, string password)
+        {
+            return RealClient.Login(email, password);
+        }
+
+        public Task<IRestResponse> AddUser(string email)
+        {
+            return RealClient.AddUser(email);
+        }
+
+        public Task<IRestResponse> RemoveUser(string email)
+        {
+            return RealClient.RemoveUser(email);
+        }
+
+        public Task<IRestResponse> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        {
+            return RealClient.ChangeSystemAdminPassword(email, newPassword, oldPassword);
+        }
+
+        public Task<IRestResponse> AddSystemAdmin(string email)
+        {
+            return RealClient.AddSystemAdmin(email);
+        }
+
+        public Task<IRestResponse> ForgetPassword(string email)
+        {
+            return RealClient.ForgetPassword(email);
+        }
         #endregion
     }
 }

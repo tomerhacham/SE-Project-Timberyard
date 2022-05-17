@@ -13,6 +13,7 @@ using Field = TimberyardClient.Client.Field;
 
 namespace AcceptanceTests.UseCases.AlarmsRelated
 {
+    [Trait("Category", "Acceptance")]
     public class AlarmsTests : TimberyardTestCase
     {
         public AlarmsTests() : base()
@@ -21,7 +22,6 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         #region CRUD Alarms Scenarios
 
         [Theory]
-        [Trait("Category", "Acceptance")]
         [InlineData(HttpStatusCode.OK, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                              // Happy : There are X records of the inputs out of Y records 
         [InlineData(HttpStatusCode.BadRequest, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]                              // Sad : List of receivers contains an invalid email 
         [InlineData(HttpStatusCode.BadRequest, "TestAlarm", Field.Catalog, "TestCatalog", -10, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                              // Bad : Negative threshold
@@ -44,7 +44,6 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         }
 
         [Theory]
-        [Trait("Category", "Acceptance")]
         [InlineData(HttpStatusCode.OK, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, false, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                                  // Happy : There are X records of the inputs out of Y records 
         [InlineData(HttpStatusCode.BadRequest, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, true, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]                             // Sad : List of receivers contains an invalid email 
         [InlineData(HttpStatusCode.BadRequest, "TestEditAlarm", Field.Catalog, "TestCatalog", -10, true, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                         // Bad : Negative threshold
@@ -72,7 +71,6 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         }
 
         [Fact]
-        [Trait("Category", "Acceptance")]
         public async void RemoveAlarmTest()
         {
 

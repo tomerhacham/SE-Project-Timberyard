@@ -83,10 +83,10 @@ namespace TimberyardClient.Client
         RestClient RestClient { get; }
         public UserCredentials UserCredentials { get; set; }
 
-        public TimberyardClient(IOptions<UserCredentials> userCredentials, IOptions<ServiceSettings> serviceSettings)
+        public TimberyardClient(UserCredentials userCredentials, ServiceSettings serviceSettings)
         {
-            UserCredentials = userCredentials.Value;
-            RestClient = new RestClient(serviceSettings.Value.Url);
+            UserCredentials = userCredentials;
+            RestClient = new RestClient(serviceSettings.Url);
             RestClient.UseSerializer(() => new JsonNetSerializer());
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {
@@ -258,7 +258,7 @@ namespace TimberyardClient.Client
         public async Task Authenticate()
         {
             var response = await Login(UserCredentials.Email, UserCredentials.Password);
-            if(response.StatusCode.Equals(HttpStatusCode.OK) && JsonConvert.DeserializeObject<JWTToken>(response.Content) is { } jwtToken)
+            if (response.StatusCode.Equals(HttpStatusCode.OK) && JsonConvert.DeserializeObject<JWTToken>(response.Content) is { } jwtToken)
             {
                 RestClient.AddDefaultHeader("Authorization", $"Bearer {jwtToken.Token}");
 

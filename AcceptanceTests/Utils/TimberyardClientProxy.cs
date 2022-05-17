@@ -127,7 +127,7 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
-        public async Task <IRestResponse> RemoveUser(string email)
+        public async Task<IRestResponse> RemoveUser(string email)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
             var response = RealClient != null ? await RealClient.RemoveUser(email) : defaultResponse;
