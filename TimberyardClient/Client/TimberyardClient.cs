@@ -83,10 +83,10 @@ namespace TimberyardClient.Client
         RestClient RestClient { get; }
         public UserCredentials UserCredentials { get; set; }
 
-        public TimberyardClient(UserCredentials userCredentials, ServiceSettings serviceSettings)
+        public TimberyardClient(IOptions<UserCredentials> userCredentials, IOptions<ServiceSettings> serviceSettings)
         {
-            UserCredentials = userCredentials;
-            RestClient = new RestClient(serviceSettings.Url);
+            UserCredentials = userCredentials.Value;
+            RestClient = new RestClient(serviceSettings.Value.Url);
             RestClient.UseSerializer(() => new JsonNetSerializer());
             RestClient.AddDefaultHeaders(new Dictionary<string, string>()
             {
