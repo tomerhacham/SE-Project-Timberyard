@@ -84,6 +84,27 @@ namespace WebService.API.Controllers
             }
         }
 
+        [Route("GetAllAlarms")]
+        [HttpPost]
+        [Authorize(Role.Admin)]
+        [ProducesResponseType(typeof(GetAllAlarmsResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
+        public async Task<IActionResult> GetAllAlarms()
+        {
+
+            var response = await SystemInterface.GetAllAlarms();
+            if (response.Status)
+            {
+                return Ok(response.Data);
+            }
+            else
+            {
+                var error = new ErrorsModel() { Errors = new List<string>() { response.Message } };
+                return BadRequest(error);
+            }
+        }
+
+
         [Route("CheckAlarmsCondition")]
         [HttpPost]
         public async Task<IActionResult> CheckAlarmsCondition()
