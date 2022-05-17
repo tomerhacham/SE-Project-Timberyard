@@ -22,7 +22,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
-        private readonly string Secret;
+        private readonly IOptions<AuthenticationSettings> Settings;
         private readonly DefaultSystemAdmin DefaultSystemAdmin;
 
 
@@ -31,7 +31,7 @@ namespace WebService.Domain.Business.Authentication
             SMTPClient = sMTPClient;
             Logger = logger;
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
-            Secret = settings.Value.Secret;
+            Settings = settings;
             DefaultSystemAdmin = defaultSystemAdmin.Value;
         }
 
@@ -65,7 +65,7 @@ namespace WebService.Domain.Business.Authentication
                 if (password.HashString().Equals(record.Password) && condition)
                 {
                     JWTtoken token = GenerateToken(record);
-                    return new Result<JWTtoken>(true, token, "Login success");
+                    return new Result<JWTtoken>(!token.Token.Equals(String.Empty), token, !token.Token.Equals(String.Empty) ? "Login success" : "Login failed");
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace WebService.Domain.Business.Authentication
                 var message = $"Use verification code {random_number} for Timberyard authentication";
                 Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
                 record.Password = random_number.HashString();
-                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(5);
+                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
 
@@ -183,21 +183,28 @@ namespace WebService.Domain.Business.Authentication
 
         private JWTtoken GenerateToken(UserDTO record)
         {
-            // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new[] {
+                // generate token that is valid for 7 days
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(Settings.Value.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[] {
                     new Claim("Email", record.Email),
                     new Claim("Role", record.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var strToken = tokenHandler.WriteToken(token);
-            return new JWTtoken() { Token = strToken };
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var strToken = tokenHandler.WriteToken(token);
+                return new JWTtoken() { Token = strToken };
+            }
+            catch (Exception exception)
+            {
+                return new JWTtoken() { Token = string.Empty };
+            }
         }
 
         public async Task<Result<List<UserDTO>>> GetAllUsers()
