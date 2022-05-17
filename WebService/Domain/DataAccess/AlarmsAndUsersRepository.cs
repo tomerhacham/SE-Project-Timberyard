@@ -213,9 +213,6 @@ namespace WebService.Domain.DataAccess
             {
                 return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
             }
-
-
-
         }
         #endregion
     }
