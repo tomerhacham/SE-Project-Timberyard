@@ -47,6 +47,13 @@ namespace Timberyard_UnitTests.Stubs
             return new Result<Alarm>(true, alarm);
 
         }
+
+        public async Task<Result<bool>> DeleteAlarm(int Id)
+        {
+            var result = Alarms.Remove(Id);
+            return new Result<bool>(result, result);
+
+        }
         #endregion
 
         #region Authentication
@@ -74,11 +81,10 @@ namespace Timberyard_UnitTests.Stubs
             return new Result<bool>(result, result);
         }
 
-        public async Task<Result<bool>> DeleteAlarm(int Id)
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
-            var result = Alarms.Remove(Id);
-            return new Result<bool>(result, result);
-
+            var result = Users.Values.ToList();
+            return new Result<List<UserDTO>>(true, result);
         }
 
         #endregion

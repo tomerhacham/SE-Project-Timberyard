@@ -5,6 +5,7 @@ using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace WebService.Domain.Interface
@@ -150,6 +151,11 @@ namespace WebService.Domain.Interface
         {
             return await AuthenticationController.ForgetPassword(email);
         }
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            return await AuthenticationController.GetAllUsers();
+        }
+
         internal async Task<JWTtoken> GetToken(string email)
         {
             return AuthenticationController.GetToken(email);

@@ -180,6 +180,9 @@ namespace WebService.Domain.Business.Authentication
             return new JWTtoken() { Token = strToken };
         }
 
-
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            return await AlarmsAndUsersRepository.GetAllUsers();
+        }
     }
 }
