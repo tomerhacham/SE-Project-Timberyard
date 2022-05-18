@@ -161,7 +161,7 @@ namespace WebService.Domain.Business.Authentication
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
 
-            if (recordResult.Status)
+            if (recordResult.Status && recordResult.Data.Role == Role.Admin)
             {
                 UserDTO user = recordResult.Data;
                 string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");
