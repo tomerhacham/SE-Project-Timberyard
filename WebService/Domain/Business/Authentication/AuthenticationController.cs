@@ -84,7 +84,7 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");               
+                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");
                 record.Password = verification_code;
                 record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
@@ -164,7 +164,7 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 UserDTO user = recordResult.Data;
-                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");                
+                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");
                 user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
