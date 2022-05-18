@@ -84,10 +84,8 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Use verification code {random_number} for Timberyard authentication";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
-                record.Password = random_number.HashString();
+                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");               
+                record.Password = verification_code;
                 record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
@@ -144,12 +142,13 @@ namespace WebService.Domain.Business.Authentication
 
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
-            // create new User
-            var random_number = new Random().Next(100000, 999999).ToString();
-            var message = $"You added as system admin on Timberyard ! your temporary passord is {random_number} for Timberyard authentication.";
-            Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
-            string tempPassword = random_number.HashString();
+            // remove user from database if exists
+            await RemoveUser(newSystemAdminEmail);
 
+            // generate new passord for admin and send to given email
+            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
+
+            // create new system admin
             UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
@@ -165,10 +164,8 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 UserDTO user = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Your temporary passord is {random_number} for Timberyard authentication.";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard forget password authentication", message, new List<string>() { email }));
-                user.Password = random_number.HashString();
+                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");                
+                user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
 
@@ -210,6 +207,18 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             return await AlarmsAndUsersRepository.GetAllUsers();
+        }
+
+        private string GenerateAndSendPassword(string email, string msg_subject, string email_subject)
+        {
+            var random_number = new Random().Next(100000, 999999).ToString();
+            SendPassword(email, random_number, msg_subject, email_subject);
+            return random_number.HashString();
+        }
+        private void SendPassword(string email, string password, string msg_subject, string email_subject)
+        {
+            var message = $"Your {msg_subject} is {password} for Timberyard authentication.";
+            Task.Run(async () => await SMTPClient.SendEmail(email_subject, message, new List<string>() { email }));
         }
     }
 }
