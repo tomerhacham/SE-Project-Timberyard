@@ -11,4 +11,14 @@ namespace WebService.API.Controllers.Models
         [ValidEmail]
         public string Email { get; set; }
     }
+
+    public class UserChangeSystemAdminPasswordModel
+    {
+        [ValidEmail]
+        public string Email { get; set; }
+        [StringIsNotNullOrEmpty]
+        public string OldPassword { get; set; }
+        [StringIsNotNullOrEmpty]
+        public string NewPassword { get; set; }
+    }
 }

@@ -11,9 +11,11 @@ namespace WebService.API.Swagger.Example.AuthenticationController
     {
         public object GetExamples()
         {
-            return new UserCRUDModel()
+            return new UserChangeSystemAdminPasswordModel()
             {
                 Email = "ExampleEmail@test.com",
+                OldPassword = "01234",
+                NewPassword = "56789",
             };
         }
     }
