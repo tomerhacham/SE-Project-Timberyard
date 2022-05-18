@@ -14,8 +14,6 @@ namespace WebService.API.Controllers.Models
 
     public class UserChangeSystemAdminPasswordModel
     {
-        [ValidEmail]
-        public string Email { get; set; }
         [StringIsNotNullOrEmpty]
         public string OldPassword { get; set; }
         [StringIsNotNullOrEmpty]

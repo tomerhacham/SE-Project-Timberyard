@@ -86,16 +86,8 @@ namespace WebService.API.Controllers
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
-            if (HttpContext.Items["Email"].Equals(model.Email))
-            {
-                Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
-                return Ok(result.Status);
-            }
-            else
-            {
-                return BadRequest("The email provided is invalid. You can only change your password");
-            }
-
+            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
+            return Ok(result.Status);            
         }
 
         [Route("AddSystemAdmin")]
