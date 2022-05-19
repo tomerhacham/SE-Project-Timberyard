@@ -47,7 +47,7 @@ jobs:
     - name: Integration Tests-Web Service
       run: |
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
-        export DatabaseSettings__DbServer="LOCALHOST\SQLEXPRESS,8080"
+        export DatabaseSettings__DbServer="localhost,8080"
         export DatabaseSettings__DbUsername="sa"
         export DatabaseSettings__DbPassword="Password123!"
         export SMPTClientSettings__Host="localhost"
