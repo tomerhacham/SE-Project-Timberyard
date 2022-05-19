@@ -113,5 +113,84 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.NotNull(removeResponse);
             Assert.Equal(expectedStatusCode, removeResponse.StatusCode);
         }
+        [Theory]
+        [InlineData("nonvalidAdmintimberyard.rbbn.com", "oldPassword", "thisIsTheNewPassword")]
+        [InlineData("nonvalidAdmin@timberyard.rbbn.com", "", "thisIsTheNewPassword")]
+        [InlineData("nonvalidAdmint@imberyard.rbbn.com", "oldPassword", "")]
+        public async Task ChangeSystemAdminPassword_InvalidInput(string email, string oldPassword, string newPassword)
+        {
+            await Client.Authenticate(); //Login as admin
+
+            var changeResponse = await Client.ChangeSystemAdminPassword(email, newPassword, oldPassword);
+            Assert.NotNull(changeResponse);
+            Assert.Equal(HttpStatusCode.BadRequest, changeResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangeSystemAdminPassowrd_ValidFlow()
+        {
+            await Client.Authenticate(); //Login as admin
+            var client = Client as TimberyardClient.Client.TimberyardClient;
+            var newPassword = "newPassword";
+
+            // Change password
+            var changeResponse = await Client.ChangeSystemAdminPassword(client.UserCredentials.Email, newPassword, client.UserCredentials.Password);
+            Assert.NotNull(changeResponse);
+            Assert.Equal(HttpStatusCode.OK, changeResponse.StatusCode);
+
+            //Attempt to login
+            var loginResponse = await Client.Login(client.UserCredentials.Email, newPassword);
+            Assert.NotNull(loginResponse);
+            Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+
+            var token = JsonConvert.DeserializeObject<JWTToken>(loginResponse.Content);
+
+            //Verify token is not empty
+            Assert.False(string.IsNullOrEmpty(token.Token));
+
+            // revert changes
+            // Change password
+            var _changeResponse = await Client.ChangeSystemAdminPassword(client.UserCredentials.Email, client.UserCredentials.Password, newPassword);
+            Assert.NotNull(_changeResponse);
+            Assert.Equal(HttpStatusCode.OK, _changeResponse.StatusCode);
+
+            //Attempt to login
+            var _loginResponse = await Client.Login(client.UserCredentials.Email, newPassword);
+            Assert.NotNull(_loginResponse);
+            Assert.Equal(HttpStatusCode.OK, _loginResponse.StatusCode);
+
+            var _token = JsonConvert.DeserializeObject<JWTToken>(_loginResponse.Content);
+            //Verify token is not empty
+            Assert.False(string.IsNullOrEmpty(_token.Token));
+
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("this is not valid email")]
+        [InlineData("thisIsNotValid.com")]
+        [InlineData("thisIsNotValid@comcom")]
+        [InlineData("thisIsNotValid@.com")]
+        public async Task AddSystemAdmin_InvalidInput(string email)
+        {
+            await Client.Authenticate(); //Login as admin
+
+            var addAdminResponse = await Client.AddSystemAdmin(email);
+            Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("this is not valid email")]
+        [InlineData("thisIsNotValid.com")]
+        [InlineData("thisIsNotValid@comcom")]
+        [InlineData("thisIsNotValid@.com")]
+        public async Task ForgotPassword_InvalidInput(string email)
+        {
+            await Client.Authenticate(); //Login as admin
+
+            var addAdminResponse = await Client.ForgetPassword(email);
+            Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
+        }
     }
 }
