@@ -8,13 +8,10 @@ WORKDIR /usr/src/app
 # Copy all scripts into working directory
 COPY . /usr/src/app
 
-
-ENV SA_PASSWORD password123!
-ENV ACCEPT_EULA Y
-ENV MSSQL_PID Express
-
+#ENV SA_PASSWORD Password123!
+#ENV ACCEPT_EULA Y
+#ENV MSSQL_PID Express
 
 # Grant permissions for the import-data script to be executable
-#RUN chmod +x /usr/work/import-data.sh
 EXPOSE 1433
 CMD /bin/bash ./entrypoint.sh

@@ -3,5 +3,10 @@ services:
   timeryard-mssql:
     build: ./Db
     ports:
-      - "3360:1433"
+      - "8080:1433"
     restart: always
+    environment:
+      SA_PASSWORD: Password123!
+      ACCEPT_EULA: Y
+      MSSQL_PID: Express
+
