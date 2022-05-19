@@ -22,7 +22,7 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
-        private readonly string Secret;
+        private readonly IOptions<AuthenticationSettings> Settings;
         private readonly DefaultSystemAdmin DefaultSystemAdmin;
 
 
@@ -31,7 +31,7 @@ namespace WebService.Domain.Business.Authentication
             SMTPClient = sMTPClient;
             Logger = logger;
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
-            Secret = settings.Value.Secret;
+            Settings = settings;
             DefaultSystemAdmin = defaultSystemAdmin.Value;
         }
 
@@ -65,7 +65,7 @@ namespace WebService.Domain.Business.Authentication
                 if (password.HashString().Equals(record.Password) && condition)
                 {
                     JWTtoken token = GenerateToken(record);
-                    return new Result<JWTtoken>(true, token, "Login success");
+                    return new Result<JWTtoken>(!token.Token.Equals(String.Empty), token, !token.Token.Equals(String.Empty) ? "Login success" : "Login failed");
                 }
                 else
                 {
@@ -84,11 +84,9 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Use verification code {random_number} for Timberyard authentication";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
-                record.Password = random_number.HashString();
-                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(5);
+                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");
+                record.Password = verification_code;
+                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
 
@@ -144,12 +142,13 @@ namespace WebService.Domain.Business.Authentication
 
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
-            // create new User
-            var random_number = new Random().Next(100000, 999999).ToString();
-            var message = $"You added as system admin on Timberyard ! your temporary passord is {random_number} for Timberyard authentication.";
-            Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
-            string tempPassword = random_number.HashString();
+            // remove user from database if exists
+            await RemoveUser(newSystemAdminEmail);
 
+            // generate new passord for admin and send to given email
+            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
+
+            // create new system admin
             UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
@@ -162,13 +161,11 @@ namespace WebService.Domain.Business.Authentication
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
 
-            if (recordResult.Status)
+            if (recordResult.Status && recordResult.Data.Role == Role.Admin)
             {
                 UserDTO user = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Your temporary passord is {random_number} for Timberyard authentication.";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard forget password authentication", message, new List<string>() { email }));
-                user.Password = random_number.HashString();
+                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");
+                user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
 
@@ -183,26 +180,45 @@ namespace WebService.Domain.Business.Authentication
 
         private JWTtoken GenerateToken(UserDTO record)
         {
-            // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new[] {
+                // generate token that is valid for 7 days
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(Settings.Value.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[] {
                     new Claim("Email", record.Email),
                     new Claim("Role", record.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var strToken = tokenHandler.WriteToken(token);
-            return new JWTtoken() { Token = strToken };
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var strToken = tokenHandler.WriteToken(token);
+                return new JWTtoken() { Token = strToken };
+            }
+            catch (Exception exception)
+            {
+                return new JWTtoken() { Token = string.Empty };
+            }
         }
 
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             return await AlarmsAndUsersRepository.GetAllUsers();
+        }
+
+        private string GenerateAndSendPassword(string email, string msg_subject, string email_subject)
+        {
+            var random_number = new Random().Next(100000, 999999).ToString();
+            SendPassword(email, random_number, msg_subject, email_subject);
+            return random_number.HashString();
+        }
+        private void SendPassword(string email, string password, string msg_subject, string email_subject)
+        {
+            var message = $"Your {msg_subject} is {password} for Timberyard authentication.";
+            Task.Run(async () => await SMTPClient.SendEmail(email_subject, message, new List<string>() { email }));
         }
     }
 }
