@@ -40,14 +40,14 @@ jobs:
     - uses: actions/checkout@v3
       with:
         dotnet-version: 3.1.x
-    - name: Initialize MS-SQL Server
-      run: docker-compose --file ./testing-DB-docker-image/docker-compose.yaml up -d
-    - name: Wait for server to init
-      run: sleep 120s
+
     - name: Integration Tests-Web Service
       run: |
+        docker-compose --file ./testing-DB-docker-image/docker-compose.yaml up -d
+        sleep 90s
+        docker ps
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
-        export DatabaseSettings__DbServer=".\SQLEXPRESS"
+        export DatabaseSettings__DbServer="localhost\SQLEXPRESS"
         export DatabaseSettings__DbUsername="sa"
         export DatabaseSettings__DbPassword="Password123!"
         export SMPTClientSettings__Host="localhost"
