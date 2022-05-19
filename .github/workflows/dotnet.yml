@@ -47,7 +47,7 @@ jobs:
         sleep 90s
         docker ps
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
-        export DatabaseSettings__DbServer="localhost\SQLEXPRESS"
+        export DatabaseSettings__DbServer=" LOCALHOST\\SQLEXPRESS"
         export DatabaseSettings__DbUsername="sa"
         export DatabaseSettings__DbPassword="Password123!"
         export SMPTClientSettings__Host="localhost"
