@@ -48,8 +48,8 @@ jobs:
       run: |
         export DatabaseSettings__ConnectionString="Initial Catalog=Timberyard;"
         export DatabaseSettings__DbServer="LOCALHOST\\SQLEXPRESS,8080"
-        export DatabaseSettings__DbPassword="sa"
-        export DatabaseSettings__DbUsername="Password123!"
+        export DatabaseSettings__DbUsername="sa"
+        export DatabaseSettings__DbPassword="Password123!"
         export SMPTClientSettings__Host="localhost"
         export SMPTClientSettings__Port="25"
         export SMPTClientSettings__SenderAddress="Timberyard"
