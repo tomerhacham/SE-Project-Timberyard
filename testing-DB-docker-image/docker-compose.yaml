@@ -3,7 +3,7 @@ services:
   timeryard-mssql:
     build: ./Db
     ports:
-      - "8080:1433"
+      - "1433:1433"
     restart: always
     environment:
       SA_PASSWORD: Password123!
