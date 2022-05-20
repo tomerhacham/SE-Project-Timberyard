@@ -87,7 +87,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
             Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
-            return Ok(result.Status);            
+            return Ok(result.Status);
         }
 
         [Route("AddSystemAdmin")]
