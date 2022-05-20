@@ -143,7 +143,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
             // remove user from database if exists
-            await RemoveUser(newSystemAdminEmail);
+            await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
 
             // generate new passord for admin and send to given email
             string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
