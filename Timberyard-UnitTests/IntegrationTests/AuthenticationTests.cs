@@ -147,12 +147,11 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void Login()
         {
             string email = "login@timberyard.com";
-            string password = "testPass";
+            string password = "testPassword";
             // TODO on resular User timeStamp
-            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password, Role = Role.Admin });
+            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password.HashString(), Role = Role.Admin });
             Assert.True(insert_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
-            Assert.Equal(password, newUser.Password);
 
             var result = await AuthenticationController.Login(email, password);
             Assert.True(result.Status);
@@ -173,7 +172,9 @@ namespace Timberyard_UnitTests.IntegrationTests
 
             var jwtToken = (JwtSecurityToken)validatedToken;
             var emailFromToken = jwtToken.Claims.First(x => x.Type == "Email").Value;
+            var role = Enum.Parse(typeof(Role), jwtToken.Claims.First(x => x.Type == "Role").Value);
             Assert.Equal(email, emailFromToken);
+            Assert.Equal(Role.Admin, role);
         }
 
         [Fact]

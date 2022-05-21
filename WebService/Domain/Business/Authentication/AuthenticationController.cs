@@ -42,8 +42,9 @@ namespace WebService.Domain.Business.Authentication
                 var record = recordResult.Data;
 
                 bool condition = record.Role == Role.RegularUser ? DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0 : true;
+                string hash_pass = password.HashString();
 
-                if (password.HashString().Equals(record.Password) && condition)
+                if (hash_pass.Equals(record.Password) && condition)
                 {
                     JWTtoken token = GenerateToken(record);
                     return new Result<JWTtoken>(true, token, "Login success");
