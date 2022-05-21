@@ -5,6 +5,7 @@ using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace WebService.Domain.Interface
@@ -100,29 +101,14 @@ namespace WebService.Domain.Interface
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
 
-        public async Task<Result<FullAlarmModel>> RemoveAlarm(int id, string name, Field field, string objective, int threshold, bool active, List<string> receivers)
+        public async Task<Result<bool>> RemoveAlarm(int id)
         {
-            var editAlarmResult = await AlarmsController.RemoveAlarm(new Alarm(id, name, field, objective, threshold, active, receivers));
-            if (editAlarmResult.Status)
-            {
-                var model = new FullAlarmModel()
-                {
-                    Id = editAlarmResult.Data.Id,
-                    Name = editAlarmResult.Data.Name,
-                    Objective = editAlarmResult.Data.Objective,
-                    Field = editAlarmResult.Data.Field,
-                    Threshold = editAlarmResult.Data.Threshold,
-                    Active = editAlarmResult.Data.Active,
-                    Receivers = editAlarmResult.Data.Receivers
-                };
-                return new Result<FullAlarmModel>(true, model);
-            }
-            return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
+            return await AlarmsController.RemoveAlarm(id);
         }
 
-        internal async Task<JWTtoken> GetToken(string email)
+        public async Task<Result<List<Alarm>>> GetAllAlarms()
         {
-            return AuthenticationController.GetToken(email);
+            return await AlarmsController.GetAllAlarms();
         }
 
         public async Task CheckAlarmsCondition()
@@ -165,10 +151,16 @@ namespace WebService.Domain.Interface
         {
             return await AuthenticationController.ForgetPassword(email);
         }
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            return await AuthenticationController.GetAllUsers();
+        }
 
-
+        internal async Task<JWTtoken> GetToken(string email)
+        {
+            return AuthenticationController.GetToken(email);
+        }
 
         #endregion
-
     }
 }

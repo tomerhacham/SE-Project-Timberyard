@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -36,27 +36,44 @@ namespace WebService.Domain.Business.Authentication
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
         {
+            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
+            {
+                if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
+                {
+                    return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
+                }
+                else
+                {
+                    return new Result<JWTtoken>(false, null);
+                }
+            }
+            var isDefaultSysAdmin = CheckForDefaultSystemAdmin(email, password);
+            //Default system admin is logging in
+            if (isDefaultSysAdmin.Status)
+            {
+                return isDefaultSysAdmin;
+            }
+
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
 
-                bool condition = record.Role == Role.RegularUser ? DateTime.Now.CompareTo(record.ExperationTimeStamp) < 0 : true;
-                string hash_pass = password.HashString();
+                bool condition = record.Role == Role.RegularUser ? DateTime.UtcNow.CompareTo(record.ExperationTimeStamp) < 0 : true;
 
-                if (hash_pass.Equals(record.Password) && condition)
+                if (password.HashString().Equals(record.Password) && condition)
                 {
                     JWTtoken token = GenerateToken(record);
-                    return new Result<JWTtoken>(true, token, "Login success");
+                    return new Result<JWTtoken>(!token.Token.Equals(String.Empty), token, !token.Token.Equals(String.Empty) ? "Login success" : "Login failed");
                 }
                 else
                 {
-                    Logger.Warning($"User {email} tried to login with Incorrect Password");
+                    Logger.Info($"User {email} tried to login with Incorrect Password");
                     return new Result<JWTtoken>(false, null, "Incorrect Password");
                 }
             }
 
-            Logger.Warning(recordResult.Message);
+            Logger.Warning($"The users {email} attempt to login failed. {recordResult.Message}");
             return new Result<JWTtoken>(false, null, recordResult.Message);
         }
 
@@ -66,30 +83,32 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Use verification code {random_number} for Timberyard authentication";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { record.Email }));
-                record.Password = random_number.HashString();
-                record.ExperationTimeStamp = DateTime.Now.AddMinutes(5);
+                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");
+                record.Password = verification_code;
+                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
-
+                if (!updateResult.Status)
+                {
+                    Logger.Warning($"An attempt to update the user {email} with a new verification code failed. {updateResult.Message}");
+                    return updateResult;
+                }
                 return new Result<bool>(true, true, "Verification code send successfuly");
             }
 
-            Logger.Warning(recordResult.Message);
+            Logger.Warning($"The users {email} attempt to request for a verification code failed. {recordResult.Message}");
             return new Result<bool>(false, false, recordResult.Message);
         }
 
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
-            UserDTO user = new UserDTO() { Email = email, Role = Role.RegularUser };
+            UserDTO user = new UserDTO() { Email = email, Password = String.Empty, Role = Role.RegularUser, ExperationTimeStamp = DateTime.UtcNow };
 
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to add the user {email}. {result.Message}");
             }
             return result;
         }
@@ -99,7 +118,7 @@ namespace WebService.Domain.Business.Authentication
             Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to remove the user {email}. {result.Message}");
             }
             return result;
         }
@@ -110,35 +129,34 @@ namespace WebService.Domain.Business.Authentication
             if (record.Status)
             {
                 UserDTO user = record.Data;
-                string hash_pass = oldPassword.HashString();
-                if (user.Password == hash_pass)
+                if (user.Password == oldPassword.HashString())
                 {
                     user.Password = newPassword.HashString();
                     return await AlarmsAndUsersRepository.UpdateUser(user);
                 }
 
-                Logger.Warning("User password don't match");
+                Logger.Warning($"User {email} password cannot be updated since the old password entered is incorrect");
                 return new Result<bool>(false, false, "User password don't match");
             }
 
-            Logger.Warning("User doesn't exist");
+            Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
+            // remove user from database if exists
             await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
-            // create new User
-            var random_number = new Random().Next(100000, 999999).ToString();
-            var message = $"You added as system admin on Timberyard ! your temporary passord is {random_number} for Timberyard authentication.";
-            Task.Run(async () => await SMTPClient.SendEmail("Timberyard system admin authentication", message, new List<string>() { newSystemAdminEmail }));
-            string tempPassword = random_number.HashString();
 
-            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin };
+            // generate new passord for admin and send to given email
+            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
+
+            // create new system admin
+            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to add a new system admin with email {newSystemAdminEmail}. {result.Message}");
             }
             return result;
         }
@@ -146,17 +164,15 @@ namespace WebService.Domain.Business.Authentication
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
 
-            if (recordResult.Status)
+            if (recordResult.Status && recordResult.Data.Role == Role.Admin)
             {
                 UserDTO user = recordResult.Data;
-                var random_number = new Random().Next(100000, 999999).ToString();
-                var message = $"Your temporary passord is {random_number} for Timberyard authentication.";
-                Task.Run(async () => await SMTPClient.SendEmail("Timberyard forget password authentication", message, new List<string>() { email }));
-                user.Password = random_number.HashString();
+                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");
+                user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
 
-            Logger.Warning("User doesn't exist");
+            Logger.Warning($"The users {email} attempt to get a new password failed. {recordResult.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
@@ -167,23 +183,47 @@ namespace WebService.Domain.Business.Authentication
 
         private JWTtoken GenerateToken(UserDTO record)
         {
-            // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new[] {
+                // generate token that is valid for 7 days
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(Settings.Value.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[] {
                     new Claim("Email", record.Email),
                     new Claim("Role", record.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var strToken = tokenHandler.WriteToken(token);
-            return new JWTtoken() { Token = strToken };
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var strToken = tokenHandler.WriteToken(token);
+                return new JWTtoken() { Token = strToken };
+            }
+            catch (Exception exception)
+            {
+                Logger.Warning($"An error occurred while attempting to generate a token for {record.Email}", exception, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new JWTtoken() { Token = string.Empty };
+            }
         }
 
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            return await AlarmsAndUsersRepository.GetAllUsers();
+        }
 
+        private string GenerateAndSendPassword(string email, string msg_subject, string email_subject)
+        {
+            var random_number = new Random().Next(100000, 999999).ToString();
+            SendPassword(email, random_number, msg_subject, email_subject);
+            return random_number.HashString();
+        }
+        
+        private void SendPassword(string email, string password, string msg_subject, string email_subject)
+        {
+            var message = $"Your {msg_subject} is {password} for Timberyard authentication.";
+            Task.Run(async () => await SMTPClient.SendEmail(email_subject, message, new List<string>() { email }));
+        }
     }
 }

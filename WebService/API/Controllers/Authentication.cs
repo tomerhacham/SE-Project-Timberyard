@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
@@ -84,7 +86,7 @@ namespace WebService.API.Controllers
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
-            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
+            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
             return Ok(result.Status);
         }
 
@@ -101,7 +103,6 @@ namespace WebService.API.Controllers
         }
 
         [Route("ForgetPassword")]
-        [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
@@ -117,6 +118,15 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> GetToken([Required] string email)
         {
             return Ok(await SystemInterface.GetToken(email));
+        }
+
+        [Route("GetAllUsers")]
+        [Authorize(Role.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            Result<List<UserDTO>> result = await SystemInterface.GetAllUsers();
+            return Ok(result.Data);
         }
 
     }

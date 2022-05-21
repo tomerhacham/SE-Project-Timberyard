@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
+using WebService.Utils.ExtentionMethods;
 
 namespace WebService.Domain.Business.Alarms
 {
@@ -34,6 +36,11 @@ namespace WebService.Domain.Business.Alarms
         /// <returns></returns>
         public async Task<Result<Alarm>> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
+            Result<Alarm> inputValidation = IsValidInputs(field, threshold, receivers);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
             var newAlarm = new Alarm(name, field, objective, threshold, true, receivers);
             return await AlarmsAndUsersRepository.InsertAlarm(newAlarm);
         }
@@ -44,18 +51,42 @@ namespace WebService.Domain.Business.Alarms
         /// <returns></returns>
         public async Task<Result<Alarm>> EditAlarm(Alarm alarmToEdit)
         {
-            return await AlarmsAndUsersRepository.UpdateAlarm(alarmToEdit);
+            Result<Alarm> inputValidation = IsValidInputs(alarmToEdit.Field, alarmToEdit.Threshold, alarmToEdit.Receivers);
+            if (!inputValidation.Status)
+            {
+                return inputValidation;
+            }
+            Result<Alarm> result = await AlarmsAndUsersRepository.UpdateAlarm(alarmToEdit);
+            if (!result.Status)
+            {
+                Logger.Warning($"An error occurred while attempting to edit an Alarm. {result.Message}");
+            }
+            return result;
         }
         /// <summary>
         /// Removing alarm from the system
         /// </summary>
         /// <param name="alarmToRemove"></param>
         /// <returns></returns>
-        public async Task<Result<Alarm>> RemoveAlarm(Alarm alarmToRemove)
+        public async Task<Result<bool>> RemoveAlarm(int Id)
         {
-            return await AlarmsAndUsersRepository.DeleteAlarm(alarmToRemove);
-
+            Result<bool> result = await AlarmsAndUsersRepository.DeleteAlarm(Id);
+            if (!result.Status)
+            {
+                Logger.Warning($"An error occurred while attempting to remove an Alarm. {result.Message}");
+            }
+            return result;
         }
+
+        /// <summary>
+        /// Returning all the system alarms
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<Alarm>>> GetAllAlarms()
+        {
+            return await AlarmsAndUsersRepository.GetAllAlarms();
+        }
+
         /// <summary>
         /// Function to deserialize all active alarms from the DB and instate each one of them.
         /// Each alarm will be check for raise condition and trigger notification if needed
@@ -66,7 +97,7 @@ namespace WebService.Domain.Business.Alarms
             var activatedAlarms = 0;
             if (activeAlarmsResult.Status)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.UtcNow;
                 var logsQueryResult = await LogsAndTestsRepository.GetAllLogsInTimeInterval(currentTime.AddHours(-24), currentTime);
                 if (logsQueryResult.Status && logsQueryResult.Data.Count > 0)
                 {
@@ -80,10 +111,28 @@ namespace WebService.Domain.Business.Alarms
                         }
                     });
                 }
-                else { Logger.Warning(logsQueryResult.Message); }
             }
-            else { Logger.Warning(activeAlarmsResult.Message); }
             return activatedAlarms;
+        }
+
+        private Result<Alarm> IsValidInputs(Field field, int threshold, List<string> receivers)
+        {
+            if (field < 0 || (int)field >= Enum.GetNames(typeof(Field)).Length)
+            {
+                Logger.Warning($"The field {field} is invalid", null, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<Alarm>(false, null, "Invalid field\n");
+            }
+            if (threshold < 0)
+            {
+                Logger.Warning($"The threshold {threshold} is invalid. Threshold can not be a negative number", null, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<Alarm>(false, null, "Invalid threshold. Threshold can not be a negative number\n");
+            }
+            if (!Extensions.IsValidEmail(receivers))
+            {
+                Logger.Warning("One or more of the entered emails are invalid", null, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<Alarm>(false, null, "One or more of the entered emails are invalid\n");
+            }
+            return new Result<Alarm>(true, null, "All inputs are valid\n");
         }
     }
 }

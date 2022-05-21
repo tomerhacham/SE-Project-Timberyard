@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebService.Utils.Models
 {
-    public class AuthenticationSettings
+    public class DefaultSystemAdmin
     {
-        public string Secret { get; set; }
-        public int Minutes { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

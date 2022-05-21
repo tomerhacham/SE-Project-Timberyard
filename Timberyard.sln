@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcceptanceTests", "Acceptan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimberyardTests", "Timberyard-UnitTests\TimberyardTests.csproj", "{6510C889-1326-498C-B4B2-A416CF4027A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimberyardClient", "TimberyardClient\TimberyardClient.csproj", "{65D29EB9-7461-4F3B-952C-443A30C9A3C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimberyardClient", "TimberyardClient\TimberyardClient.csproj", "{65D29EB9-7461-4F3B-952C-443A30C9A3C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{57EC0FC5-969E-40C7-B77A-A7DF74F6E8D2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

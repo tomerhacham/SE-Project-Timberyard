@@ -44,19 +44,25 @@ namespace WebService.Domain.Business.Queries
                 obj.TestName = TestName; obj.Min = Min; obj.Max = Max; obj.Average = average; obj.StandardDeviation = standardDeviation; obj.Received = Received;
                 return obj;
             }
-            var testNames = records.Select(record => record.TestName).Distinct().ToList();
-            var aggregatedData = new List<dynamic>();
-            foreach (var test in testNames)
+            try
             {
-                var min = records.Where(record => record.TestName == test).Select(record => record.Min).First();
-                var max = records.Where(record => record.TestName == test).Select(record => record.Max).First();
-                List<double> receivedValues = records.Where(record => record.TestName == test).Select(record => double.Parse(record.Received)).Cast<double>().ToList();
-                var stdDev = receivedValues.StdDev();
-                var avg = receivedValues.Average();
-                aggregatedData.Add(InstanceExpandoObject(test, min, max, avg, stdDev, receivedValues));
+                var testNames = records.Select(record => record.TestName).Distinct().ToList();
+                var aggregatedData = new List<dynamic>();
+                foreach (var test in testNames)
+                {
+                    var min = records.Where(record => record.TestName == test).Select(record => record.Min).First();
+                    var max = records.Where(record => record.TestName == test).Select(record => record.Max).First();
+                    List<double> receivedValues = records.Where(record => record.TestName == test).Select(record => double.Parse(record.Received)).Cast<double>().ToList();
+                    var stdDev = receivedValues.StdDev();
+                    var avg = receivedValues.Average();
+                    aggregatedData.Add(InstanceExpandoObject(test, min, max, avg, stdDev, receivedValues));
+                }
+                return new Result<QueryResult>(true, new QueryResult(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, aggregatedData), "\n");
             }
-            return new Result<QueryResult>(true, new QueryResult(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, aggregatedData), "\n");
-
+            catch (Exception exception)
+            {
+                return new Result<QueryResult>(false, null, exception.ToString());
+            }
         }
     }
 }

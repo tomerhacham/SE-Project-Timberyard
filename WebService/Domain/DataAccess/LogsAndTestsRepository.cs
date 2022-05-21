@@ -343,6 +343,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while executing query", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }

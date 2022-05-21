@@ -21,11 +21,12 @@ namespace WebService.Domain.DataAccess
         public Task<Result<List<Alarm>>> GetAllAlarms();
         public Task<Result<Alarm>> InsertAlarm(Alarm alarm);
         public Task<Result<Alarm>> UpdateAlarm(Alarm alarm);
-        public Task<Result<Alarm>> DeleteAlarm(Alarm alarm);
+        public Task<Result<bool>> DeleteAlarm(int Id);
         public Task<Result<UserDTO>> GetUserRecord(string email);
         public Task<Result<bool>> UpdateUser(UserDTO record);
         public Task<Result<bool>> AddUser(UserDTO record);
         public Task<Result<bool>> RemoveUser(string email);
+        public Task<Result<List<UserDTO>>> GetAllUsers();
     }
     public class AlarmsAndUsersRepository : IAlarmsAndUsersRepository
     {
@@ -68,13 +69,14 @@ namespace WebService.Domain.DataAccess
                 var alarms = dtos.Select(x =>
                 {
                     var dto = Alarm.ConstructFromDTO(x);
-                    if (!dto.Status) { Logger.Warning(dto.Message); }
+                    if (!dto.Status) { Logger.Warning($"An error occurred while attempting to construct the Alarm object from DTO. {dto.Message}"); }
                     return dto;
                 }).Where(x => x.Status == true).Select(x => x.Data);
                 return new Result<List<Alarm>>(true, alarms.ToList());
             }
             catch (Exception e)
             {
+                Logger.Warning("A database error occurred while retrieving all the alarms from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<Alarm>>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -90,6 +92,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while inserting alarm (id = {alarm.Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -104,21 +107,23 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while updating alarm (id = {alarm.Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
-        public async Task<Result<Alarm>> DeleteAlarm(Alarm alarm)
+        public async Task<Result<bool>> DeleteAlarm(int Id)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(alarm.GetDTO(true)) ? new Result<Alarm>(true, alarm) : new Result<Alarm>(false, alarm, $"There was a problem during the deletion of alarm {alarm.Id}");
+                var returnVal = await connection.DeleteAsync(new AlarmDTO() { Id = Id }) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"There was a problem during the deletion of alarm {Id}");
                 return returnVal;
             }
             catch (Exception e)
             {
-                return new Result<Alarm>(false, null, "There was a problem with the DataBase");
+                Logger.Warning($"A database error occurred while deleting alarm (id = {Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
         #endregion
@@ -141,6 +146,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while retreving user {email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<UserDTO>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -156,6 +162,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while updating user {record.Email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -171,6 +178,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while deleting user {email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -181,12 +189,38 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                await connection.InsertAsync(user);
-                return new Result<bool>(true, true);
+                using var transaction = await connection.BeginTransactionAsync();
+                var userRecord = await connection.GetAsync<UserDTO>(user.Email, transaction);
+                var status = false;
+                if (userRecord == default)
+                {
+                    await connection.InsertAsync(user, transaction);
+                    status = true;
+                }
+                await transaction.CommitAsync();
+                return new Result<bool>(status, status, status ? "Succeed" : "User already exists");
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while adding the user {user.Email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
+            }
+        }
+
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            var sqlCommand = @"select * from Users";
+            try
+            {
+                using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
+                await connection.OpenAsync();
+                var users_dtos = await connection.QueryAsync<UserDTO>(sqlCommand);
+                return new Result<List<UserDTO>>(true, users_dtos.ToList());
+            }
+            catch (Exception e)
+            {
+                Logger.Warning($"A database error occurred while retrieving all the users from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
             }
         }
         #endregion

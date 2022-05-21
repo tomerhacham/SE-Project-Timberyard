@@ -8,9 +8,10 @@
         "cardYieldUrl": "cardyield",
         "stationYieldUrl": "stationyield",
         "stationCardYieldUrl": "stationcardyield",
-        "nffUrl": "nff"
+        "nffUrl": "nff",
+        "boundariesUrl": "boundaries",
+        "testerLoadUrl": "testerload",
+        "cardTestDurationUrl": "cardtestduration"
     },
-    "testFiles": [
-        "tests/queryPage-test.js"
-    ]
+    "testFiles": ["tests/queryPage-test.js"]
 }

@@ -66,7 +66,7 @@ namespace WebService.Domain.Business.Alarms
             }
             if (raiseCondition)
             {
-                var message = GetAlarmMessage(DateTime.Now.Date.ToShortDateString(), count);
+                var message = GetAlarmMessage(DateTime.UtcNow.Date.ToShortDateString(), count);
                 await iSMTPClient.SendEmail($"Alarm Notification - {Name}", message, Receivers);
             }
             return raiseCondition;
