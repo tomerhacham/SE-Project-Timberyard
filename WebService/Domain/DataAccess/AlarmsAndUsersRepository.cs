@@ -69,13 +69,14 @@ namespace WebService.Domain.DataAccess
                 var alarms = dtos.Select(x =>
                 {
                     var dto = Alarm.ConstructFromDTO(x);
-                    if (!dto.Status) { Logger.Warning(dto.Message); }
+                    if (!dto.Status) { Logger.Warning($"An error occurred while attempting to construct the Alarm object from DTO. {dto.Message}"); }
                     return dto;
                 }).Where(x => x.Status == true).Select(x => x.Data);
                 return new Result<List<Alarm>>(true, alarms.ToList());
             }
             catch (Exception e)
             {
+                Logger.Warning("A database error occurred while retrieving all the alarms from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<Alarm>>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -91,6 +92,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while inserting alarm (id = {alarm.Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -105,6 +107,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while updating alarm (id = {alarm.Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -119,6 +122,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while deleting alarm (id = {Id})", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -142,6 +146,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while retreving user {email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<UserDTO>(false, null, "There was a problem with the DataBase");
             }
         }
@@ -157,6 +162,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while updating user {record.Email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -172,6 +178,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while deleting user {email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -195,6 +202,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while adding the user {user.Email}", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
@@ -211,6 +219,7 @@ namespace WebService.Domain.DataAccess
             }
             catch (Exception e)
             {
+                Logger.Warning($"A database error occurred while retrieving all the users from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
             }
         }

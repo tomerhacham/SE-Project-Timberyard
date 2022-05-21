@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,7 @@ namespace WebService.API.Middlewares
                 // do nothing if jwt validation fails
                 // user is not attached to context so request won't have access to secure routes
                 context.Items["ValidLifetime"] = false;
+                Logger.Warning($"An error occurred while attempting to attach user to context", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
             }
         }
     }

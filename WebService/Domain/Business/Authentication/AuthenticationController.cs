@@ -69,12 +69,12 @@ namespace WebService.Domain.Business.Authentication
                 }
                 else
                 {
-                    Logger.Warning($"User {email} tried to login with Incorrect Password");
+                    Logger.Info($"User {email} tried to login with Incorrect Password");
                     return new Result<JWTtoken>(false, null, "Incorrect Password");
                 }
             }
 
-            Logger.Warning(recordResult.Message);
+            Logger.Warning($"The users {email} attempt to login failed. {recordResult.Message}");
             return new Result<JWTtoken>(false, null, recordResult.Message);
         }
 
@@ -89,11 +89,15 @@ namespace WebService.Domain.Business.Authentication
                 record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
-
+                if (!updateResult.Status)
+                {
+                    Logger.Warning($"An attempt to update the user {email} with a new verification code failed. {updateResult.Message}");
+                    return updateResult;
+                }
                 return new Result<bool>(true, true, "Verification code send successfuly");
             }
 
-            Logger.Warning(recordResult.Message);
+            Logger.Warning($"The users {email} attempt to request for a verification code failed. {recordResult.Message}");
             return new Result<bool>(false, false, recordResult.Message);
         }
 
@@ -105,7 +109,7 @@ namespace WebService.Domain.Business.Authentication
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to add the user {email}. {result.Message}");
             }
             return result;
         }
@@ -115,7 +119,7 @@ namespace WebService.Domain.Business.Authentication
             Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to remove the user {email}. {result.Message}");
             }
             return result;
         }
@@ -132,11 +136,11 @@ namespace WebService.Domain.Business.Authentication
                     return await AlarmsAndUsersRepository.UpdateUser(user);
                 }
 
-                Logger.Warning("User password don't match");
+                Logger.Warning($"User {email} password cannot be updated since the old password entered is incorrect");
                 return new Result<bool>(false, false, "User password don't match");
             }
 
-            Logger.Warning("User doesn't exist");
+            Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
@@ -153,7 +157,7 @@ namespace WebService.Domain.Business.Authentication
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
-                Logger.Warning(result.Message);
+                Logger.Warning($"An error occurred while attempting to add a new system admin with email {newSystemAdminEmail}. {result.Message}");
             }
             return result;
         }
@@ -169,7 +173,7 @@ namespace WebService.Domain.Business.Authentication
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
 
-            Logger.Warning("User doesn't exist");
+            Logger.Warning($"The users {email} attempt to get a new password failed. {recordResult.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
@@ -200,6 +204,7 @@ namespace WebService.Domain.Business.Authentication
             }
             catch (Exception exception)
             {
+                Logger.Warning($"An error occurred while attempting to generate a token for {record.Email}", exception, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new JWTtoken() { Token = string.Empty };
             }
         }
