@@ -53,6 +53,7 @@ namespace WebService.Domain.Business.Services
             }
             catch (Exception e)
             {
+                Logger.Warning($"An error occurred when sending the email \"{subject}\" from the SMTP server", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<string>(false, "Could'nt sent email", e.Message);
             }
 
