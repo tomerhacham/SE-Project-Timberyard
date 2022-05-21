@@ -22,16 +22,17 @@ namespace WebService.Domain.Business.Authentication
         ISMTPClient SMTPClient { get; }
         ILogger Logger { get; }
         IAlarmsAndUsersRepository AlarmsAndUsersRepository { get; }
+        private readonly IOptions<AuthenticationSettings> Settings;
+        private readonly DefaultSystemAdmin DefaultSystemAdmin;
 
-        private readonly string Secret;
 
-
-        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository, IOptions<AuthenticationSettings> settings)
+        public AuthenticationController(ISMTPClient sMTPClient, ILogger logger, IAlarmsAndUsersRepository alarmsAndUsersRepository, IOptions<AuthenticationSettings> settings, IOptions<DefaultSystemAdmin> defaultSystemAdmin)
         {
             SMTPClient = sMTPClient;
             Logger = logger;
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
-            Secret = settings.Value.Secret;
+            Settings = settings;
+            DefaultSystemAdmin = defaultSystemAdmin.Value;
         }
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
@@ -219,7 +220,6 @@ namespace WebService.Domain.Business.Authentication
             SendPassword(email, random_number, msg_subject, email_subject);
             return random_number.HashString();
         }
-        
         private void SendPassword(string email, string password, string msg_subject, string email_subject)
         {
             var message = $"Your {msg_subject} is {password} for Timberyard authentication.";

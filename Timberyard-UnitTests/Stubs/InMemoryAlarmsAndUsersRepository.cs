@@ -81,6 +81,12 @@ namespace Timberyard_UnitTests.Stubs
             return new Result<bool>(result, result);
         }
 
+        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        {
+            var result = Users.Values.ToList();
+            return new Result<List<UserDTO>>(true, result);
+        }
+
         #endregion
     }
 }

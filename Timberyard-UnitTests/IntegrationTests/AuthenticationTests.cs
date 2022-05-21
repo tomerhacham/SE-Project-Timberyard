@@ -242,7 +242,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         public async void ForgetPassword()
         {
             string email = "forgetPassword@timberyard.com";
-            var insert_result = await AuthenticationController.AddUser(email);
+            var insert_result = await AuthenticationController.AddSystemAdmin(email);
             Assert.True(insert_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
             string oldPass = user.Password;
