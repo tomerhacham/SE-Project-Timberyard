@@ -57,11 +57,11 @@ namespace WebService.Domain.Business.Alarms
                 return inputValidation;
             }
             Result<Alarm> result = await AlarmsAndUsersRepository.UpdateAlarm(alarmToEdit);
-            if(!result.Status)
-            {                
+            if (!result.Status)
+            {
                 Logger.Warning($"An error occurred while attempting to edit an Alarm. {result.Message}");
             }
-            return result; 
+            return result;
         }
         /// <summary>
         /// Removing alarm from the system

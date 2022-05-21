@@ -89,7 +89,7 @@ namespace WebService.Domain.Business.Authentication
                 record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
-                if(!updateResult.Status)
+                if (!updateResult.Status)
                 {
                     Logger.Warning($"An attempt to update the user {email} with a new verification code failed. {updateResult.Message}");
                     return updateResult;
@@ -139,7 +139,7 @@ namespace WebService.Domain.Business.Authentication
                 Logger.Warning($"User {email} password cannot be updated since the old password entered is incorrect");
                 return new Result<bool>(false, false, "User password don't match");
             }
-            
+
             Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
@@ -172,7 +172,7 @@ namespace WebService.Domain.Business.Authentication
                 user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
-            
+
             Logger.Warning($"The users {email} attempt to get a new password failed. {recordResult.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }

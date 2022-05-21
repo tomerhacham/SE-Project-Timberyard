@@ -69,7 +69,7 @@ namespace WebService.Domain.DataAccess
                 var alarms = dtos.Select(x =>
                 {
                     var dto = Alarm.ConstructFromDTO(x);
-                    if (!dto.Status) {Logger.Warning($"An error occurred while attempting to construct the Alarm object from DTO. {dto.Message}");}
+                    if (!dto.Status) { Logger.Warning($"An error occurred while attempting to construct the Alarm object from DTO. {dto.Message}"); }
                     return dto;
                 }).Where(x => x.Status == true).Select(x => x.Data);
                 return new Result<List<Alarm>>(true, alarms.ToList());
