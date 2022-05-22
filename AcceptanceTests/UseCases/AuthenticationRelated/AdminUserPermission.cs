@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using TimberyardClient.Client;
 using Xunit;
 
+
 namespace AcceptanceTests.UseCases.AuthenticationRelated
 {
     [Trait("Category", "Acceptance")]
+    [CollectionDefinition("AdminUserPermissions", DisableParallelization = true)]
+
     public class AdminUserPermission : TimberyardTestCase
     {
         public AdminUserPermission() : base()
@@ -19,7 +22,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Theory]
         [InlineData("validUser@timberyard.rbbn.com", HttpStatusCode.OK, true)]
         [InlineData("nonValidUsertimberyard.rbbn.com", HttpStatusCode.BadRequest, false)]       // email is not valid
-        [InlineData("validUser@timberyard.rbbn.com", HttpStatusCode.OK, false)]                 //user is already exists
 
         public async Task AddUserTests(string email, HttpStatusCode expectedStatusCode, bool expectedResult)
         {
@@ -30,6 +32,13 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             {
                 var result = JsonConvert.DeserializeObject<bool>(response.Content);
                 Assert.Equal(expectedResult, result);
+
+                //Attempt to add the same user again and expect fail
+                response = await Client.AddUser(email);
+                Assert.NotNull(response);
+                Assert.Equal(expectedStatusCode, response.StatusCode);
+                result = JsonConvert.DeserializeObject<bool>(response.Content);
+                Assert.False(result);
             }
         }
 
@@ -101,7 +110,9 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Fact]
         public async Task ChangeSystemAdminPassowrd_ValidFlow()
         {
-            var client = Client as TimberyardClient.Client.TimberyardClient;
+            var clientProxy = Client as TimberyardClientProxy;
+            var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+            var client = clientAdapter.RealClient as TimberyardClient.Client.TimberyardClient;
             var newPassword = "newPassword";
 
             // Change password
