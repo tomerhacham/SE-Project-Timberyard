@@ -2,6 +2,7 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
@@ -85,7 +86,7 @@ namespace WebService.API.Controllers
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
-            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword(model.Email, model.NewPassword, model.OldPassword);
+            Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
             return Ok(result.Status);
         }
 
