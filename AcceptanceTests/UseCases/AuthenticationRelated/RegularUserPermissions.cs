@@ -133,10 +133,12 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Fact]
         public async Task RemoveUserTests()
         {
-            var email = (Client as TimberyardClient.Client.TimberyardClient).UserCredentials.Email;
+            var clientProxy = Client as TimberyardClientProxy;
+            var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+            var client = clientAdapter.RealClient as TimberyardClient.Client.TimberyardClient;
 
             //Removing the user
-            var removeResponse = await Client.RemoveUser(email);
+            var removeResponse = await Client.RemoveUser(client.UserCredentials.Email);
             Assert.Equal(HttpStatusCode.Unauthorized, removeResponse.StatusCode);
         }
 
