@@ -39,6 +39,14 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
                 Assert.Equal(expectedStatusCode, response.StatusCode);
                 result = JsonConvert.DeserializeObject<bool>(response.Content);
                 Assert.False(result);
+
+                //Clean up
+                //Removing the user
+                var removeResponse = await Client.RemoveUser(email);
+                Assert.NotNull(removeResponse);
+                Assert.Equal(HttpStatusCode.OK, removeResponse.StatusCode);
+                var removeResult = JsonConvert.DeserializeObject<bool>(removeResponse.Content);
+                Assert.True(removeResult);
             }
         }
 
@@ -64,10 +72,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             //Attempt to login but should fail
             var loginResponse = await Client.Login(emailToAdd, "password!");
             Assert.NotNull(loginResponse);
-            Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-            var loginResult = JsonConvert.DeserializeObject<bool>(loginResponse.Content);
-            Assert.False(loginResult);
-
+            Assert.Equal(HttpStatusCode.NoContent, loginResponse.StatusCode);
         }
 
         [Fact]

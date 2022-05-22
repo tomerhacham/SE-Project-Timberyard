@@ -189,7 +189,7 @@ namespace TimberyardClient.Client
         #region Authentication
         public async Task<IRestResponse> RequestVerificationCode(string email)
         {
-            var request = new RestRequest(REMOVE_ALARM_ENDPOINT, Method.POST);
+            var request = new RestRequest(REQUEST_VERIFICATION_CODE_ENDPOINT, Method.POST);
             var body = new { Email = email };
             request.AddJsonBody(body);
             return await ExecuteWrapperAsync(request);

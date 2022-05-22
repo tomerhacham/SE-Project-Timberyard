@@ -10,7 +10,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
     [Trait("Category", "Acceptance")]
     public class NonUsersPermissions : TimberyardTestCase
     {
-        protected NonUsersPermissions() : base()
+        public NonUsersPermissions() : base()
         {
         }
 
@@ -22,9 +22,9 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         }
         [Theory]
         [InlineData("admin@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
-        [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
+        [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
         [InlineData("regularUser@timberyard.rbbn.com", "217751", HttpStatusCode.OK, true)]
-        [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
+        [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
         [InlineData("regularUser@timberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "asd", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
