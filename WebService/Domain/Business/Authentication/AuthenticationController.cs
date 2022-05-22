@@ -33,27 +33,36 @@ namespace WebService.Domain.Business.Authentication
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
             Settings = settings;
             DefaultSystemAdmin = defaultSystemAdmin.Value;
+            var systemAdminRegistrationResult = AlarmsAndUsersRepository.UpdateOrInsert(new UserDTO { Email = DefaultSystemAdmin.Email, Password = DefaultSystemAdmin.Password.HashString(), Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow }).Result;
+            if (systemAdminRegistrationResult.Status)
+            {
+                Logger.Info($"Default system admin registration status:{systemAdminRegistrationResult.Message}", new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+            }
+            else
+            {
+                Logger.Warning($"Default system admin registration status:{systemAdminRegistrationResult.Message}");
+            }
         }
 
         public async Task<Result<JWTtoken>> Login(string email, string password)
         {
-            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
-            {
-                if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
-                {
-                    return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
-                }
-                else
-                {
-                    return new Result<JWTtoken>(false, null);
-                }
-            }
-            var isDefaultSysAdmin = CheckForDefaultSystemAdmin(email, password);
-            //Default system admin is logging in
-            if (isDefaultSysAdmin.Status)
-            {
-                return isDefaultSysAdmin;
-            }
+            /*            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
+                        {
+                            if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
+                            {
+                                return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
+                            }
+                            else
+                            {
+                                return new Result<JWTtoken>(false, null);
+                            }
+                        }
+                        var isDefaultSysAdmin = CheckForDefaultSystemAdmin(email, password);
+                        //Default system admin is logging in
+                        if (isDefaultSysAdmin.Status)
+                        {
+                            return isDefaultSysAdmin;
+                        }*/
 
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)

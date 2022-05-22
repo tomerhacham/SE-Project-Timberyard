@@ -27,6 +27,8 @@ namespace WebService.Domain.DataAccess
         public Task<Result<bool>> AddUser(UserDTO record);
         public Task<Result<bool>> RemoveUser(string email);
         public Task<Result<List<UserDTO>>> GetAllUsers();
+        public Task<Result<bool>> UpdateOrInsert(UserDTO user);
+
     }
     public class AlarmsAndUsersRepository : IAlarmsAndUsersRepository
     {
@@ -200,7 +202,6 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
-
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             var sqlCommand = @"select * from Users";
@@ -215,6 +216,19 @@ namespace WebService.Domain.DataAccess
             {
                 Logger.Warning($"A database error occurred while retrieving all the users from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
+            }
+        }
+
+        public async Task<Result<bool>> UpdateOrInsert(UserDTO user)
+        {
+            var insertResult = await AddUser(user);
+            if (!insertResult.Status)
+            {
+                return await UpdateUser(user);
+            }
+            else
+            {
+                return insertResult;
             }
         }
         #endregion

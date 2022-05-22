@@ -134,10 +134,10 @@ namespace AcceptanceTests.Utils
             return response;
         }
 
-        public async Task<IRestResponse> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        public async Task<IRestResponse> ChangeSystemAdminPassword(string newPassword, string oldPassword)
         {
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
-            var response = RealClient != null ? await RealClient.ChangeSystemAdminPassword(email, newPassword, oldPassword) : defaultResponse;
+            var response = RealClient != null ? await RealClient.ChangeSystemAdminPassword(newPassword, oldPassword) : defaultResponse;
             return response;
         }
 

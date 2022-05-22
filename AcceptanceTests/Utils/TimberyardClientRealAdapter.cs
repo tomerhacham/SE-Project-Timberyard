@@ -100,9 +100,9 @@ namespace AcceptanceTests.Utils
             return RealClient.RemoveUser(email);
         }
 
-        public Task<IRestResponse> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
+        public Task<IRestResponse> ChangeSystemAdminPassword(string newPassword, string oldPassword)
         {
-            return RealClient.ChangeSystemAdminPassword(email, newPassword, oldPassword);
+            return RealClient.ChangeSystemAdminPassword(newPassword, oldPassword);
         }
 
         public Task<IRestResponse> AddSystemAdmin(string email)
