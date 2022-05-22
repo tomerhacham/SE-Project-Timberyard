@@ -15,14 +15,16 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
     {
         public UserManagement() : base()
         {
+            Client.Authenticate().Wait(); //Login as admin
+
         }
 
         [Theory]
         [InlineData("admin@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
         [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
-        [InlineData("regularuser@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
-        [InlineData("regularuser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
-        [InlineData("regularuser@timberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
+        [InlineData("regularUser@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
+        [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
+        [InlineData("regularUser@timberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "asd", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
         public async Task LoginTest(string email, string password, HttpStatusCode expectedStatusCode, bool expectedTokenResult)
@@ -44,7 +46,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
 
         public async Task AddUserTests(string email, HttpStatusCode expectedStatusCode, bool expectedResult)
         {
-            await Client.Authenticate(); //Login as admin
             var response = await Client.AddUser(email);
             Assert.NotNull(response);
             Assert.Equal(expectedStatusCode, response.StatusCode);
@@ -59,7 +60,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         public async Task RemoveUserTests_ValidScenario()
         {
             var emailToAdd = "IHopeThisWontBeAnUser@timberyard.rbbn.com";
-            await Client.Authenticate(); //Login as admin
 
             //Adding a user
             var addResponse = await Client.AddUser(emailToAdd);
@@ -88,7 +88,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         public async Task RemoveUserTests_EmailNotExists()
         {
             var email = "EmailThatShouldNotExists@timberyard.rbbn.com";
-            await Client.Authenticate(); //Login as admin
 
             //Removing the user
             var removeResponse = await Client.RemoveUser(email);
@@ -106,8 +105,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [InlineData("notvalid@timber,com", HttpStatusCode.BadRequest)]
         public async Task RemoveUserTests_InputCheck(string email, HttpStatusCode expectedStatusCode)
         {
-            await Client.Authenticate(); //Login as admin
-
             //Removing the user
             var removeResponse = await Client.RemoveUser(email);
             Assert.NotNull(removeResponse);
@@ -119,8 +116,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [InlineData("nonvalidAdmint@imberyard.rbbn.com", "oldPassword", "")]
         public async Task ChangeSystemAdminPassword_InvalidInput(string email, string oldPassword, string newPassword)
         {
-            await Client.Authenticate(); //Login as admin
-
             var changeResponse = await Client.ChangeSystemAdminPassword(email, newPassword, oldPassword);
             Assert.NotNull(changeResponse);
             Assert.Equal(HttpStatusCode.BadRequest, changeResponse.StatusCode);
@@ -129,7 +124,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Fact]
         public async Task ChangeSystemAdminPassowrd_ValidFlow()
         {
-            await Client.Authenticate(); //Login as admin
             var client = Client as TimberyardClient.Client.TimberyardClient;
             var newPassword = "newPassword";
 
@@ -173,8 +167,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [InlineData("thisIsNotValid@.com")]
         public async Task AddSystemAdmin_InvalidInput(string email)
         {
-            await Client.Authenticate(); //Login as admin
-
             var addAdminResponse = await Client.AddSystemAdmin(email);
             Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
         }
@@ -187,8 +179,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [InlineData("thisIsNotValid@.com")]
         public async Task ForgotPassword_InvalidInput(string email)
         {
-            await Client.Authenticate(); //Login as admin
-
             var addAdminResponse = await Client.ForgetPassword(email);
             Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
         }
