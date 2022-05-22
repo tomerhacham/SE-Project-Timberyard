@@ -119,6 +119,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             var changeResponse = await Client.ChangeSystemAdminPassword(client.UserCredentials.Email, newPassword, client.UserCredentials.Password);
             Assert.NotNull(changeResponse);
             Assert.Equal(HttpStatusCode.OK, changeResponse.StatusCode);
+            Assert.True(JsonConvert.DeserializeObject<bool>(changeResponse.Content), "changing password failed");
 
             //Attempt to login
             var loginResponse = await Client.Login(client.UserCredentials.Email, newPassword);
@@ -128,7 +129,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             var token = JsonConvert.DeserializeObject<JWTToken>(loginResponse.Content);
 
             //Verify token is not empty
-            Assert.False(string.IsNullOrEmpty(token.Token));
+            Assert.Null(token);
 
             // revert changes
             // Change password
