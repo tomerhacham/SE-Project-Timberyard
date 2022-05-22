@@ -1,13 +1,9 @@
 ﻿using AcceptanceTests.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using TimberyardClient.Client;
-using WebService.Domain.Business.Queries;
 using Xunit;
 
 namespace AcceptanceTests.UseCases.AuthenticationRelated

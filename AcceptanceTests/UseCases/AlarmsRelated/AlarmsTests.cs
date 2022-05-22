@@ -1,13 +1,8 @@
 ﻿using AcceptanceTests.Utils;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Net;
-using TimberyardClient.Client;
-using WebService.API.Controllers.Models;
-using WebService.Domain.Business.Alarms;
 using Xunit;
 using Field = TimberyardClient.Client.Field;
 
