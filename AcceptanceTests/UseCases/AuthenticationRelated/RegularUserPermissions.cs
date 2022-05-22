@@ -145,7 +145,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Fact]
         public async Task ChangeSystemAdminPassword()
         {
-            var changeResponse = await Client.ChangeSystemAdminPassword("someEmail@timberyard.rbbn.com", "newPassword", "oldPassword");
+            var changeResponse = await Client.ChangeSystemAdminPassword("newPassword", "oldPassword");
             Assert.Equal(HttpStatusCode.Unauthorized, changeResponse.StatusCode);
         }
 
