@@ -10,7 +10,7 @@ namespace AcceptanceTests.Utils
 
         protected TimberyardTestCase([Optional] UserCredentials userCredentials)
         {
-            Client= SystemBridge.GetService();
+            Client = SystemBridge.GetService();
 
             if (userCredentials != null)
             {

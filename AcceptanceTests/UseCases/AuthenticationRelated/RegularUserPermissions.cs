@@ -15,7 +15,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
     {
         public RegularUserPermissions() : base(new UserCredentials { Email = "regularUser@timberyard.rbbn.com", Password = "Password123!" })
         {
-            GetServiceProvider().GetService<DatabaseUtils>().AddOrUpdateRegularUser("regularUser@timberyard.rbbn.com", "Password123!").Wait();
+            GetServiceProvider().GetService<DatabaseUtils>().AddOrUpdateRegularUser("regularUser@timberyard.rbbn.com", "Password123!".HashString()).Wait();
             Client.Authenticate().Wait();
         }
         #region Queries

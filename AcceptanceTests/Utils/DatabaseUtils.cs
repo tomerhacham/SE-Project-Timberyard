@@ -34,12 +34,12 @@ namespace AcceptanceTests.Utils
         /// Util function to insert to the database regular user for test purposes only!
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> AddOrUpdateRegularUser(string email,string password,CancellationToken cancellationToken = new CancellationToken())
+        public async Task<bool> AddOrUpdateRegularUser(string email, string password, CancellationToken cancellationToken = new CancellationToken())
         {
-            var sqlCommand = @"IF EXISTS (SELECT * FROM Users WHERE Email = @Email)
-                            UPDATE Users SET Password = @Password, ExpirationTimeStamp=@ExpirationTimeStamp
-                            ELSE
-                            INSERT INTO Users (@Email, @Password,0,@ExpirationTimeStamp)";
+            var sqlCommand = @" IF EXISTS (SELECT * FROM Users WHERE Email = @Email)
+	                            UPDATE Users SET Password = @Password, ExpirationTimeStamp=@ExpirationTimeStamp;
+                                ELSE
+                                INSERT INTO Users (Email,Password,Role,ExpirationTimeStamp) values(@Email, @Password, 0 , @ExpirationTimeStamp)";
 
             try
             {
