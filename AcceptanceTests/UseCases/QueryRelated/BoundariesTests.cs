@@ -14,7 +14,7 @@ namespace AcceptanceTests.UseCases.QueryRelated
     {
         public BoundariesTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
         [Theory]

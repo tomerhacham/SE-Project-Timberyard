@@ -14,7 +14,7 @@ namespace AcceptanceTests.UseCases.QueryRelated
     {
         public StationAndCardYieldTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
         [Theory]

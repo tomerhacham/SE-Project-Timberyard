@@ -13,7 +13,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
     {
         public AlarmsTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
         #region CRUD Alarms Scenarios

@@ -14,7 +14,7 @@ namespace AcceptanceTests.UseCases.QueryRelated
     {
         public TesterLoadTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
         [Theory]

@@ -14,7 +14,7 @@ namespace AcceptanceTests.UseCases.QueryRelated
     {
         public CardTestDurationTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
 

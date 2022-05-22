@@ -30,6 +30,7 @@ namespace WebService.API.Middlewares
         public async Task Invoke(HttpContext context, AuthenticationController authController)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var a = context.Request.Headers["Authorization"];
 
             if (token != null)
             {

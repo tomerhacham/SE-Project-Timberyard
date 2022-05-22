@@ -15,7 +15,7 @@ namespace AcceptanceTests
 
         public CardYieldTests() : base()
         {
-            Client.Authenticate();
+            Client.Authenticate().Wait();
         }
 
         [Theory]
