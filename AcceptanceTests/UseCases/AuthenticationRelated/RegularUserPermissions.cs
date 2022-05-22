@@ -1,4 +1,5 @@
 ﻿using AcceptanceTests.Utils;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -12,8 +13,9 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
 
     public class RegularUserPermissions : TimberyardTestCase
     {
-        public RegularUserPermissions() : base(new UserCredentials { Email = "regularUser@timberyard.rbbn.com", Password = "Password!123" })
+        public RegularUserPermissions() : base(new UserCredentials { Email = "regularUser@timberyard.rbbn.com", Password = "Password123!" })
         {
+            GetServiceProvider().GetService<DatabaseUtils>().AddOrUpdateRegularUser("regularUser@timberyard.rbbn.com", "Password123!").Wait();
             Client.Authenticate().Wait();
         }
         #region Queries

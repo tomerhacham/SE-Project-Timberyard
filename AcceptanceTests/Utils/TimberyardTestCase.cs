@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.InteropServices;
 using TimberyardClient.Client;
 
 namespace AcceptanceTests.Utils
@@ -9,14 +10,21 @@ namespace AcceptanceTests.Utils
 
         protected TimberyardTestCase([Optional] UserCredentials userCredentials)
         {
-            Client = SystemBridge.GetService();
+            Client= SystemBridge.GetService();
 
             if (userCredentials != null)
             {
-                TimberyardClientRealAdapter adapter = Client as TimberyardClientRealAdapter;
-                TimberyardClient.Client.TimberyardClient realClient = adapter.RealClient as TimberyardClient.Client.TimberyardClient;
-                realClient.UserCredentials = userCredentials;
+                var clientProxy = Client as TimberyardClientProxy;
+                var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+                var client = clientAdapter.RealClient as TimberyardClient.Client.TimberyardClient;
+                client.UserCredentials = userCredentials;
             }
+        }
+        protected ServiceProvider GetServiceProvider()
+        {
+            var clientProxy = Client as TimberyardClientProxy;
+            var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+            return clientAdapter.ServiceProvider;
         }
     }
 }

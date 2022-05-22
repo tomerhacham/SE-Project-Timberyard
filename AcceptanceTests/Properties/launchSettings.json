@@ -6,6 +6,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "UserCredentials__Email": "admin@timberyard.rbbn.com",
         "UserCredentials__Password": "Password!123",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard_Testing;",
+        "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
+        "DatabaseSettings__DbPassword": "timberyard_service",
+        "DatabaseSettings__DbUsername": "timberyard_service",
         "ServiceSettings__Url": "https://localhost:5001"
       }
     }

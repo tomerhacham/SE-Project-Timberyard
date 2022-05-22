@@ -20,15 +20,17 @@ namespace AcceptanceTests.Utils
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected ITimberyardClient GetConfiguratedClient()
+        protected ServiceProvider GetServices()
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("AcceptanceTests").Build();
             var serviceProvier = new ServiceCollection()
                     .Configure<UserCredentials>(config.GetSection("UserCredentials"))
                     .Configure<ServiceSettings>(config.GetSection("ServiceSettings"))
+                    .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
+                    .AddSingleton<DatabaseUtils>()
                     .AddSingleton<ITimberyardClient, TimberyardClient.Client.TimberyardClient>()
                     .BuildServiceProvider();
-            return serviceProvier.GetService<ITimberyardClient>();
+            return serviceProvier;
         }
     }
 

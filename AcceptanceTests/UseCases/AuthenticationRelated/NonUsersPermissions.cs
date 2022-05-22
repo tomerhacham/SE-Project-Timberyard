@@ -42,7 +42,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         [Fact]
         public async Task RequestVerificationcodeTest()
         {
-            var response = await Client.RequestVerificationCode("regularuser@timberyard.rbbn.com");
+            var response = await Client.RequestVerificationCode("differentRegularUser@timberyard.rbbn.com");
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }

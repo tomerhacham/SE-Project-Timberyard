@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ namespace AcceptanceTests.Utils
     public class TimberyardClientRealAdapter : InitializeSystem, ITimberyardClient
     {
         public ITimberyardClient RealClient { get; set; }
+        public ServiceProvider ServiceProvider { get; set; }
 
         public TimberyardClientRealAdapter()
         {
-            RealClient = GetConfiguratedClient();
+            ServiceProvider = GetServices();
+            RealClient = ServiceProvider.GetService<ITimberyardClient>();
         }
 
         #region Queries Scenarios

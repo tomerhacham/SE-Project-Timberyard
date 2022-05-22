@@ -20,7 +20,7 @@ namespace WebService.Domain.DataAccess.DTO
         public string Email { get; set; }
         public string Password { get; set; }
         public Role Role { get; set; }
-        public DateTime ExperationTimeStamp { get; set; }
+        public DateTime ExpirationTimeStamp { get; set; }
 
     }
 }

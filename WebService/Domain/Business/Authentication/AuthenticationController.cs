@@ -33,7 +33,7 @@ namespace WebService.Domain.Business.Authentication
             AlarmsAndUsersRepository = alarmsAndUsersRepository;
             Settings = settings;
             DefaultSystemAdmin = defaultSystemAdmin.Value;
-            var systemAdminRegistrationResult = AlarmsAndUsersRepository.UpdateOrInsert(new UserDTO { Email = DefaultSystemAdmin.Email, Password = DefaultSystemAdmin.Password.HashString(), Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow }).Result;
+            var systemAdminRegistrationResult = AlarmsAndUsersRepository.UpdateOrInsert(new UserDTO { Email = DefaultSystemAdmin.Email, Password = DefaultSystemAdmin.Password.HashString(), Role = Role.Admin, ExpirationTimeStamp = DateTime.UtcNow }).Result;
             if (systemAdminRegistrationResult.Status)
             {
                 Logger.Info($"Default system admin registration status:{systemAdminRegistrationResult.Message}", new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
@@ -69,7 +69,7 @@ namespace WebService.Domain.Business.Authentication
             {
                 var record = recordResult.Data;
 
-                bool condition = record.Role == Role.RegularUser ? DateTime.UtcNow.CompareTo(record.ExperationTimeStamp) < 0 : true;
+                bool condition = record.Role == Role.RegularUser ? DateTime.UtcNow.CompareTo(record.ExpirationTimeStamp) < 0 : true;
 
                 if (password.HashString().Equals(record.Password) && condition)
                 {
@@ -95,7 +95,7 @@ namespace WebService.Domain.Business.Authentication
                 var record = recordResult.Data;
                 string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");
                 record.Password = verification_code;
-                record.ExperationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
+                record.ExpirationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
                 if (!updateResult.Status)
@@ -113,7 +113,7 @@ namespace WebService.Domain.Business.Authentication
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
-            UserDTO user = new UserDTO() { Email = email, Password = String.Empty, Role = Role.RegularUser, ExperationTimeStamp = DateTime.UtcNow };
+            UserDTO user = new UserDTO() { Email = email, Password = String.Empty, Role = Role.RegularUser, ExpirationTimeStamp = DateTime.UtcNow };
 
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
@@ -162,7 +162,7 @@ namespace WebService.Domain.Business.Authentication
             string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
 
             // create new system admin
-            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExperationTimeStamp = DateTime.UtcNow };
+            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExpirationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
