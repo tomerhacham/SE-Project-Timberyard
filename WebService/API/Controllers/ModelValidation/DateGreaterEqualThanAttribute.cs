@@ -12,6 +12,12 @@ namespace WebService.API.Controllers.ModelValidation
         {
             DateToCompareFieldName = dateToCompareFieldName;
         }
+        /// <summary>
+        /// Validate that the provided value is datetime object which greater that the value in the 'DateToCompareFieldName' field
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             DateTime laterDate = (DateTime)value;

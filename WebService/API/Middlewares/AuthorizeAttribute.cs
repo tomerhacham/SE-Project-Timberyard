@@ -14,6 +14,12 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         AuthorizedRole = authorizedRole;
     }
 
+    /// <summary>
+    /// Validate the extracted information from the users token.
+    /// The function checks that the token is not expired that the user's role match the attribute role
+    /// In case the token is expired or role is not matches unauthorized response will be return
+    /// </summary>
+    /// <param name="context"></param>
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         if (context.HttpContext.Items.Count == 0

@@ -11,6 +11,9 @@ using WebService.Domain.Interface;
 
 namespace WebService.API.Controllers
 {
+    /// <summary>
+    /// Responsible on all query calculation scenarios
+    /// </summary>
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
@@ -23,6 +26,11 @@ namespace WebService.API.Controllers
             SystemInterface = systemInterface;
         }
 
+        /// <summary>
+        /// Calcuate card yield by catalog and dates range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("CardYield")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(CardYieldRequestExample))]
@@ -43,6 +51,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculate Station yield for all station by dates range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("StationsYield")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(StationsYieldRequestExample))]
@@ -63,6 +76,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculate station and card yield by catalog, station and date of range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("StationAndCardYield")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(StationAndCardYieldRequestExample))]
@@ -82,6 +100,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calcuate no failure found details by card name, dates range and time interval between to runs on the same serial number [in seconds]
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("NFF")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(NFFRequestExample))]
@@ -102,6 +125,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculate load metric for all the testers in dates range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("TesterLoad")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(TesterLoadRequestExample))]
@@ -121,6 +149,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculate test duration by catalog and dates range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("CardTestDuration")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(CardTestDurationRequestExample))]
@@ -139,6 +172,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculate boundaries metrics (Min,Max,Avg,Std..) by catalog and dates range
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("Boundaries")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(BoundariesRequestExample))]

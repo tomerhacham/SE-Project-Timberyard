@@ -9,12 +9,18 @@ namespace WebService.API.Controllers.ModelValidation
     [AttributeUsage(AttributeTargets.Property)]
     public class ValidEmailsAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Validate the the provided value is list of valid emails
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             List<string> emails = (List<string>)value;
             foreach (var email in emails)
             {
-                if (!IsValidEmail(email))
+                if (!ValidEmailAttribute.IsValidEmail(email))
                 {
                     return new ValidationResult($"This email address {email} is not valid");
                 }
@@ -22,56 +28,5 @@ namespace WebService.API.Controllers.ModelValidation
             return ValidationResult.Success;
         }
 
-        /// <summary>
-        /// Utility function to validate email 
-        /// </summary>
-        /// <see cref="https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        private static bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return false;
-            }
-
-            try
-            {
-                // Normalize the domain
-                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
-                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
-
-                // Examines the domain part of the email and normalizes it.
-                string DomainMapper(Match match)
-                {
-                    // Use IdnMapping class to convert Unicode domain names.
-                    var idn = new IdnMapping();
-
-                    // Pull out and process domain name (throws ArgumentException on invalid)
-                    string domainName = idn.GetAscii(match.Groups[2].Value);
-
-                    return match.Groups[1].Value + domainName;
-                }
-            }
-            catch (RegexMatchTimeoutException e)
-            {
-                return false;
-            }
-            catch (ArgumentException e)
-            {
-                return false;
-            }
-
-            try
-            {
-                return Regex.IsMatch(email,
-                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
     }
 }

@@ -22,6 +22,11 @@ namespace WebService.Domain.Business.Queries
             EndDate = endDate;
         }
 
+        /// <summary>
+        /// Execute Boundaries query and aggregate the raw results
+        /// </summary>
+        /// <param name="LogsAndTestsRepository"></param>
+        /// <returns></returns>
         public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
@@ -35,7 +40,11 @@ namespace WebService.Domain.Business.Queries
             }
             return new Result<QueryResult>(false, null, sqlResult.Message);
         }
-
+        /// <summary>
+        /// Util function to aggreate raw results returned from the persistance and calcualte Std, Avg and selection all tset names which related to the query
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
         private async Task<Result<QueryResult>> AggregateResults(List<dynamic> records)
         {
             dynamic InstanceExpandoObject(string TestName, double Min, double Max, double average, double standardDeviation, List<double> Received)

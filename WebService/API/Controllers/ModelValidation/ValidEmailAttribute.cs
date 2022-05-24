@@ -7,6 +7,9 @@ namespace WebService.API.Controllers.ModelValidation
 {
     public class ValidEmailAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Validate that the provided value is valid email address
+        /// </summary>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             string email = (string)value;
@@ -24,7 +27,7 @@ namespace WebService.API.Controllers.ModelValidation
         /// <see cref="https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
         /// <param name="email"></param>
         /// <returns></returns>
-        private static bool IsValidEmail(string email)
+        public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {

@@ -27,6 +27,13 @@ namespace WebService.API.Middlewares
             Logger = logger;
         }
 
+        /// <summary>
+        /// util fucntion to extract token from request header if provided.
+        /// In case a token is provided, the embedded information will be extracted too and be assign in the HttpContext
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="authController"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context, AuthenticationController authController)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -40,6 +47,13 @@ namespace WebService.API.Middlewares
             await _next(context);
         }
 
+        /// <summary>
+        /// Extracting the relevent information from the users token if its valid.
+        /// In cae the token expired and boolean indicate so will be turn on
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userService"></param>
+        /// <param name="token"></param>
         private void AttachUserToContext(HttpContext context, AuthenticationController userService, string token)
         {
             try
