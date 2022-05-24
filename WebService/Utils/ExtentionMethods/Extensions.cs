@@ -36,6 +36,7 @@ namespace WebService.Utils.ExtentionMethods
 
             return Encoding.ASCII.GetString(hash_bytes);
         }
+
         /// <summary>
         /// Utility function to validate a list of emails
         /// </summary>
