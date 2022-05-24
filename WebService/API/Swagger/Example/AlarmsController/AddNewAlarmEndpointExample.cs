@@ -81,4 +81,14 @@ namespace WebService.API.Swagger.Example.AlarmsController
             return records;
         }
     }
+    public class AlarmToRemoveRequestExample : IExamplesProvider<object>
+    {
+        public object GetExamples()
+        {
+            return new AlarmToRemoveModel()
+            {
+                Id = 1
+            };
+        }
+    }
 }

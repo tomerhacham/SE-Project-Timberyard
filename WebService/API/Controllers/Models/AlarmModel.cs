@@ -39,4 +39,10 @@ namespace WebService.API.Controllers.Models
         [ValidEmails]
         public List<string> Receivers { get; set; }
     }
+
+    public class AlarmToRemoveModel
+    {
+        [Required]
+        public int Id { get; set; }
+    }
 }

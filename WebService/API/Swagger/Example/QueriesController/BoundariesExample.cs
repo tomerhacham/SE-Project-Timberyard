@@ -17,10 +17,9 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            var records = new List<object> { new {Operator= "73531", NetTimeAvg= 686, TotalTimeAvg=1696 },
-            new {Operator= "73003", NetTimeAvg= 602, TotalTimeAvg=605 },
-            new {Operator= "71220", NetTimeAvg= 605, TotalTimeAvg=607 }};
-            var headers = new string[] { "Operator", "NetTimeAvg", "TotalTimeAvg" };
+            var records = new List<object> { new { TestName = "Boundaries_Test1", Min = 2, Max = 6, Average = 4, StandardDeviation = 1.41421, Received = (2, 4, 3, 5, 6) },
+            new { TestName = "Boundaries_Test2", Min = 1, Max = 4, Average = 2.4, StandardDeviation = 0.749577, Received = (1, 4, 3) }};
+            var headers = new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" };
             return new QueryResult(headers, records);
         }
     }
