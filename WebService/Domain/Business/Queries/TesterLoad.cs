@@ -15,7 +15,11 @@ namespace WebService.Domain.Business.Queries
             StartDate = startDate;
             EndDate = endDate;
         }
-
+        /// <summary>
+        /// Execute test loader query and returns the result
+        /// </summary>
+        /// <param name="LogsAndTestsRepository"></param>
+        /// <returns></returns>
         public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)

@@ -17,7 +17,11 @@ namespace WebService.Domain.Business.Queries
             StartDate = startDate;
             EndDate = endDate;
         }
-
+        /// <summary>
+        /// Execute Card test duration query and return the results
+        /// </summary>
+        /// <param name="LogsAndTestsRepository"></param>
+        /// <returns></returns>
         public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
