@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebService.API.Controllers.Models;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;

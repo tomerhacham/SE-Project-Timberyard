@@ -1,4 +1,5 @@
 ﻿using ETL.Repository.DTO;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Collections.Generic;
 using Timberyard_UnitTests.Stubs;
@@ -7,9 +8,6 @@ using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using ETL.DataObjects;
 
 namespace Timberyard_UnitTests.UnitTests
 {

@@ -5,9 +5,7 @@ using RestSharp.Serializers.NewtonsoftJson;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using TimberyardClient.Client;
 
 namespace TimberyardClient.Client
 {

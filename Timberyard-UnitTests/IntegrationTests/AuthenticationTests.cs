@@ -1,25 +1,18 @@
-﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using WebService.Domain.Business.Alarms;
-using WebService.Domain.Business.Services;
-using WebService.Utils;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Timberyard_UnitTests.Stubs;
-using WebService.Domain.DataAccess;
-using System.Linq;
-using ETL.DataObjects;
-using WebService.Domain.Business.Authentication;
-using WebService.Domain.DataAccess.DTO;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
-using WebService.Utils.Models;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography;
+using System.Linq;
+using System.Text;
+using Timberyard_UnitTests.Stubs;
+using WebService.Domain.Business.Authentication;
+using WebService.Domain.DataAccess;
+using WebService.Domain.DataAccess.DTO;
+using WebService.Utils;
 using WebService.Utils.ExtentionMethods;
+using WebService.Utils.Models;
+using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {

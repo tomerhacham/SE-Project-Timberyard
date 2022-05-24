@@ -1,5 +1,4 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
-using System.Collections.Generic;
 using WebService.API.Controllers.Models;
 
 namespace WebService.API.Swagger.Example.AlarmsController
