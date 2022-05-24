@@ -47,6 +47,19 @@
         "DatabaseSettings__DbPassword": "badPasword",
         "DatabaseSettings__DbUsername": "badUsername"
       }
+    },
+    "LoadtestSettings": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Directories__NewLogsDirectory": "..\\..\\..\\Resources\\LoadTestLogs\\NewLogs",
+        "Directories__HandeledLogsDirectory": "..\\..\\..\\Resources\\LoadTestLogs\\HandleLogs",
+        "Directories__FaultLogsDirectory": "C:\\Tomer-University\\ETL-dotnet\\FaultLogs",
+        "DatabaseSettings__ConnectionString": "Initial Catalog=Timberyard;",
+        "DatabaseSettings__DbServer": "LOCALHOST\\SQLEXPRESS",
+        "DatabaseSettings__DbPassword": "etl_process",
+        "DatabaseSettings__DbUsername": "etl_process",
+        "ServiceSettings__Url": "https://localhost:5001"
+      }
     }
   }
 }
