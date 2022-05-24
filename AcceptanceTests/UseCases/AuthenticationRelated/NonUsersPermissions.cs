@@ -7,19 +7,26 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.AuthenticationRelated
 {
-    [Trait("Category", "Acceptance")]
+
     public class NonUsersPermissions : TimberyardTestCase
     {
         public NonUsersPermissions() : base()
         {
         }
 
-        [Fact]
-        public async Task ForgotPassword()
+        [Theory]
+        [InlineData("", HttpStatusCode.BadRequest)]
+        [InlineData("this is not valid email", HttpStatusCode.BadRequest)]
+        [InlineData("thisIsNotValid.com", HttpStatusCode.BadRequest)]
+        [InlineData("thisIsNotValid@comcom", HttpStatusCode.BadRequest)]
+        [InlineData("thisIsNotValid@.com", HttpStatusCode.BadRequest)]
+        [InlineData("someEmail@timberyard.rbbn.com", HttpStatusCode.OK)]
+        public async Task ForgotPassword(string email, HttpStatusCode expectedStatusCode)
         {
-            var addAdminResponse = await Client.ForgetPassword("someEmail@timberyard.rbbn.com");
-            Assert.Equal(HttpStatusCode.OK, addAdminResponse.StatusCode);
+            var forgotPasswordresponse = await Client.ForgetPassword(email);
+            Assert.Equal(expectedStatusCode, forgotPasswordresponse.StatusCode);
         }
+
         [Theory]
         [InlineData("admin@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
         [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]

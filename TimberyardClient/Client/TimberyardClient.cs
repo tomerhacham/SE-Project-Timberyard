@@ -266,7 +266,7 @@ namespace TimberyardClient.Client
             }
             else
             {
-                throw new Exception("Authnetication process has failed");
+                throw new Exception($"Authnetication process has failed:{response.StatusCode}");
             }
         }
     }

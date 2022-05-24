@@ -8,7 +8,7 @@ using Field = TimberyardClient.Client.Field;
 
 namespace AcceptanceTests.UseCases.AlarmsRelated
 {
-    [Trait("Category", "Acceptance")]
+
     public class AlarmsTests : TimberyardTestCase
     {
         public AlarmsTests() : base()

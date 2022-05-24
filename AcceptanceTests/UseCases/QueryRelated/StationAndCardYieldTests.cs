@@ -9,7 +9,7 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
-    [Trait("Category", "Acceptance")]
+
     public class StationAndCardYieldTests : TimberyardTestCase
     {
         public StationAndCardYieldTests() : base()

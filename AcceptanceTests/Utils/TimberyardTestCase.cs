@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
+using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
 using TimberyardClient.Client;
+using Xunit;
 
 namespace AcceptanceTests.Utils
 {
+    [Trait("Category", "Acceptance")]
+
     public class TimberyardTestCase
     {
         protected ITimberyardClient Client;

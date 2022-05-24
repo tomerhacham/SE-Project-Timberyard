@@ -8,8 +8,6 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.AuthenticationRelated
 {
-    [Trait("Category", "Acceptance")]
-    [CollectionDefinition("AdminUserPermissions", DisableParallelization = true)]
 
     public class AdminUserPermission : TimberyardTestCase
     {
@@ -112,8 +110,8 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.Equal(HttpStatusCode.BadRequest, changeResponse.StatusCode);
         }
 
-        [Fact]
-        public async Task ChangeSystemAdminPassowrd_ValidFlow()
+        [Fact(Skip = "This test should run not in parallel with othere tests")]
+        public async Task ChangeSystemAdminPassword_ValidFlow()
         {
             var clientProxy = Client as TimberyardClientProxy;
             var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
@@ -163,18 +161,6 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         public async Task AddSystemAdmin_InvalidInput(string email)
         {
             var addAdminResponse = await Client.AddSystemAdmin(email);
-            Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("this is not valid email")]
-        [InlineData("thisIsNotValid.com")]
-        [InlineData("thisIsNotValid@comcom")]
-        [InlineData("thisIsNotValid@.com")]
-        public async Task ForgotPassword_InvalidInput(string email)
-        {
-            var addAdminResponse = await Client.ForgetPassword(email);
             Assert.Equal(HttpStatusCode.BadRequest, addAdminResponse.StatusCode);
         }
     }

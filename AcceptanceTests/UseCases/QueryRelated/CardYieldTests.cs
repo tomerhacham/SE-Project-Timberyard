@@ -7,9 +7,9 @@ using System.Dynamic;
 using System.Net;
 using Xunit;
 
-namespace AcceptanceTests
+namespace AcceptanceTests.UseCases.QueryRelated
 {
-    [Trait("Category", "Acceptance")]
+
     public class CardYieldTests : TimberyardTestCase
     {
 

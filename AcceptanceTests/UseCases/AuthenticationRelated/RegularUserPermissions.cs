@@ -9,7 +9,6 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.AuthenticationRelated
 {
-    [Trait("Category", "Acceptance")]
 
     public class RegularUserPermissions : TimberyardTestCase
     {
