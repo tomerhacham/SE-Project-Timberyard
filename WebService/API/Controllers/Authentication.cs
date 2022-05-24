@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,8 +35,7 @@ namespace WebService.API.Controllers
         [Route("RequestVerificationCode")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(RequestVerificationCodeExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> RequestVerificationCode([FromBody] EmailModel model)
         {
             await SystemInterface.RequestVerificationCode(model.Email);
@@ -52,9 +52,9 @@ namespace WebService.API.Controllers
         /// </returns>
         [Route("Login")]
         [HttpPost]
-        [SwaggerRequestExample(typeof(object), typeof(LoginExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerRequestExample(typeof(object), typeof(LoginRequestExample))]
+        [ProducesResponseType(typeof(LoginResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             Result<JWTtoken> result = await SystemInterface.Login(model.Email, model.Password);
@@ -70,8 +70,7 @@ namespace WebService.API.Controllers
         [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(AddUserExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> AddUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.AddUser(model.Email);
@@ -87,8 +86,7 @@ namespace WebService.API.Controllers
         [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(RemoveUserExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> RemoveUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
@@ -103,8 +101,7 @@ namespace WebService.API.Controllers
         [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ChangeSystemAdminPasswordExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
             Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
@@ -119,8 +116,7 @@ namespace WebService.API.Controllers
         [Authorize(Role.Admin)]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(AddSystemAdminExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> AddSystemAdmin([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.AddSystemAdmin(model.Email);
@@ -134,8 +130,7 @@ namespace WebService.API.Controllers
         [Route("ForgetPassword")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
-        //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> ForgetPassword([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
@@ -159,6 +154,8 @@ namespace WebService.API.Controllers
         /// <returns>List of users</returns>
         [Route("GetAllUsers")]
         [Authorize(Role.Admin)]
+        [ProducesResponseType(typeof(GetAllUsersResponseExample), StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllUsersResponseExample))]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {

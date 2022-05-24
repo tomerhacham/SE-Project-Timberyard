@@ -82,13 +82,12 @@ namespace WebService.API.Controllers
         [Route("RemoveAlarm")]
         [HttpPost]
         [Authorize(Role.Admin)]
-        //[SwaggerRequestExample(typeof(object), typeof(FullAlarmRequestExample))]
-        //[ProducesResponseType(typeof(FullAlarmRequestExample), StatusCodes.Status200OK)]
-        //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
-        public async Task<IActionResult> RemoveAlarm([FromBody] int Id)
+        [SwaggerRequestExample(typeof(object), typeof(AlarmToRemoveRequestExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
+        public async Task<IActionResult> RemoveAlarm([FromBody] AlarmToRemoveModel model)
         {
 
-            var response = await SystemInterface.RemoveAlarm(Id);
+            var response = await SystemInterface.RemoveAlarm(model.Id);
             if (response.Status)
             {
                 return Ok();
@@ -108,7 +107,7 @@ namespace WebService.API.Controllers
         [HttpPost]
         [Authorize(Role.Admin)]
         [ProducesResponseType(typeof(GetAllAlarmsResponseExample), StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllAlarmsResponseExample))]
         public async Task<IActionResult> GetAllAlarms()
         {
 
@@ -130,6 +129,7 @@ namespace WebService.API.Controllers
         /// <returns></returns>
         [Route("CheckAlarmsCondition")]
         [HttpPost]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(OkResult))]
         public async Task<IActionResult> CheckAlarmsCondition()
         {
 
