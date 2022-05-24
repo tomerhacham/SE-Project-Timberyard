@@ -47,4 +47,6 @@ jobs:
     - name: Install formater
       run: dotnet tool install --global dotnet-format
     - name: Unit Tests-ETL
-      run: dotnet test '.\ETLTests\ETLTests.csproj'   
+      run: dotnet test './ETLTests/ETLTests.csproj' --filter Category=Unit -l "console;verbosity=detailed"
+    - name: Unit Tests-Web Service
+      run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Unit -l "console;verbosity=detailed"   
