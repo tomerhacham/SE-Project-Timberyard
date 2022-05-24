@@ -31,6 +31,7 @@ namespace WebService.Utils.ExtentionMethods
 
         public static string HashString(this string value)
         {
+            return value;
             var sha256 = new SHA256CryptoServiceProvider();
             var hash_bytes = sha256.ComputeHash(Encoding.ASCII.GetBytes(value));
 

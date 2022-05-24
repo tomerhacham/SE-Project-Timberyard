@@ -28,7 +28,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         }
 
         [Theory]
-        [InlineData("admin@timberyard.rbbn.com", "Password!123", HttpStatusCode.OK, true)]
+        [InlineData("admin@timberyard.rbbn.com", "Password123!", HttpStatusCode.OK, true)]
         [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
         [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
         [InlineData("regularUser@timberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]

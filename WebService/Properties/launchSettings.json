@@ -36,7 +36,7 @@
         "SMPTClientSettings__Port": "25",
         "SMPTClientSettings__SenderAddress": "Timberyard@test.com",
         "DefaultSystemAdmin__Email": "admin@timberyard.rbbn.com",
-        "DefaultSystemAdmin__Password": "Password!123"
+        "DefaultSystemAdmin__Password": "Password123!"
       }
     }
   }

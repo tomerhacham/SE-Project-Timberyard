@@ -8,7 +8,8 @@ using Xunit;
 
 namespace AcceptanceTests.UseCases.AuthenticationRelated
 {
-
+    [Collection("AdminUserPermission")]
+    [CollectionDefinition("AdminUserPermission", DisableParallelization = true)]
     public class AdminUserPermission : TimberyardTestCase
     {
         public AdminUserPermission() : base()
@@ -110,7 +111,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.Equal(HttpStatusCode.BadRequest, changeResponse.StatusCode);
         }
 
-        [Fact(Skip = "This test should run not in parallel with othere tests")]
+        [Fact()]
         public async Task ChangeSystemAdminPassword_ValidFlow()
         {
             var clientProxy = Client as TimberyardClientProxy;
