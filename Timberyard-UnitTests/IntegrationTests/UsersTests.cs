@@ -1,20 +1,13 @@
-﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Services;
-using WebService.Utils;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Timberyard_UnitTests.Stubs;
 using WebService.Domain.DataAccess;
-using System.Linq;
-using ETL.DataObjects;
-using Microsoft.Extensions.Configuration;
+using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class UsersTests : TestSuit
     {
         Mock<ISMTPClient> SmtpClient { get; set; }
@@ -27,7 +20,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        [Trait("Category", "Integration")]
         public async void dummyTest()
         {
             var result = await Repository.GetUserRecord("tomer@post.bgu.ac.il");

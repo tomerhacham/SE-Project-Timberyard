@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.DataAccess;
@@ -85,6 +84,11 @@ namespace Timberyard_UnitTests.Stubs
         {
             var result = Users.Values.ToList();
             return new Result<List<UserDTO>>(true, result);
+        }
+
+        public Task<Result<bool>> UpdateOrInsert(UserDTO user)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

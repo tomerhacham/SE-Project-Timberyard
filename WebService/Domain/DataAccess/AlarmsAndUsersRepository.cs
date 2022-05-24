@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -27,6 +26,8 @@ namespace WebService.Domain.DataAccess
         public Task<Result<bool>> AddUser(UserDTO record);
         public Task<Result<bool>> RemoveUser(string email);
         public Task<Result<List<UserDTO>>> GetAllUsers();
+        public Task<Result<bool>> UpdateOrInsert(UserDTO user);
+
     }
     public class AlarmsAndUsersRepository : IAlarmsAndUsersRepository
     {
@@ -131,18 +132,12 @@ namespace WebService.Domain.DataAccess
         #region Authentication 
         public async Task<Result<UserDTO>> GetUserRecord(string email)
         {
-            var sqlCommand =
-                @"
-                SELECT *
-                from Users
-                where Email=@Email";
-            var queryParams = new { Email = email };
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var user_record = await connection.QueryAsync<UserDTO>(sqlCommand, queryParams);
-                return user_record.Count() > 0 ? new Result<UserDTO>(true, user_record.First()) : new Result<UserDTO>(false, null, $"User with email {email} was not found in data base");
+                var user_record = await connection.GetAsync<UserDTO>(email);
+                return user_record != default ? new Result<UserDTO>(true, user_record) : new Result<UserDTO>(false, null, $"User with email {email} was not found in data base");
             }
             catch (Exception e)
             {
@@ -173,7 +168,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(email) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {email} was not found in data base");
+                var returnVal = await connection.DeleteAsync(new UserDTO { Email = email }) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {email} was not found in data base");
                 return returnVal;
             }
             catch (Exception e)
@@ -206,7 +201,6 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
-
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             var sqlCommand = @"select * from Users";
@@ -221,6 +215,19 @@ namespace WebService.Domain.DataAccess
             {
                 Logger.Warning($"A database error occurred while retrieving all the users from the database", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
                 return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
+            }
+        }
+
+        public async Task<Result<bool>> UpdateOrInsert(UserDTO user)
+        {
+            var insertResult = await AddUser(user);
+            if (!insertResult.Status)
+            {
+                return await UpdateUser(user);
+            }
+            else
+            {
+                return insertResult;
             }
         }
         #endregion

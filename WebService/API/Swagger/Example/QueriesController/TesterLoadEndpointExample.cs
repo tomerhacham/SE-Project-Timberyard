@@ -10,7 +10,7 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            return new TesterLoadModel() { StartDate = new DateTime(2021, 01, 01), EndDate = new DateTime(2021, 01, 03) };
+            return new DatesModel() { StartDate = new DateTime(2021, 01, 01), EndDate = new DateTime(2021, 01, 03) };
         }
     }
 

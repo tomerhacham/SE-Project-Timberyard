@@ -5,15 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
-using WebService.Domain.Business.Queries;
 using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
+
     public class CardTestDurationTests : TimberyardTestCase
     {
         public CardTestDurationTests() : base()
-        { }
+        {
+            Client.Authenticate().Wait();
+        }
 
 
         [Theory]

@@ -4,8 +4,7 @@ using WebService.API.Controllers.ModelValidation;
 
 namespace WebService.API.Controllers.Models
 {
-    public class StationAndCardYieldModel
-
+    public class CatalogStationWithDatesModel
     {
         [StringIsNotNullOrEmpty]
         public string Station { get; set; }

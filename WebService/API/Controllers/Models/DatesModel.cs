@@ -4,11 +4,8 @@ using WebService.API.Controllers.ModelValidation;
 
 namespace WebService.API.Controllers.Models
 {
-    public class CardTestDurationModel
+    public class DatesModel
     {
-        [Required]
-        [StringIsNotNullOrEmpty]
-        public string Catalog { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -16,7 +13,7 @@ namespace WebService.API.Controllers.Models
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [DateGreaterEqualThan("StartDate")]
+        [DateGreaterEqualThanAttribute("StartDate")]
         public DateTime EndDate { get; set; }
     }
 }

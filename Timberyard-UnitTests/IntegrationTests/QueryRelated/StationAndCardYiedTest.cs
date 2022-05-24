@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class StationAndCardYiedTest : TestSuit
     {
         // Properties
@@ -19,7 +20,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [Trait("Category", "Integration")]
         [InlineData("L5", "X93655", 2021, 2022, true, new string[] { "9901X_JTAG" }, new double[] { 70 })]                          // Happy : There are X records of the inputs out of Y records
         [InlineData("11", "X39337", 2021, 2022, true, new string[] { "RCP08_O_JTAG" }, new double[] { 80 })]                        // Happy : There are X records of the inputs out of Y records
         [InlineData("L", "X93655", 2021, 2022, true, new string[] { }, new double[] { })]                                           // Happy : There are no records since station name does not exsists

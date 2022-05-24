@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using WebService.API.Controllers.ModelValidation;
-using WebService.Domain.Business.Alarms;
+﻿using WebService.API.Controllers.ModelValidation;
 
 namespace WebService.API.Controllers.Models
 {
@@ -13,11 +9,4 @@ namespace WebService.API.Controllers.Models
         [StringIsNotNullOrEmpty]
         public string Password { get; set; }
     }
-
-    public class RequestVerificationCodeModel
-    {
-        [ValidEmail]
-        public string Email { get; set; }
-    }
-
 }

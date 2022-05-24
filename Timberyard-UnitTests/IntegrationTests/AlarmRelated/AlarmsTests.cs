@@ -1,19 +1,16 @@
-﻿using Moq;
+﻿using ETL.DataObjects;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using WebService.Domain.Business.Alarms;
-using WebService.Domain.Business.Services;
-using WebService.Utils;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Timberyard_UnitTests.Stubs;
-using WebService.Domain.DataAccess;
 using System.Linq;
-using ETL.DataObjects;
+using Timberyard_UnitTests.Stubs;
+using WebService.Domain.Business.Alarms;
+using WebService.Domain.DataAccess;
+using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class AlarmsTests : TestSuit
     {
         AlarmsController AlarmsController { get; set; }
@@ -29,7 +26,6 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         #region CRUD Alarms Scenarios
         [Fact]
-        [Trait("Category", "Integration")]
         public async void AddNewAlarmTest()
         {
             var result = await AlarmsController.AddNewAlarm("TestAlarm", Field.Catalog, "TestCatalog", 15, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
@@ -40,7 +36,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        [Trait("Category", "Integration")]
         public async void EditAlarmTest()
         {
             var alarmToInsert = new Alarm("TestAlarm", Field.Catalog, "TestCatalog", 15, true, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
@@ -64,7 +59,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        [Trait("Category", "Integration")]
         public async void RemoveAlarmTest()
         {
             int totalAlarms = 3;
@@ -86,7 +80,6 @@ namespace Timberyard_UnitTests.IntegrationTests
 
         #region Check Alarm Condition Scenarios
         [Fact]
-        [Trait("Category", "Integration")]
         public async void CheckForAlarmsConditionTest_NoActiveAlarms()
         {
             // Inserting log from the last 24 hours
@@ -97,7 +90,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        [Trait("Category", "Integration")]
         public async void CheckForAlarmsConditionTest_NoRecordsInLast24Hours()
         {
             // There is active alarm but no record inserted
@@ -109,7 +101,6 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.Equal(0, activatedAlarms);
         }
         [Fact]
-        [Trait("Category", "Integration")]
         public async void CheckForAlarmsConditionTest_DidNotReachedThreshold()
         {
             // There is active alarm but not enough records to reach the threshold
@@ -122,7 +113,6 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.Equal(0, activatedAlarms);
         }
         [Fact]
-        [Trait("Category", "Integration")]
         public async void CheckForAlarmsConditionTest_ReachingThreshold()
         {
             // There is active alarm but not enough records to reach the threshold
@@ -135,7 +125,6 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.Equal(1, activatedAlarms);
         }
         [Fact]
-        [Trait("Category", "Integration")]
         public async void CheckForAlarmsConditionTest_2AlarmsReachingThreshold()
         {
             // There is active alarm but not enough records to reach the threshold

@@ -5,15 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
-using WebService.Domain.Business.Queries;
 using Xunit;
 
 namespace AcceptanceTests.UseCases.QueryRelated
 {
+
     public class TesterLoadTests : TimberyardTestCase
     {
         public TesterLoadTests() : base()
-        { }
+        {
+            Client.Authenticate().Wait();
+        }
 
         [Theory]
         [InlineData(2021, 2022, HttpStatusCode.OK, new string[] { "L5", "11", "7", "2T", "2X", "L4" },                       // happy : there is data

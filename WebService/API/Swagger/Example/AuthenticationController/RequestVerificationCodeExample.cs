@@ -1,5 +1,4 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
-using System.Collections.Generic;
 using WebService.API.Controllers.Models;
 
 namespace WebService.API.Swagger.Example.AlarmsController
@@ -8,7 +7,7 @@ namespace WebService.API.Swagger.Example.AlarmsController
     {
         public object GetExamples()
         {
-            return new RequestVerificationCodeModel()
+            return new EmailModel()
             {
                 Email = "ExampleEmail@test.com"
             };

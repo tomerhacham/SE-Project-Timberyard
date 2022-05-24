@@ -5,16 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
-using WebService.Domain.Business.Queries;
 using Xunit;
 
-namespace AcceptanceTests
+namespace AcceptanceTests.UseCases.QueryRelated
 {
+
     public class CardYieldTests : TimberyardTestCase
     {
 
         public CardYieldTests() : base()
-        { }
+        {
+            Client.Authenticate().Wait();
+        }
 
         [Theory]
         [InlineData("X93655", 2021, 2022, HttpStatusCode.OK, 2, new string[] { "9901X_JTAG", "HIO400A_JTAG" }, new double[] { 70, 50 })]                              // Happy : There are X records of the inputs out of Y records 

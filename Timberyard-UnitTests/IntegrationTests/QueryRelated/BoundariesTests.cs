@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class BoundariesTests : TestSuit
     {
         // Properties
@@ -25,7 +24,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         [InlineData("X39337", 2020, 2019, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                     // Bad: invalid dates
         [InlineData("", 2021, 2022, false, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                           // Bad: empty catalog
         [InlineData("X12345", 2021, 2022, true, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                      // Happy: No records for the given catalog                                                                                                                          
-
         public async void Boundaries_Scenarios_Test(string catalog, int startDate, int endDate, bool expectedResult, String[] testNames, double[] minValue, double[] maxValue, double[] average, double[] standardDeviation)
         {
             Result<QueryResult> queryResult = await QueriesController.CalculateBoundaries(catalog, new DateTime(startDate, 11, 15), new DateTime(endDate, 01, 22));

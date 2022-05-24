@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using WebService.Domain.Business.Queries;
 using WebService.Utils;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class CardTestDurationTests : TestSuit
     {
 
@@ -20,7 +21,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [Trait("Category", "Integration")]
         [InlineData("X93655", 2021, 2022, true, 2, new string[] { "75653", "73003" }, new double[] { 1085, 2052 }, new double[] { 1086, 2053 })]                                          // Happy : There are X records of the inputs out of Y records ( where X==Y )
         [InlineData("X17837", 2021, 2022, true, 1, new string[] { "71220" }, new double[] { 814 }, new double[] { 815 })]                                                                 // Happy : There are X records of the inputs out of Y records ( where X<Y )
         [InlineData("X93677", 2021, 2022, true, 0, new string[] { }, new double[] { }, new double[] { })]                                                                                    // Happy : There are 0 records of the inputs out of Y records  ( catalog does not exists )      

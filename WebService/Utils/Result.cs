@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebService.Utils
+﻿namespace WebService.Utils
 {
     public class Result<T>
     {

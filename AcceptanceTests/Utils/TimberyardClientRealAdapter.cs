@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ namespace AcceptanceTests.Utils
     public class TimberyardClientRealAdapter : InitializeSystem, ITimberyardClient
     {
         public ITimberyardClient RealClient { get; set; }
+        public ServiceProvider ServiceProvider { get; set; }
 
         public TimberyardClientRealAdapter()
         {
-            RealClient = GetConfiguratedClient();
+            ServiceProvider = GetServices();
+            RealClient = ServiceProvider.GetService<ITimberyardClient>();
         }
 
         #region Queries Scenarios
@@ -77,7 +80,48 @@ namespace AcceptanceTests.Utils
         {
             return RealClient.CheckAlarmsCondition();
         }
+        #endregion
 
+        #region Authentication Scenarios
+        public Task<IRestResponse> RequestVerificationCode(string email)
+        {
+            return RealClient.RequestVerificationCode(email);
+        }
+
+        public Task<IRestResponse> Login(string email, string password)
+        {
+            return RealClient.Login(email, password);
+        }
+
+        public Task<IRestResponse> AddUser(string email)
+        {
+            return RealClient.AddUser(email);
+        }
+
+        public Task<IRestResponse> RemoveUser(string email)
+        {
+            return RealClient.RemoveUser(email);
+        }
+
+        public Task<IRestResponse> ChangeSystemAdminPassword(string newPassword, string oldPassword)
+        {
+            return RealClient.ChangeSystemAdminPassword(newPassword, oldPassword);
+        }
+
+        public Task<IRestResponse> AddSystemAdmin(string email)
+        {
+            return RealClient.AddSystemAdmin(email);
+        }
+
+        public Task<IRestResponse> ForgetPassword(string email)
+        {
+            return RealClient.ForgetPassword(email);
+        }
+
+        public async Task Authenticate()
+        {
+            await RealClient.Authenticate();
+        }
         #endregion
     }
 }

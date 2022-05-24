@@ -10,7 +10,7 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            return new BoundariesModel() { Catalog = "X39337", StartDate = new DateTime(2021, 12, 22), EndDate = new DateTime(2022, 02, 22) };
+            return new CatalogWithDatesModel() { Catalog = "X39337", StartDate = new DateTime(2021, 12, 22), EndDate = new DateTime(2022, 02, 22) };
         }
     }
     public class BoundariesResponseExample : IExamplesProvider<object>

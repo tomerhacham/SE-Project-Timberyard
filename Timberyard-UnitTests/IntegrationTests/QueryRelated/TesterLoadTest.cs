@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class TesterLoadTest : TestSuit
     {
         // Properties
@@ -19,7 +20,6 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Theory]
-        [Trait("Category", "Integration")]
         [InlineData(2021, 2022, true, new string[] { "L5", "11", "7", "2T", "2X", "L4" },                       // happy : there is data
             new int[] { 10, 10, 5, 3, 2, 2 },
             new double[] { 3.199444, 1.059444, 0.162500, 0.551388, 0.944722, 0.039166 })]

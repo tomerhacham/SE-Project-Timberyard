@@ -73,8 +73,7 @@ namespace AcceptanceTests.Utils
 
         #endregion
 
-
-        #region Alsrms Scenarios
+        #region Alarms Scenarios
 
         public async Task<IRestResponse> AddNewAlarm(string name, Field field, string objective, int threshold, List<string> receivers)
         {
@@ -102,6 +101,66 @@ namespace AcceptanceTests.Utils
             var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
             var response = RealClient != null ? await RealClient.CheckAlarmsCondition() : defaultResponse;
             return response;
+        }
+        #endregion
+
+        #region Authentication Scenarios
+        public async Task<IRestResponse> RequestVerificationCode(string email)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.RequestVerificationCode(email) : defaultResponse;
+            return response;
+
+        }
+
+        public async Task<IRestResponse> Login(string email, string password)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.Login(email, password) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> AddUser(string email)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.AddUser(email) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> RemoveUser(string email)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.RemoveUser(email) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> ChangeSystemAdminPassword(string newPassword, string oldPassword)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.ChangeSystemAdminPassword(newPassword, oldPassword) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> AddSystemAdmin(string email)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.AddSystemAdmin(email) : defaultResponse;
+            return response;
+        }
+
+        public async Task<IRestResponse> ForgetPassword(string email)
+        {
+            var defaultResponse = new RestResponse() { StatusCode = HttpStatusCode.OK };
+            var response = RealClient != null ? await RealClient.ForgetPassword(email) : defaultResponse;
+            return response;
+        }
+
+        public async Task Authenticate()
+        {
+            if (RealClient != null)
+            {
+                await RealClient.Authenticate();
+            }
         }
 
         #endregion

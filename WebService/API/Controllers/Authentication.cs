@@ -2,7 +2,6 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using WebService.API.Controllers.Models;
 using WebService.API.Swagger.Example.AlarmsController;
@@ -29,7 +28,7 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(RequestVerificationCodeExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> RequestVerificationCode([FromBody] RequestVerificationCodeModel model)
+        public async Task<IActionResult> RequestVerificationCode([FromBody] EmailModel model)
         {
             await SystemInterface.RequestVerificationCode(model.Email);
             // always return OK due to security issues
@@ -60,7 +59,7 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(AddUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> AddUser([FromBody] UserCRUDModel model)
+        public async Task<IActionResult> AddUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.AddUser(model.Email);
             return Ok(result.Status);
@@ -72,7 +71,7 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(RemoveUserExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> RemoveUser([FromBody] UserCRUDModel model)
+        public async Task<IActionResult> RemoveUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
             return Ok(result.Status);
@@ -96,9 +95,9 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(AddSystemAdminExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> AddSystemAdmin([FromBody] SystemAdminModel model)
+        public async Task<IActionResult> AddSystemAdmin([FromBody] EmailModel model)
         {
-            Result<bool> result = await SystemInterface.AddSystemAdmin(model.SystemAdminEmail);
+            Result<bool> result = await SystemInterface.AddSystemAdmin(model.Email);
             return Ok(result.Status);
         }
 
@@ -107,7 +106,7 @@ namespace WebService.API.Controllers
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
         //[ProducesResponseType(typeof(CardYieldResponseExample), StatusCodes.Status200OK)]
         //[SwaggerResponseExample(StatusCodes.Status200OK, typeof(CardYieldResponseExample))]
-        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel model)
+        public async Task<IActionResult> ForgetPassword([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
             return Ok(result.Status);

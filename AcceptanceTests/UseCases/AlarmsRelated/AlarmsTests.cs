@@ -1,27 +1,24 @@
 ﻿using AcceptanceTests.Utils;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Net;
-using TimberyardClient.Client;
-using WebService.API.Controllers.Models;
-using WebService.Domain.Business.Alarms;
 using Xunit;
 using Field = TimberyardClient.Client.Field;
 
 namespace AcceptanceTests.UseCases.AlarmsRelated
 {
+
     public class AlarmsTests : TimberyardTestCase
     {
         public AlarmsTests() : base()
-        { }
+        {
+            Client.Authenticate().Wait();
+        }
 
         #region CRUD Alarms Scenarios
 
         [Theory]
-        [Trait("Category", "Acceptance")]
         [InlineData(HttpStatusCode.OK, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                              // Happy : There are X records of the inputs out of Y records 
         [InlineData(HttpStatusCode.BadRequest, "TestAlarm", Field.Catalog, "TestCatalog", 15, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]                              // Sad : List of receivers contains an invalid email 
         [InlineData(HttpStatusCode.BadRequest, "TestAlarm", Field.Catalog, "TestCatalog", -10, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                              // Bad : Negative threshold
@@ -44,7 +41,6 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         }
 
         [Theory]
-        [Trait("Category", "Acceptance")]
         [InlineData(HttpStatusCode.OK, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, false, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                                  // Happy : There are X records of the inputs out of Y records 
         [InlineData(HttpStatusCode.BadRequest, "TestEditAlarm", Field.Catalog, "TestCatalog", 15, true, new string[] { "tomer@tests.com", "zoe@test.com", "InvalidEmail", "raz@tests.com" })]                             // Sad : List of receivers contains an invalid email 
         [InlineData(HttpStatusCode.BadRequest, "TestEditAlarm", Field.Catalog, "TestCatalog", -10, true, new string[] { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" })]                         // Bad : Negative threshold
@@ -72,7 +68,6 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         }
 
         [Fact]
-        [Trait("Category", "Acceptance")]
         public async void RemoveAlarmTest()
         {
 
