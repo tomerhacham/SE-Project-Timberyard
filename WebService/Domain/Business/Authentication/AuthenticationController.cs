@@ -161,7 +161,7 @@ namespace WebService.Domain.Business.Authentication
             Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
             return new Result<bool>(false, false, "User doesn't exist");
         }
-        
+
         /// <summary>
         /// Adding new system admin user for the provided email
         /// </summary>
@@ -184,7 +184,7 @@ namespace WebService.Domain.Business.Authentication
             }
             return result;
         }
-        
+
         /// <summary>
         /// Reset the provided email password and send it via SMTP
         /// </summary>
