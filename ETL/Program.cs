@@ -9,17 +9,20 @@ using TimberyardClient.Client;
 
 namespace ETL
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            StartETL();
+        }
 
-            var serviceProvier = ConfigureServices();
+        public static void StartETL(string profile = "ETL", bool restCalls = true)
+        {
+            var serviceProvier = ConfigureServices(profile);
             var repository = serviceProvier.GetService<Repository.Repository>();
             var fileManager = serviceProvier.GetService<FileManager>();
             var deserializer = serviceProvier.GetService<Deserializer>();
             var restClient = serviceProvier.GetService<ITimberyardClient>();
-            Task.Delay(TimeSpan.FromSeconds(30)).Wait();
 
             #region Continuation Passing Style
             fileManager.GetNewLogs().ContinueWith((string[] files) =>
@@ -33,10 +36,13 @@ namespace ETL
                                 success: (Log log) =>
                                 {
                                     var res = repository.InsertLog(log);
-                                    res.ContinueWith(async (bool insertSucceed) =>
+                                    res.ContinueWith((bool insertSucceed) =>
                                     {
                                         fileManager.MoveToHandeledLogsDirectory(file);
-                                        restClient.CheckAlarmsCondition().Wait();
+                                        if (restCalls)
+                                        {
+                                            restClient.CheckAlarmsCondition().Wait();
+                                        }
                                     });
                                 }, fail: (Log log) => { fileManager.MoveToFaultLogsDirectory(file); }
 
@@ -46,13 +52,14 @@ namespace ETL
             });
             #endregion
         }
+
         /// <summary>
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        private static ServiceProvider ConfigureServices()
+        public static ServiceProvider ConfigureServices(string profile)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting("ETL").Build();
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()
                 .Configure<Directories>(config.GetSection("Directories"))
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
@@ -65,5 +72,6 @@ namespace ETL
                 .BuildServiceProvider();
             return serviceProvier;
         }
+
     }
 }
