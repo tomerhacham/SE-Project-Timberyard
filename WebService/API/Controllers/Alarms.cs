@@ -10,6 +10,9 @@ using WebService.Domain.Interface;
 
 namespace WebService.API.Controllers
 {
+    /// <summary>
+    /// Responsible on all alarms management scenarios
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class Alarms : ControllerBase
@@ -20,7 +23,11 @@ namespace WebService.API.Controllers
         {
             SystemInterface = systemInterface;
         }
-
+        /// <summary>
+        /// Adding new alarm to the system
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>new alarm object</returns>
         [Route("AddNewAlarm")]
         [HttpPost]
         [Authorize(Role.Admin)]
@@ -42,6 +49,11 @@ namespace WebService.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Editing existing alarm
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>updated alarm object</returns>
         [Route("EditAlarm")]
         [HttpPost]
         [Authorize(Role.Admin)]
@@ -62,7 +74,11 @@ namespace WebService.API.Controllers
                 return BadRequest(error);
             }
         }
-
+        /// <summary>
+        /// Removing alarm from the system
+        /// </summary>
+        /// <param name="Id">Id of th alarm to remove</param>
+        /// <returns></returns>
         [Route("RemoveAlarm")]
         [HttpPost]
         [Authorize(Role.Admin)]
@@ -83,7 +99,11 @@ namespace WebService.API.Controllers
                 return BadRequest(error);
             }
         }
-
+        /// <summary>
+        /// Get all alarms object listed in the system
+        /// This function should be use only to display in the UI all the alarms
+        /// </summary>
+        /// <returns>List of alarms</returns>
         [Route("GetAllAlarms")]
         [HttpPost]
         [Authorize(Role.Admin)]
@@ -104,7 +124,10 @@ namespace WebService.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// End point which whill use only by the ETL process to signal that new batch of logs has been inserted
+        /// </summary>
+        /// <returns></returns>
         [Route("CheckAlarmsCondition")]
         [HttpPost]
         public async Task<IActionResult> CheckAlarmsCondition()
