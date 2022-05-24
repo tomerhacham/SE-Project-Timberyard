@@ -24,6 +24,11 @@ namespace WebService.Domain.Business.Queries
             TimeInterval = timeInterval;
         }
 
+        /// <summary>
+        /// Executing NoFailureFound query and aggregate the raw results
+        /// </summary>
+        /// <param name="LogsAndTestsRepository"></param>
+        /// <returns></returns>
         public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
@@ -37,6 +42,13 @@ namespace WebService.Domain.Business.Queries
             }
             return new Result<QueryResult>(false, null, sqlResult.Message);
         }
+
+        /// <summary>
+        /// Util function to perform aggregation of the test names which yield the failure.
+        /// Thhe function will find all the records which return with the same LogId and makes a list of all the test names associate to it
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
         private async Task<Result<QueryResult>> AggregateResults(List<dynamic> records)
         {
             dynamic InstanceExpandoObject(DateTime date, string cardName, string catalog, string station, string @operator, List<dynamic> failedTestNames)

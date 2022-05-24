@@ -12,6 +12,9 @@ using WebService.Utils;
 
 namespace WebService.API.Controllers
 {
+    /// <summary>
+    /// Responsible on all authentication and users management scenarios
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class Authentication : ControllerBase
@@ -22,7 +25,12 @@ namespace WebService.API.Controllers
         {
             SystemInterface = systemInterface;
         }
-
+        /// <summary>
+        /// Request verification code to be sent to the provided email.
+        /// This function should be use on regular user loging flow
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("RequestVerificationCode")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(RequestVerificationCodeExample))]
@@ -36,7 +44,7 @@ namespace WebService.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Perform login and generated token for the user
         /// </summary>
         /// <param name="model"></param>
         /// <returns>
@@ -53,6 +61,11 @@ namespace WebService.API.Controllers
             return Ok(result.Data);
         }
 
+        /// <summary>
+        /// Adding new email as regular user to the system
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("AddUser")]
         [Authorize(Role.Admin)]
         [HttpPost]
@@ -65,6 +78,11 @@ namespace WebService.API.Controllers
             return Ok(result.Status);
         }
 
+        /// <summary>
+        /// Remove user (system admin or regular user) from the system
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("RemoveUser")]
         [Authorize(Role.Admin)]
         [HttpPost]
@@ -76,7 +94,11 @@ namespace WebService.API.Controllers
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
             return Ok(result.Status);
         }
-
+        /// <summary>
+        /// Change system admin password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("ChangeSystemAdminPassword")]
         [Authorize(Role.Admin)]
         [HttpPost]
@@ -88,7 +110,11 @@ namespace WebService.API.Controllers
             Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
             return Ok(result.Status);
         }
-
+        /// <summary>
+        /// Add new email as new system admin
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("AddSystemAdmin")]
         [Authorize(Role.Admin)]
         [HttpPost]
@@ -100,7 +126,11 @@ namespace WebService.API.Controllers
             Result<bool> result = await SystemInterface.AddSystemAdmin(model.Email);
             return Ok(result.Status);
         }
-
+        /// <summary>
+        /// Reset the provided user's password and send the new password via SMTP
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Route("ForgetPassword")]
         [HttpPost]
         [SwaggerRequestExample(typeof(object), typeof(ForgetPasswordExample))]
@@ -111,14 +141,22 @@ namespace WebService.API.Controllers
             Result<bool> result = await SystemInterface.ForgetPassword(model.Email);
             return Ok(result.Status);
         }
-
+        /// <summary>
+        /// Util function - should be for test purposes only
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [Route("getToken")]
         [HttpGet]
         public async Task<IActionResult> GetToken([Required] string email)
         {
             return Ok(await SystemInterface.GetToken(email));
         }
-
+        /// <summary>
+        /// Get all users listed in the system
+        /// This function should be use only to display in the UI all the users
+        /// </summary>
+        /// <returns>List of users</returns>
         [Route("GetAllUsers")]
         [Authorize(Role.Admin)]
         [HttpGet]

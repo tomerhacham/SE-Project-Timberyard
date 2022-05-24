@@ -281,10 +281,14 @@ namespace WebService.Domain.DataAccess
             var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
             return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
         }
-
+        /// <summary>
         /// Execute Tester Load Query 
         /// </summary>
         /// <param name="testerLoad">
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
         ///     [Station, NumberOfRuns, TotalRunTimeHours]        
         /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad)
@@ -300,7 +304,17 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
-
+        /// <summary>
+        /// Execute Boundaries Query 
+        /// </summary>
+        /// <param name="boundaries">
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Station, NumberOfRuns, TotalRunTimeHours]        
+        /// </returns>
         public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
         {
             var sqlCommand =
@@ -314,7 +328,13 @@ namespace WebService.Domain.DataAccess
             return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
-
+        /// <summary>
+        /// Util function to query for all the logs betwen to time intervals.
+        /// This function is been used by the alarm controller to check if any of the alarms needs to be raise on the returns logs
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
         public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
             var sqlCommand =
@@ -325,7 +345,6 @@ namespace WebService.Domain.DataAccess
             var queryParams = new { StartDate = startTime, EndDate = endTime };
             return await ExecuteQuery<LogDTO>(sqlCommand, queryParams);
         }
-
         /// <summary>
         /// Private function to wrap and handle execptions in query execution process
         /// </summary>

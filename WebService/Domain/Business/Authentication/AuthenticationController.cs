@@ -42,26 +42,15 @@ namespace WebService.Domain.Business.Authentication
             }
         }
 
+        /// <summary>
+        /// Login to the system. the provided pasword will be validate with the persisted information regarding the user.
+        /// If validation succeed a JWT token will be issued for the user.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task<Result<JWTtoken>> Login(string email, string password)
         {
-            /*            Result<JWTtoken> CheckForDefaultSystemAdmin(string email, string password)
-                        {
-                            if (email.Equals(DefaultSystemAdmin.Email) && password.Equals(DefaultSystemAdmin.Password))
-                            {
-                                return new Result<JWTtoken>(true, GenerateToken(new UserDTO { Email = DefaultSystemAdmin.Email, Role = Role.Admin }), "Login succees");
-                            }
-                            else
-                            {
-                                return new Result<JWTtoken>(false, null);
-                            }
-                        }
-                        var isDefaultSysAdmin = CheckForDefaultSystemAdmin(email, password);
-                        //Default system admin is logging in
-                        if (isDefaultSysAdmin.Status)
-                        {
-                            return isDefaultSysAdmin;
-                        }*/
-
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
             if (recordResult.Status)
             {
@@ -85,6 +74,11 @@ namespace WebService.Domain.Business.Authentication
             return new Result<JWTtoken>(false, null, recordResult.Message);
         }
 
+        /// <summary>
+        /// Sends OTP (One Time Password) to the provided user if is listed as user in the system
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> RequestVerificationCode(string email)
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
@@ -108,6 +102,11 @@ namespace WebService.Domain.Business.Authentication
             return new Result<bool>(false, false, recordResult.Message);
         }
 
+        /// <summary>
+        /// Adding the provided email as regular user to the system.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> AddUser(string email)
         {
             // create new User
@@ -121,6 +120,11 @@ namespace WebService.Domain.Business.Authentication
             return result;
         }
 
+        /// <summary>
+        /// Removing the provided email address from the system's users
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> RemoveUser(string email)
         {
             Result<bool> result = await AlarmsAndUsersRepository.RemoveUser(email);
@@ -131,6 +135,13 @@ namespace WebService.Domain.Business.Authentication
             return result;
         }
 
+        /// <summary>
+        /// Change users password in case the provided oldPassword matches the exisitng one
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="oldPassword"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> ChangeSystemAdminPassword(string email, string newPassword, string oldPassword)
         {
             Result<UserDTO> record = await AlarmsAndUsersRepository.GetUserRecord(email);
@@ -151,6 +162,11 @@ namespace WebService.Domain.Business.Authentication
             return new Result<bool>(false, false, "User doesn't exist");
         }
 
+        /// <summary>
+        /// Adding new system admin user for the provided email
+        /// </summary>
+        /// <param name="newSystemAdminEmail"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
             // remove user from database if exists
@@ -168,6 +184,12 @@ namespace WebService.Domain.Business.Authentication
             }
             return result;
         }
+
+        /// <summary>
+        /// Reset the provided email password and send it via SMTP
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> ForgetPassword(string email)
         {
             var recordResult = await AlarmsAndUsersRepository.GetUserRecord(email);
@@ -175,7 +197,7 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status && recordResult.Data.Role == Role.Admin)
             {
                 UserDTO user = recordResult.Data;
-                string tempPassword = GenerateAndSendPassword(email, "temporary passord", "Timberyard forget password authentication");
+                string tempPassword = GenerateAndSendPassword(email, "temporary password", "Timberyard forget password authentication");
                 user.Password = tempPassword;
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
@@ -189,6 +211,11 @@ namespace WebService.Domain.Business.Authentication
             return GenerateToken(new UserDTO() { Email = email, Role = Role.Admin });
         }
 
+        /// <summary>
+        /// Generate JWT token with digital signature and user's claims
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         private JWTtoken GenerateToken(UserDTO record)
         {
             try
@@ -221,12 +248,26 @@ namespace WebService.Domain.Business.Authentication
             return await AlarmsAndUsersRepository.GetAllUsers();
         }
 
+        /// <summary>
+        /// Util function to generate random number and sent it via email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="msg_subject"></param>
+        /// <param name="email_subject"></param>
+        /// <returns></returns>
         private string GenerateAndSendPassword(string email, string msg_subject, string email_subject)
         {
             var random_number = new Random().Next(100000, 999999).ToString();
             SendPassword(email, random_number, msg_subject, email_subject);
             return random_number.HashString();
         }
+        /// <summary>
+        /// Util function to build email message and send it as backgorund task
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="msg_subject"></param>
+        /// <param name="email_subject"></param>
         private void SendPassword(string email, string password, string msg_subject, string email_subject)
         {
             var message = $"Your {msg_subject} is {password} for Timberyard authentication.";

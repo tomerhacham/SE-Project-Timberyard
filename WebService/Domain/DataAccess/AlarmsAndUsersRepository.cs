@@ -50,16 +50,30 @@ namespace WebService.Domain.DataAccess
         }
 
         #region Alarm
+        /// <summary>
+        /// Query the database for all active alarms.
+        /// </summary>
+        /// <returns></returns>
         public async Task<Result<List<Alarm>>> GetAllActiveAlarms()
         {
             var sqlCommand = @"select * from Alarms where Active=1";
             return await GetAlarmsQuery(sqlCommand);
         }
+        /// <summary>
+        /// Query the database for all alarms
+        /// </summary>
+        /// <returns></returns>
         public async Task<Result<List<Alarm>>> GetAllAlarms()
         {
             var sqlCommand = @"select * from Alarms";
             return await GetAlarmsQuery(sqlCommand);
         }
+        /// <summary>
+        /// Util function to query the databse by generic sql command and parameters
+        /// </summary>
+        /// <param name="sqlCommand"></param>
+        /// <param name="queryParams"></param>
+        /// <returns></returns>
         private async Task<Result<List<Alarm>>> GetAlarmsQuery(string sqlCommand, [Optional] object queryParams)
         {
             try
@@ -81,6 +95,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<List<Alarm>>(false, null, "There was a problem with the DataBase");
             }
         }
+        /// <summary>
+        /// Inserting new alarm record to the database
+        /// </summary>
+        /// <param name="alarm"></param>
+        /// <returns></returns>
         public async Task<Result<Alarm>> InsertAlarm(Alarm alarm)
         {
             try
@@ -97,6 +116,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
+        /// <summary>
+        /// Updating exisitng alarm record in the database
+        /// </summary>
+        /// <param name="alarm"></param>
+        /// <returns></returns>
         public async Task<Result<Alarm>> UpdateAlarm(Alarm alarm)
         {
             try
@@ -112,6 +136,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<Alarm>(false, null, "There was a problem with the DataBase");
             }
         }
+        /// <summary>
+        /// Deleting alarm record by its Id from the database
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> DeleteAlarm(int Id)
         {
             try
@@ -130,6 +159,11 @@ namespace WebService.Domain.DataAccess
         #endregion
 
         #region Authentication 
+        /// <summary>
+        /// Qurey the databse for the user record by Email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<UserDTO>> GetUserRecord(string email)
         {
             try
@@ -145,7 +179,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<UserDTO>(false, null, "There was a problem with the DataBase");
             }
         }
-
+        /// <summary>
+        /// Updating user record in the database
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> UpdateUser(UserDTO record)
         {
             try
@@ -161,7 +199,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
-
+        /// <summary>
+        /// Removing user record by it email from the database
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> RemoveUser(string email)
         {
             try
@@ -177,7 +219,12 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
-
+        /// <summary>
+        /// Inserting new user record to the database if not exists.
+        /// In case the user already exisits and result object indication failure will returns.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> AddUser(UserDTO user)
         {
             try
@@ -201,6 +248,10 @@ namespace WebService.Domain.DataAccess
                 return new Result<bool>(false, false, "There was a problem with the DataBase");
             }
         }
+        /// <summary>
+        /// Query the database for all the listed users
+        /// </summary>
+        /// <returns></returns>
         public async Task<Result<List<UserDTO>>> GetAllUsers()
         {
             var sqlCommand = @"select * from Users";
@@ -217,7 +268,11 @@ namespace WebService.Domain.DataAccess
                 return new Result<List<UserDTO>>(false, null, "There was a problem with the DataBase");
             }
         }
-
+        /// <summary>
+        /// Util function which use only to insert or update the defualt system admin on every system initialization event
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<Result<bool>> UpdateOrInsert(UserDTO user)
         {
             var insertResult = await AddUser(user);

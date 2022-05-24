@@ -34,6 +34,13 @@ namespace WebService.Domain.Business.Services
             });
         }
 
+        /// <summary>
+        /// Sends email via SMTP client
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="message"></param>
+        /// <param name="receivers"></param>
+        /// <returns></returns>
         public async Task<Result<string>> SendEmail(string subject, string message, List<string> receivers)
         {
             Email.DefaultSender = Sender;
