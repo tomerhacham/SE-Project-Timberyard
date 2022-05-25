@@ -109,6 +109,13 @@ namespace WebService.Domain.Business.Authentication
         /// <returns></returns>
         public async Task<Result<bool>> AddUser(string email)
         {
+            Result<bool> inputValidation = IsValidInputs(email);
+            if (!inputValidation.Status)
+            {
+                Logger.Warning($"An error occurred while attempting to add the user {email}. {inputValidation.Message}");
+                return inputValidation;
+            }
+
             // create new User
             UserDTO user = new UserDTO() { Email = email, Password = String.Empty, Role = Role.RegularUser, ExpirationTimeStamp = DateTime.UtcNow };
 
@@ -169,6 +176,13 @@ namespace WebService.Domain.Business.Authentication
         /// <returns></returns>
         public async Task<Result<bool>> AddSystemAdmin(string newSystemAdminEmail)
         {
+            Result<bool> inputValidation = IsValidInputs(newSystemAdminEmail);
+            if (!inputValidation.Status)
+            {
+                Logger.Warning($"An error occurred while attempting to add the system admin {newSystemAdminEmail}. {inputValidation.Message}");
+                return inputValidation;
+            }
+
             // remove user from database if exists
             await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
 
@@ -272,6 +286,17 @@ namespace WebService.Domain.Business.Authentication
         {
             var message = $"Your {msg_subject} is {password} for Timberyard authentication.";
             Task.Run(async () => await SMTPClient.SendEmail(email_subject, message, new List<string>() { email }));
+        }
+
+
+        private Result<bool> IsValidInputs(string email)
+        {
+            if (!Extensions.IsValidEmail(email))
+            {
+                Logger.Warning("The entered email is invalid", null, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<bool>(false, false, "The entered email is invalid\n");
+            }
+            return new Result<bool>(true, true, "All inputs are valid\n");
         }
     }
 }

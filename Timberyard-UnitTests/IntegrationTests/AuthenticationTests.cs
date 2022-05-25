@@ -35,17 +35,39 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         #region CRUD Alarms Scenarios
-        [Fact]
-        public async void AddUser()
+        [Theory]
+        [InlineData("addUserTest_1@timberyard.com", true)]      // Happy : add new user with a valid email
+        [InlineData("addUserTest_2.com", false)]                // sad : add new user with an invalid email
+        public async void AddUser(string email, bool expectedResult)
         {
-            string email = "addUserTest@timberyard.com";
             var result = await AuthenticationController.AddUser(email);
-            Assert.True(result.Status);
-            Assert.NotEmpty(UsersRepository.Users);
-            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
-            Assert.Equal(UsersRepository.Users[email].Role, Role.RegularUser);
-            Assert.Equal(email, UsersRepository.Users.Keys.First());
+            Assert.Equal(expectedResult, result.Status);
+            if (expectedResult)
+            {
+                Assert.NotEmpty(UsersRepository.Users);
+                Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+                Assert.Equal(Role.RegularUser, UsersRepository.Users[email].Role);
+            }
+            else
+            {
+                Assert.False(UsersRepository.Users.ContainsKey(email));
+            }
         }
+
+        [Fact]
+        public async void AddUser_UserExists()
+        {
+            string email = "addExistedUserTest@timberyard.com";
+            await AuthenticationController.AddUser(email);  // add user once
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.Equal(Role.RegularUser, UsersRepository.Users[email].Role);
+            var result = await AuthenticationController.AddUser(email); // try to add user again
+            Assert.False(result.Status);
+            Assert.NotEmpty(UsersRepository.Users);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.Equal(Role.RegularUser, UsersRepository.Users[email].Role);
+        }
+
 
         [Fact]
         public async void RemoveUser()
@@ -55,17 +77,17 @@ namespace Timberyard_UnitTests.IntegrationTests
             {
                 var insert_result = await AuthenticationController.AddUser($"removeUserTest{i}@timberyard.com");
                 Assert.True(insert_result.Status);
-                Assert.Equal(i, UsersRepository.Users.Count);
+                Assert.Equal(i, UsersRepository.Users.Count - 1); // the reposiroty initial capacity is 1 due to default system admin
             }
 
-            Assert.Equal(totalUsers, UsersRepository.Users.Count);
+            Assert.Equal(totalUsers, UsersRepository.Users.Count - 1);
             // Add and Remove user from exists repository
             string emailToRemove = "removeUserTest1@timberyard.com";
             var remove_result = await AuthenticationController.RemoveUser(emailToRemove);
 
             Assert.True(remove_result.Status);
             Assert.False(UsersRepository.Users.ContainsKey(emailToRemove));
-            Assert.Equal(totalUsers - 1, UsersRepository.Users.Count);
+            Assert.Equal(totalUsers - 1, UsersRepository.Users.Count - 1);
             Assert.False(UsersRepository.Users.TryGetValue(emailToRemove, out UserDTO user));
         }
 
@@ -109,10 +131,10 @@ namespace Timberyard_UnitTests.IntegrationTests
 
             Assert.True(result.Status);
             Assert.NotEmpty(UsersRepository.Users);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
             Assert.Equal(Role.Admin, UsersRepository.Users[email].Role);
             Assert.NotEmpty(UsersRepository.Users[email].Password);
-            Assert.Equal(email, UsersRepository.Users.Keys.First());
         }
 
         [Fact]
@@ -129,7 +151,26 @@ namespace Timberyard_UnitTests.IntegrationTests
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
             Assert.Equal(Role.Admin, UsersRepository.Users[email].Role);
             Assert.NotEmpty(UsersRepository.Users[email].Password);
-            Assert.Equal(email, UsersRepository.Users.Keys.First());
+        }
+
+
+        [Fact]
+        public async void AddSystemAdmin_systemAdminExists()
+        {
+            string email = "addSystemAdminUserExists@timberyard.com";
+            var firstAttempt = await AuthenticationController.AddSystemAdmin(email);
+            Assert.True(firstAttempt.Status);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.Equal(Role.Admin, UsersRepository.Users[email].Role);
+
+            var secondAttempt = await AuthenticationController.AddSystemAdmin(email);
+
+            Assert.True(secondAttempt.Status);
+            Assert.NotEmpty(UsersRepository.Users);
+            Assert.True(UsersRepository.Users.ContainsKey(email));
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+            Assert.Equal(Role.Admin, UsersRepository.Users[email].Role);
+            Assert.NotEmpty(UsersRepository.Users[email].Password);
         }
 
         #endregion
