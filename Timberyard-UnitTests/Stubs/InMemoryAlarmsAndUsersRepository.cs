@@ -86,9 +86,17 @@ namespace Timberyard_UnitTests.Stubs
             return new Result<List<UserDTO>>(true, result);
         }
 
-        public Task<Result<bool>> UpdateOrInsert(UserDTO user)
+        public async Task<Result<bool>> UpdateOrInsert(UserDTO user)
         {
-            throw new NotImplementedException();
+            var insertResult = await AddUser(user);
+            if (!insertResult.Status)
+            {
+                return await UpdateUser(user);
+            }
+            else
+            {
+                return insertResult;
+            }
         }
 
         #endregion
