@@ -273,7 +273,7 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        public async void ForgetPassword()
+        public async void ForgetPassword_systemAdmin()
         {
             string email = "forgetPassword@timberyard.com";
             var insert_result = await AuthenticationController.AddSystemAdmin(email);
@@ -300,6 +300,26 @@ namespace Timberyard_UnitTests.IntegrationTests
 
                 Assert.False(forget_result.Status);
                 Assert.False(UsersRepository.Users.ContainsKey(email));
+            }
+        }
+
+        [Fact]
+        public async void ForgetPassword_regularUser()
+        {
+            string email = "forgetPassword_regularUser@timberyard.com";
+            bool result = UsersRepository.Users.ContainsKey(email);
+
+            if (!result)
+            {
+                var insert_regularUser = await AuthenticationController.AddUser(email);
+                Assert.True(insert_regularUser.Status);
+                Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+                Assert.Equal(Role.RegularUser, UsersRepository.Users[email].Role);
+
+                var regularUserPassword = user.Password;
+                var forget_result = await AuthenticationController.ForgetPassword(email);
+                Assert.False(forget_result.Status);
+                Assert.Equal(regularUserPassword, UsersRepository.Users[email].Password);
             }
         }
 
