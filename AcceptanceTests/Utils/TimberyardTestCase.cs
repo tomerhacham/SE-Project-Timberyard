@@ -1,8 +1,13 @@
-﻿using AcceptanceTests.Client;
+﻿
+using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
+using TimberyardClient.Client;
+using Xunit;
 
 namespace AcceptanceTests.Utils
 {
+    [Trait("Category", "Acceptance")]
+
     public class TimberyardTestCase
     {
         protected ITimberyardClient Client;
@@ -13,10 +18,17 @@ namespace AcceptanceTests.Utils
 
             if (userCredentials != null)
             {
-                TimberyardClientRealAdapter adapter = Client as TimberyardClientRealAdapter;
-                TimberyardClient realClient = adapter.RealClient as TimberyardClient;
-                realClient.UserCredentials = userCredentials;
+                var clientProxy = Client as TimberyardClientProxy;
+                var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+                var client = clientAdapter.RealClient as TimberyardClient.Client.TimberyardClient;
+                client.UserCredentials = userCredentials;
             }
+        }
+        protected ServiceProvider GetServiceProvider()
+        {
+            var clientProxy = Client as TimberyardClientProxy;
+            var clientAdapter = clientProxy.RealClient as TimberyardClientRealAdapter;
+            return clientAdapter.ServiceProvider;
         }
     }
 }

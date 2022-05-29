@@ -3,9 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 namespace ETL.Tests
 {
+    [Trait("Category", "Unit")]
     public class RepositoryTests : TestSuit
     {
-        [Fact()]
+        [Fact]
         public void InsertLogTest_CommunicationFail()
         {
             var serviceProvider = ConfigureServices("FaultDBSettings");

@@ -16,7 +16,12 @@ namespace WebService.Domain.Business.Queries
             EndDate = endDate;
         }
 
-        public async Task<Result<QueryResult>> Execute(LogsAndTestsRepository LogsAndTestsRepository)
+        /// <summary>
+        /// Execute Stations yield and returns the result
+        /// </summary>
+        /// <param name="LogsAndTestsRepository"></param>
+        /// <returns></returns>
+        public async Task<Result<QueryResult>> Execute(ILogsAndTestsRepository LogsAndTestsRepository)
         {
             if (LogsAndTestsRepository == null)
             {

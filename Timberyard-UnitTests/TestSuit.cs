@@ -1,11 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Timberyard_UnitTests.Stubs;
+using WebService.Domain.Business.Alarms;
+using WebService.Domain.Business.Authentication;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
 using WebService.Utils;
 using WebService.Utils.Models;
@@ -19,16 +25,47 @@ namespace Timberyard_UnitTests
         /// Utility function to build service provider for dependency injection
         /// </summary>
         /// <returns></returns>
-        protected ServiceProvider ConfigureServices(string profile)
+        protected ServiceProvider ConfigureServices(string profile, [Optional] bool inMemoryLogsAndTestRepository, [Optional] bool inMemoryAlarmsRepository)
         {
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddEnvironmentVariablesForTesting(profile).Build();
             var serviceProvier = new ServiceCollection()
+                .Configure<DefaultSystemAdmin>(config.GetSection("DefaultSystemAdmin"))
                 .Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"))
-                .AddSingleton<LogsAndTestsRepository>()
-                .AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
-                .AddSingleton<QueriesController>()
-                .BuildServiceProvider();
-            return serviceProvier;
+                .Configure<AuthenticationSettings>(config.GetSection("AuthenticationSettings"))
+                .Configure<SMPTClientSettings>(config.GetSection("SMPTClientSettings"))
+
+                .AddSingleton<ISMTPClient>((sp) =>
+                {
+                    var SmtpClient = new Mock<ISMTPClient>();
+                    SmtpClient.Setup(client => client.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
+                            .ReturnsAsync(new Result<string>(true, "Email sent", ""));
+                    return SmtpClient.Object;
+                });
+
+            if (inMemoryAlarmsRepository)
+            {
+                serviceProvier.AddSingleton<IAlarmsAndUsersRepository, InMemoryAlarmsAndUsersRepository>();
+            }
+            else
+            {
+                serviceProvier.AddSingleton<IAlarmsAndUsersRepository, AlarmsAndUsersRepository>();
+            }
+
+            if (inMemoryLogsAndTestRepository)
+            {
+                serviceProvier.AddSingleton<ILogsAndTestsRepository, InMemoryLogsAndTestsRepository>();
+            }
+            else
+            {
+                serviceProvier.AddSingleton<ILogsAndTestsRepository, LogsAndTestsRepository>();
+            }
+
+            serviceProvier.AddSingleton<ILogger>(sp => new Logger("IntegrationTesting"))
+            .AddSingleton<QueriesController>()
+            .AddSingleton<AlarmsController>()
+            .AddSingleton<AuthenticationController>();
+
+            return serviceProvier.BuildServiceProvider();
         }
     }
 

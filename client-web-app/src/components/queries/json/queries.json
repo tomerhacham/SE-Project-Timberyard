@@ -1,0 +1,192 @@
+{
+    "cardYield": {
+        "id": "cardYield",
+        "title": "Card Yield",
+        "url": "/Queries/CardYield",
+        "fields": [
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "SdCardIcon"
+    },
+    "stationYield": {
+        "id": "stationYield",
+        "title": "Station Yield",
+        "url": "/Queries/StationsYield",
+        "fields": [
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date",
+                "autoFocus": true
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date",
+                "autoFocus": false
+            }
+        ],
+        "icon": "LocalGasStationIcon"
+    },
+    "stationCardYield": {
+        "id": "stationCardYield",
+        "title": "Station & Card Yield",
+        "url": "/Queries/StationAndCardYield",
+        "fields": [
+            {
+                "id": "station",
+                "required": true,
+                "label": "Station",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text"
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "EvStationIcon"
+    },
+    "nff": {
+        "id": "nff",
+        "title": "No Failure Found",
+        "url": "/Queries/NFF",
+        "fields": [
+            {
+                "id": "cardName",
+                "required": true,
+                "label": "Card Name",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            },
+            {
+                "id": "timeInterval",
+                "required": true,
+                "label": "Time Interval",
+                "type": "number"
+            }
+        ],
+        "icon": "GppBadIcon"
+    },
+    "boundaries": {
+        "id": "boundaries",
+        "title": "Boundaries",
+        "url": "/Queries/Boundaries",
+        "fields": [
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "FenceIcon"
+    },
+    "testerLoad": {
+        "id": "testerLoad",
+        "title": "Tester Load",
+        "url": "/Queries/TesterLoad",
+        "fields": [
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date",
+                "autoFocus": true
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "TimelapseIcon"
+    },
+    "cardTestDuration": {
+        "id": "cardTestDuration",
+        "title": "Card Test Duration",
+        "url": "/Queries/CardTestDuration",
+        "fields": [
+            {
+                "id": "catalog",
+                "required": true,
+                "label": "Catalog",
+                "type": "text",
+                "autoFocus": true
+            },
+            {
+                "id": "startDate",
+                "required": true,
+                "label": "Start Date",
+                "type": "date"
+            },
+            {
+                "id": "endDate",
+                "required": true,
+                "label": "End Date",
+                "type": "date"
+            }
+        ],
+        "icon": "AvTimerIcon"
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ETL.Repository.DTO;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,19 @@ using WebService.Utils.Models;
 
 namespace WebService.Domain.DataAccess
 {
-    public class LogsAndTestsRepository
+    public interface ILogsAndTestsRepository
+    {
+        Task<Result<List<dynamic>>> ExecuteQuery(CardYield cardYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(StationsYield stationsYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(NoFailureFound noFailureFound);
+        Task<Result<List<dynamic>>> ExecuteQuery(StationAndCardYield stationAndCardYield);
+        Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration);
+        Task<Result<List<dynamic>>> ExecuteQuery(TesterLoad testerLoad);
+        Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries);
+        Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime);
+    }
+
+    public class LogsAndTestsRepository : ILogsAndTestsRepository
     {
         //Properties
         public DatabaseSettings DatabaseSettings { get; set; }
@@ -92,7 +105,7 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Catalog = cardYield.Catalog, StartDate = cardYield.StartDate, EndDate = cardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -135,7 +148,7 @@ namespace WebService.Domain.DataAccess
                 )
                 ";
             var queryParams = new { StartDate = stationsYield.StartDate, EndDate = stationsYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -185,7 +198,7 @@ namespace WebService.Domain.DataAccess
                 where CardName=@CardName
                 ";
             var queryParams = new { CardName = noFailureFound.CardName, StartDate = noFailureFound.StartDate, EndDate = noFailureFound.EndDate, TimeInterval = noFailureFound.TimeInterval };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
         /// <summary>
@@ -234,8 +247,39 @@ namespace WebService.Domain.DataAccess
 	                ON T1.CardName = T2.CardName
                 ) ";
             var queryParams = new { Station = stationAndCardYield.Station, Catalog = stationAndCardYield.Catalog, StartDate = stationAndCardYield.StartDate, EndDate = stationAndCardYield.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
+        }
+        /// <summary>
+        /// Execute Card Test Duration query
+        /// </summary>
+        /// <param name="cardTestDuration">
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Operator, NetTimeAvg, TotalTimeAvg]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(CardTestDuration cardTestDuration)
+        {
+            var sqlCommand =
+                @"
+                SELECT Logs.Operator, AVG(datediff(second, cast('00:00' as time(7)), Logs.NetTime)) as NetTimeAvg , AVG(datediff(second, Logs.StartTime, Logs.EndTime)) as TotalTimeAvg
+                From Logs
+                WHERE Catalog=@Catalog AND
+                      Date between @StartDate AND @EndDate AND
+					  FinalResult = 'PASS' AND
+					  ContinueOnFail = 'FALSE' AND
+					  TECHMode = 'FALSE' AND
+					  ABORT = 'FALSE' AND
+					  DBMode != 'BYPASS'
+                GROUP BY Operator
+                ORDER BY Operator DESC
+                ";
+
+            var queryParams = new { Catalog = cardTestDuration.Catalog, StartDate = cardTestDuration.StartDate, EndDate = cardTestDuration.EndDate };
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
         }
         /// <summary>
         /// Execute Tester Load Query 
@@ -257,30 +301,73 @@ namespace WebService.Domain.DataAccess
                 group by Station
                 order by NumberOfRuns desc, TotalRunTimeHours desc";
             var queryParams = new { StartDate = testerLoad.StartDate, EndDate = testerLoad.EndDate };
-            return await ExecuteQuery(sqlCommand, queryParams);
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
         }
+        /// <summary>
+        /// Execute Boundaries Query 
+        /// </summary>
+        /// <param name="boundaries">
+        ///     Catalog:string
+        ///     StartDate:DateTime
+        ///     EndDate:DateTime
+        /// </param>
+        /// <returns>
+        ///     [Station, NumberOfRuns, TotalRunTimeHours]        
+        /// </returns>
+        public virtual async Task<Result<List<dynamic>>> ExecuteQuery(Boundaries boundaries)
+        {
+            var sqlCommand =
+                @"
+                SELECT Tests.TestName, Tests.Min, Tests.Max, Tests.Received
+                From Logs Join Tests
+                On Tests.Type='Boundaries'
+                Where Catalog=@Catalog AND Date BETWEEN @StartDate AND @EndDate
+                ";
+            var queryParams = new { Catalog = boundaries.Catalog, StartDate = boundaries.StartDate, EndDate = boundaries.EndDate };
+            return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
 
-
+        }
+        /// <summary>
+        /// Util function to query for all the logs betwen to time intervals.
+        /// This function is been used by the alarm controller to check if any of the alarms needs to be raise on the returns logs
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public virtual async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
+        {
+            var sqlCommand =
+                @"
+                SELECT *
+                from Logs
+                where Logs.EndTime BETWEEN @StartDate AND @EndDate";
+            var queryParams = new { StartDate = startTime, EndDate = endTime };
+            return await ExecuteQuery<LogDTO>(sqlCommand, queryParams);
+        }
         /// <summary>
         /// Private function to wrap and handle execptions in query execution process
         /// </summary>
         /// <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
         /// <param name="queryParams">object hold SQL query parameters</param>
         /// <returns></returns>
-        private async Task<Result<List<dynamic>>> ExecuteQuery(string sqlCommand, object queryParams)
+        private async Task<Result<List<T>>> ExecuteQuery<T>(string sqlCommand, object queryParams)
         {
             try
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var objects = await connection.QueryAsync<dynamic>(sqlCommand, queryParams);
-                return new Result<List<dynamic>>(true, objects.AsList());
+                var objects = await connection.QueryAsync<T>(sqlCommand, queryParams);
+                return new Result<List<T>>(true, objects.AsList());
             }
             catch (Exception e)
             {
-                return new Result<List<dynamic>>(false, new List<dynamic>(), "There was a problem with the DataBase");
+                Logger.Warning($"A database error occurred while executing query", e, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
+                return new Result<List<T>>(false, new List<T>(), "There was a problem with the DataBase");
             }
         }
+
+
+
     }
 }

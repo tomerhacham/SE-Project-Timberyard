@@ -4,6 +4,7 @@ using System;
 using Xunit;
 namespace ETL.Tests
 {
+    [Trait("Category", "Unit")]
     public class FileManagerTests : TestSuit
     {
 
@@ -11,7 +12,7 @@ namespace ETL.Tests
         /// <summary>
         /// Verify that all the files which been return are json files
         /// </summary>
-        [Fact()]
+        [Fact]
         public void GetNewLogsTest_JsonFormat()
         {
             var serviceProvider = ConfigureServices("Valid");
@@ -28,7 +29,7 @@ namespace ETL.Tests
         /// <summary>
         /// Verify searching for new logs is in all the subdirectories
         /// </summary>
-        [Fact()]
+        [Fact]
         public void GetNewLogsTest_EmptyParentDirectory()
         {
             var serviceProvider = ConfigureServices("Valid");
@@ -41,7 +42,7 @@ namespace ETL.Tests
         /// <summary>
         /// Verify searching for new logs is in all the subdirectories
         /// </summary>
-        [Fact()]
+        [Fact]
         public void GetNewLogsTest_DirectoryNotFound()
         {
             var serviceProvider = ConfigureServices("NonExisitngDirectory");
@@ -50,7 +51,7 @@ namespace ETL.Tests
             Assert.False(filesResult.Status);
         }
 
-        [Fact()]
+        [Fact]
         public void ReadFromFileTest_ValidFile()
         {
             var serviceProvider = ConfigureServices("FaultLog");
@@ -71,7 +72,7 @@ namespace ETL.Tests
             fail: (data) => Assert.True(false));
         }
 
-        [Fact()]
+        [Fact]
         public void ReadFromFileTest_NonExisitngFile()
         {
             var serviceProvider = ConfigureServices("Valid");

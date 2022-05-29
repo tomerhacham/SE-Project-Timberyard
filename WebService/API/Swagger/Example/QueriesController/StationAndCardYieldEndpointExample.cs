@@ -10,7 +10,7 @@ namespace WebService.API.Swagger.Example.QueriesController
     {
         public object GetExamples()
         {
-            return new StationAndCardYieldModel() { Station = "L4", Catalog = "X56490", StartDate = new DateTime(2021, 12, 21), EndDate = new DateTime(2022, 03, 09) };
+            return new CatalogStationWithDatesModel() { Station = "L4", Catalog = "X56490", StartDate = new DateTime(2021, 12, 21), EndDate = new DateTime(2022, 03, 09) };
         }
     }
     public class StationAndCardYieldResponseExample : IExamplesProvider<object>

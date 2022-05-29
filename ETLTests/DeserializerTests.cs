@@ -4,9 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 namespace ETL.Tests
 {
+    [Trait("Category", "Unit")]
     public class DeserializerTests : TestSuit
     {
-        [Fact()]
+        [Fact]
         public void DeserializeTest_ValidFile()
         {
             var serviceProvider = ConfigureServices("Valid");
@@ -29,7 +30,7 @@ namespace ETL.Tests
                 Assert.True(false);
             }
         }
-        [Fact()]
+        [Fact]
         public void DeserializeTest_NonValidFile()
         {
             var serviceProvider = ConfigureServices("FaultLog");

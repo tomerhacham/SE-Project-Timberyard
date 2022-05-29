@@ -9,6 +9,12 @@ namespace WebService.API.Controllers.ModelValidation
     [AttributeUsage(AttributeTargets.Property)]
     public class PositiveNumberAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Validates that the provided value is positive integer
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if ((int)value < 0)

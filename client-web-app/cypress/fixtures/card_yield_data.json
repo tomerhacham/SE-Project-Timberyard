@@ -1,0 +1,24 @@
+{
+  "columnNames": [
+      "Catalog",
+      "CardName",
+      "SuccessRatio"
+  ],
+  "records": [
+    {
+      "Catalog":"X56868",
+      "CardName":"OA_HF",
+      "SuccessRatio": 100
+    },
+    {
+      "Catalog": "X56868",
+      "CardName": "OP_KLF",
+      "SuccessRatio": 95
+    },
+    {
+      "Catalog": "X56868",
+      "CardName": "OA_ASDF",
+      "SuccessRatio": 89
+    }
+  ]
+}

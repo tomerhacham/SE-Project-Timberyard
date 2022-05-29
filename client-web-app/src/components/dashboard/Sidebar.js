@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types';
+import { camelCase } from 'lodash';
 import { Link, useLocation } from 'react-router-dom';
 import { Box, Divider, Drawer, useMediaQuery, List } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,7 +13,14 @@ import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import FenceIcon from '@mui/icons-material/Fence';
+import TimelapseIcon from '@mui/icons-material/Timelapse';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { 
+  CARD_YIELD_PATH, STATION_YIELD_PATH, NFF_PATH,
+  STATION_CARD_YIELD_PATH, BOUNDARIES_PATH, 
+  TESTER_LOAD_PATH, CARD_TEST_DURATION_PATH
+} from '../../constants/constants';
 
 const Sidebar = ({ open, onClose }) => {
     const location = useLocation();
@@ -26,28 +34,38 @@ const Sidebar = ({ open, onClose }) => {
     const queriesListItems = [
         {
           primary: 'Station Yield',
-          to: '/stationyield',
+          to: STATION_YIELD_PATH,
           icon: <LocalGasStationIcon />
         },
         {
           primary: 'Card Yield',
-          to: '/cardyield',
+          to: CARD_YIELD_PATH,
           icon: <SdCardIcon />
         },
         {
           primary: 'Station & Card Yield',
-          to: '/stationcardyield',
+          to: STATION_CARD_YIELD_PATH,
           icon: <EvStationIcon />
         },
         {
           primary: 'NFF',
-          to: '/nff',
+          to: NFF_PATH,
           icon: <GppBadIcon />
         },
         {
           primary: 'Boundaries',
-          to: '/boundaries',
+          to: BOUNDARIES_PATH,
           icon: <FenceIcon />
+        },
+        {
+          primary: 'Tester Load',
+          to: TESTER_LOAD_PATH,
+          icon: <TimelapseIcon />
+        },
+        {
+          primary: 'Card Test Duration',
+          to: CARD_TEST_DURATION_PATH,
+          icon: <AvTimerIcon />
         }
     ];
       
@@ -97,7 +115,7 @@ const Sidebar = ({ open, onClose }) => {
                         />
                         {queriesListItems.map((item) =>
                             <NavItem
-                                id={`sidebar-${item.primary.replace(/\s/g, '').toLowerCase()}`} 
+                                id={`sidebar-${camelCase(item.primary)}`} 
                                 key={item.primary}
                                 primary={item.primary}
                                 to={item.to}
@@ -165,8 +183,8 @@ const Sidebar = ({ open, onClose }) => {
 }
 
 Sidebar.propTypes = {
-    onClose: PropTypes.func,
-    open: PropTypes.bool
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
 };
 
 export default Sidebar;

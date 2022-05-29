@@ -1,27 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using WebService.Utils;
 
 namespace WebService.API.ActionFilters
 {
     /// <summary>
     /// Middleware for verifing model state.
-    /// Instead of verifing the model state explicilty the middleware will verigy it implicitly.
+    /// Instead of verifing the model state explicilty the middleware will verify it implicitly.
     /// Hence, not valid requests will be handeled by this middleware
     /// </summary>
     public sealed class ModelStateCheckFilter : IActionFilter
     {
-        /// <summary>
-        /// Method been called after exection of the action has been completed
-        /// </summary>
-        /// <param name="context"></param>
-        public void OnActionExecuted(ActionExecutedContext context) { }
+        public readonly ILogger Logger;
+
+        public ModelStateCheckFilter(ILogger logger)
+        {
+            Logger = logger;
+        }
+
 
         /// <summary>
-        /// Method been called in the begining of the execution of thr action
+        /// Method been called after execution of the action has been completed
+        /// </summary>
+        /// <param name="context"></param>
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            //Logger.Info(context.Result?.ToString());
+        }
+
+        /// <summary>
+        /// Method been called in the begining of the execution of the action
         /// </summary>
         /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
