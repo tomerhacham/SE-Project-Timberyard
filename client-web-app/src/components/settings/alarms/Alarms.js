@@ -15,10 +15,10 @@ import {
     MenuItem,
     InputLabel,
 } from '@mui/material';
-import { AlarmsPost } from '../../../api/Api';
+import AlarmsTable from './AlarmsTable';
 
 const Alarms = () => {
-    const [data, setData] = useState({ data: '' });
+    const [data, setData] = useState({ type: 0 });
 
     const handleTypeChange = (event) => {
         setData({ type: event.target.value, ...data });
@@ -31,74 +31,21 @@ const Alarms = () => {
                 <CardHeader subheader='Manage Alarms' title='Alarms' />
                 <Divider />
                 <CardContent>
-                    <Grid container spacing={6} wrap='wrap'>
-                        <Grid
-                            item
-                            md={4}
-                            sm={6}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                            xs={12}>
-                            <Typography
-                                color='textPrimary'
-                                gutterBottom
-                                variant='h6'>
-                                Alarms
-                            </Typography>
-                            <FormControl fullWidth>
-                                <InputLabel id='select-label'>Type</InputLabel>
-                                <Select
-                                    labelId='notification-type-select-label'
-                                    id='notification-type-select'
-                                    value={data.type}
-                                    label='Type'
-                                    onChange={handleTypeChange}>
-                                    <MenuItem value={'Catalog'}>
-                                        Catalog
-                                    </MenuItem>
-                                    <MenuItem value={'Station'}>
-                                        Station
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid
-                            item
-                            md={4}
-                            sm={6}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                            xs={12}>
-                            <Typography
-                                color='textPrimary'
-                                gutterBottom
-                                variant='h6'>
-                                Messages
-                            </Typography>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox color='primary' defaultChecked />
-                                }
-                                label='Email'
-                            />
-                            <FormControlLabel
-                                control={<Checkbox />}
-                                label='Push Alarms'
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox color='primary' defaultChecked />
-                                }
-                                label='Phone calls'
-                            />
-                        </Grid>
+                    {/* <Grid container wrap='wrap'> */}
+                    <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        // sx={{
+                        //     display: 'flex',
+                        //     flexDirection: 'column',
+                        // }}
+                        xs={12}>
+                        <AlarmsTable />
                     </Grid>
+                    {/* </Grid> */}
                 </CardContent>
-                <Divider />
+                {/* <Divider />
                 <Box
                     sx={{
                         display: 'flex',
@@ -108,7 +55,7 @@ const Alarms = () => {
                     <Button color='primary' variant='contained'>
                         Save
                     </Button>
-                </Box>
+                </Box> */}
             </Card>
         </form>
     );
