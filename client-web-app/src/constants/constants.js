@@ -22,14 +22,10 @@ export const BOUNDARIES_ICON = 'FenceIcon';
 export const TESTER_LOAD_ICON = 'TimelapseIcon';
 export const CARD_TEST_DURATION_ICON = 'AvTimerIcon';
 
-// TODO: Delete if unused
-// api-urls.js
-const API_URL = 'https://localhost:5001/api';
-export const CARD_YIELD_URL = `${API_URL}/Queries/CardYield`;
-export const STATION_YIELD_URL = `${API_URL}/Queries/StationsYield`;
-export const STATION_CARD_YIELD_URL = `${API_URL}/Queries/StationAndCardYield`;
+// urls
+export const ADD_NEW_ALARM_URL = '/Alarms/AddNewAlarm';
+export const EDIT_ALARM_URL = '/Alarms/EditAlarm';
+export const REMOVE_ALARM_URL = '/Alarms/RemoveAlarm';
 
-// queries.js
-export const CARD_YIELD_TITLE = 'Card Yield';
-export const STATION_YIELD_TITLE = 'Station Yield';
-export const STATION_CARD_YIELD_TITLE = 'Station and Card Yield';
+// api
+export const SUCCESS_CODE = 200;

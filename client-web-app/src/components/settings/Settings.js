@@ -1,32 +1,28 @@
 import React from 'react';
 import { Box, Container, Typography } from '@mui/material';
-// import { DashboardLayout } from '../components/dashboard-layout';
-// import { SettingsNotifications } from '../components/settings/settings-notifications';
 import SettingsPassword from './SettingsPassword';
+import Alarms from './alarms/Alarms';
+import AlarmsTable from './alarms/AlarmsTable';
 
 const Settings = () => {
     return (
         <Box
-        component="main"
-        sx={{
-            flexGrow: 1,
-            py: 8
-        }}
-        >
-            <Container maxWidth="lg">
-                <Typography
-                sx={{ mb: 3 }}
-                variant="h4"
-                >
-                Settings
+            component='main'
+            sx={{
+                flexGrow: 1,
+                py: 8,
+            }}>
+            <Container maxWidth='lg'>
+                <Typography sx={{ mb: 3 }} variant='h4'>
+                    Settings
                 </Typography>
-                {/* <SettingsNotifications /> */}
+                <Alarms />
                 <Box sx={{ pt: 3 }}>
                     <SettingsPassword />
                 </Box>
             </Container>
         </Box>
-    )
-}
+    );
+};
 
 export default Settings;
