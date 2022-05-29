@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Timberyard_UnitTests.IntegrationTests
 {
-    [Trait("Category", "Integration")]
+    [Trait("Category", "Integration-Queries")]
     public class CardYieldTests : TestSuit
     {
         // Properties

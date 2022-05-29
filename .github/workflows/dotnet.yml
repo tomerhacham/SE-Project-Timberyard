@@ -50,3 +50,17 @@ jobs:
       run: dotnet test './ETLTests/ETLTests.csproj' --filter Category=Unit -l "console;verbosity=detailed"
     - name: Unit Tests-Web Service
       run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Unit -l "console;verbosity=detailed"   
+    
+  integrationtests:      
+    needs: unittests
+    name:  Integration Tests
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        dotnet-version: 3.1.x
+    - name: Install formater
+      run: dotnet tool install --global dotnet-format
+    - name: Integration Tests
+      run: dotnet test './Timberyard-UnitTests/TimberyardTests.csproj' --filter Category=Integration -l "console;verbosity=detailed"   
+  
