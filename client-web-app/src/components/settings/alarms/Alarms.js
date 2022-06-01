@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    FormControl,
-    Grid,
-    Typography,
-    Select,
-    MenuItem,
-    InputLabel,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, Divider, Grid } from '@mui/material';
+import Message from '../../../generic-components/Message';
 import AlarmsTable from './AlarmsTable';
 
 const Alarms = () => {
     const [data, setData] = useState({ type: 0 });
+    const [message, setMessage] = useState(null);
 
     const handleTypeChange = (event) => {
         setData({ type: event.target.value, ...data });
@@ -30,6 +17,9 @@ const Alarms = () => {
             <Card>
                 <CardHeader subheader='Manage Alarms' title='Alarms' />
                 <Divider />
+                {message && (
+                    <Message text={message.text} severity={message.severity} />
+                )}
                 <CardContent>
                     {/* <Grid container wrap='wrap'> */}
                     <Grid
@@ -41,7 +31,7 @@ const Alarms = () => {
                         //     flexDirection: 'column',
                         // }}
                         xs={12}>
-                        <AlarmsTable />
+                        <AlarmsTable setMessage={setMessage} />
                     </Grid>
                     {/* </Grid> */}
                 </CardContent>

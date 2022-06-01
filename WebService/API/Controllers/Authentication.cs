@@ -74,7 +74,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> AddUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.AddUser(model.Email);
-            return Ok(result.Status);
+            return Ok(result);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> RemoveUser([FromBody] EmailModel model)
         {
             Result<bool> result = await SystemInterface.RemoveUser(model.Email);
-            return Ok(result.Status);
+            return Ok(result);
         }
         /// <summary>
         /// Change system admin password
@@ -105,7 +105,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> ChangeSystemAdminPassword([FromBody] ChangeSystemAdminPasswordModel model)
         {
             Result<bool> result = await SystemInterface.ChangeSystemAdminPassword((string)HttpContext.Items["Email"], model.NewPassword, model.OldPassword);
-            return Ok(result.Status);
+            return Ok(result);
         }
         /// <summary>
         /// Add new email as new system admin

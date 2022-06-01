@@ -162,7 +162,7 @@ namespace WebService.Domain.Business.Authentication
                 }
 
                 Logger.Warning($"User {email} password cannot be updated since the old password entered is incorrect");
-                return new Result<bool>(false, false, "User password don't match");
+                return new Result<bool>(false, false, "The entered password is incorrect");
             }
 
             Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
