@@ -66,12 +66,12 @@ namespace WebService.Domain.Business.Authentication
                 else
                 {
                     Logger.Info($"User {email} tried to login with Incorrect Password");
-                    return new Result<JWTtoken>(false, null, "Incorrect Password");
+                    return new Result<JWTtoken>(false, null, "Incorrect email address or password");
                 }
             }
 
             Logger.Warning($"The users {email} attempt to login failed. {recordResult.Message}");
-            return new Result<JWTtoken>(false, null, recordResult.Message);
+            return new Result<JWTtoken>(false, null, "Incorrect email address or password");
         }
 
         /// <summary>

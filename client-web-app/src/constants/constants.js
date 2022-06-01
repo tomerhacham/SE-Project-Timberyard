@@ -30,6 +30,7 @@ export const ADD_USER_URL = '/Authentication/AddUser';
 export const REMOVE_USER_URL = '/Authentication/RemoveUser';
 export const CHANGE_ADMIN_PASSWORD_URL =
     '/Authentication/ChangeSystemAdminPassword';
+export const FORGET_PASSWORD_URL = '/Authentication/ForgetPassword';
 export const GET_ALL_ALARMS_URL = '/Alarms/GetAllAlarms';
 export const ADD_NEW_ALARM_URL = '/Alarms/AddNewAlarm';
 export const EDIT_ALARM_URL = '/Alarms/EditAlarm';
@@ -37,10 +38,18 @@ export const REMOVE_ALARM_URL = '/Alarms/RemoveAlarm';
 
 // Role
 export const ROLE = {
-    UNAUTHORIZE: 'unauthorize',
-    USER: 'user',
-    ADMIN: 'admin',
+    UNAUTHORIZE: 'Unauthorized',
+    USER: 'RegularUser',
+    ADMIN: 'Admin',
 };
 
 // api
 export const SUCCESS_CODE = 200;
+
+// text
+export const SEND_VERIFICATION_CODE_TEXT =
+    'If a user with this email address exists, a verification code will be sent to it.';
+export const FORGOT_PASSWORD_TEXT =
+    'Please enter your email address to reset your password';
+export const FORGOT_PASSWORD_SENT_TEXT =
+    'If a user with this email address exists, an email with a new password will be sent.';

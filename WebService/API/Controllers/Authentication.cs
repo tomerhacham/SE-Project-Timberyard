@@ -58,7 +58,7 @@ namespace WebService.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             Result<JWTtoken> result = await SystemInterface.Login(model.Email, model.Password);
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ import React, {
     useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
-import { ROLE, SUCCESS_CODE } from '../constants/constants';
+import { ROLE } from '../constants/constants';
 import { Login } from '../api/Api';
 
 const initialTokenState = {
@@ -44,24 +44,24 @@ const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    const handleLogin = useCallback(async (email, password, role) => {
-        const response = await Login({ email, password });
-        if (
-            response &&
-            response.status === SUCCESS_CODE &&
-            response.data !== ''
-        ) {
+    const handleLogin = useCallback(async (email, password, setMessage) => {
+        const result = await Login({ email, password });
+        if (result && result.status && result.data?.token) {
             const token = {
                 ...accessToken,
-                role,
-                token: response.data.token,
+                role: result.data.role,
+                token: result.data.token,
             };
             setAccessToken(token);
             localStorage.setItem('access_token', JSON.stringify(token));
             setIsLoggedIn(true);
+        } else if (result && !result.status) {
+            setMessage({
+                text: result.message,
+                severity: 'error',
+            });
         } else {
-            // TODO: Handle error
-            console.log('Login failed.');
+            console.log('Error in login');
         }
     }, []);
 
@@ -77,8 +77,8 @@ const AuthProvider = ({ children }) => {
             isLoggedIn,
             apiResponse,
             setApiResponse,
-            loginAction: (email, password, role) =>
-                handleLogin(email, password, role),
+            loginAction: (email, password, setMessage) =>
+                handleLogin(email, password, setMessage),
             logoutAction: () => handleLogout(),
         };
     }, [

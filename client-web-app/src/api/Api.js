@@ -9,6 +9,7 @@ import {
     LOGIN_URL,
     CHANGE_ADMIN_PASSWORD_URL,
     REQUEST_VERIFICATION_CODE_URL,
+    FORGET_PASSWORD_URL,
     SUCCESS_CODE,
 } from '../constants/constants';
 
@@ -81,7 +82,7 @@ export async function Login(data) {
         )
         .then((response) => {
             console.log(response);
-            return response;
+            return response.data;
         })
         .catch((error) => {
             console.log('LOGIN ERROR', error);
@@ -150,6 +151,26 @@ export async function ChangeAdminPassword(data) {
                 console.log(response);
                 throw Error('Response was unsuccessful');
             }
+            return response.data;
+        })
+        .catch((error) => {
+            console.log('Catched error in api:', error);
+        });
+}
+
+export async function ForgotPassword(data) {
+    const token = getToken();
+
+    return await axios
+        .post(`${API_URL}${FORGET_PASSWORD_URL}`, JSON.stringify(data), {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: token && `Bearer ${get(token, 'token')}`,
+            },
+        })
+        .then((response) => {
+            console.log(response);
             return response.data;
         })
         .catch((error) => {

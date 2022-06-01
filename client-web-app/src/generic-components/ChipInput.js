@@ -9,6 +9,7 @@ import {
     Stack,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { validateEmail } from '../utils/utils';
 
 const ChipInput = (props) => {
     const { defaultTags, onChange } = props;
@@ -27,10 +28,6 @@ const ChipInput = (props) => {
             setTags([...tags, value]);
             onChange([...tags, value]);
         }
-    };
-
-    const validateEmail = (value) => {
-        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value);
     };
 
     return (

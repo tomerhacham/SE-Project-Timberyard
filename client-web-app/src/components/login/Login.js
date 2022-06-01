@@ -13,9 +13,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Message from '../../generic-components/Message';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { RequestVerificationCode } from '../../api/Api';
+import { ForgotPassword, RequestVerificationCode } from '../../api/Api';
+import { validateEmail } from '../../utils/utils';
 import Background_Image from '../../logs_background.jpeg';
-import { ROLE } from '../../constants/constants';
+import {
+    SEND_VERIFICATION_CODE_TEXT,
+    FORGOT_PASSWORD_TEXT,
+    FORGOT_PASSWORD_SENT_TEXT,
+    SUCCESS_CODE,
+} from '../../constants/constants';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -25,50 +31,56 @@ const Login = () => {
         password: '',
     });
     // TODO: Handle error
-    const [errorMessage, setErrorMessage] = useState('');
-    const [loginError, setLoginError] = useState(false);
-    const [adminWindow, setAdminWindow] = useState(true);
-    const [passwordSent, setPasswordSent] = useState(false);
+    const [havePassword, setHavePassword] = useState(true);
+    const [forgotPassword, setForgotPassword] = useState(false);
     const [message, setMessage] = useState(null);
 
-    const handleLogin = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         console.log(userInput);
-        if (!passwordSent) {
-            const response = await RequestVerificationCode({
-                email: userInput.email,
+        if (forgotPassword) {
+            return handleForgotPassword();
+        } else if (!havePassword) {
+            return handleSendCode();
+        }
+
+        // Admin/user with password
+        loginAction(userInput.email, userInput.password, setMessage);
+    };
+
+    const handleSendCode = async () => {
+        // Regular user without password
+        const response = await RequestVerificationCode({
+            email: userInput.email,
+        });
+        if (response && response.status === SUCCESS_CODE) {
+            setMessage({
+                text: SEND_VERIFICATION_CODE_TEXT,
+                severity: 'info',
             });
-            if (response) {
-                setPasswordSent(true);
-                setMessage({
-                    text: 'If a user exists with this email address, a verification code will be sent to it.',
-                    severity: 'info',
-                });
-            }
-        } else {
-            const role = adminWindow ? ROLE.ADMIN : ROLE.USER;
-            loginAction(userInput.email, userInput.password, role);
+            setHavePassword(true);
         }
-        // navigate('/');
     };
 
-    const disableSignInButton = () => {
-        if (adminWindow || passwordSent) {
-            return userInput.email === '' || userInput.password === '';
+    const handleForgotPassword = async () => {
+        const result = await ForgotPassword({ email: userInput.email });
+        if (result) {
+            setMessage({
+                text: FORGOT_PASSWORD_SENT_TEXT,
+                severity: 'info',
+            });
         }
-        return userInput.email === '';
     };
 
-    useEffect(() => {
-        if (errorMessage !== '') {
-            setLoginError(true);
-        }
-    }, [errorMessage]);
-
-    useEffect(() => {
-        setPasswordSent(false);
-    }, [adminWindow]);
+    const forgotPasswordButton = () => {
+        setForgotPassword(true);
+        setHavePassword(false);
+        setMessage({
+            text: FORGOT_PASSWORD_TEXT,
+            severity: 'info',
+        });
+    };
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -118,20 +130,19 @@ const Login = () => {
                     <Typography component='h1' variant='h5'>
                         Sign in
                     </Typography>
-                    {/* TODO: Change to proper error */}
                     {message && (
                         <Message
+                            style={{ marginTop: '10px' }}
                             text={message.text}
                             severity={message.severity}
                         />
                     )}
-                    {loginError && <Typography>{errorMessage}</Typography>}
                     <Box
                         component='form'
-                        onSubmit={handleLogin}
+                        onSubmit={handleSubmit}
                         sx={{ mt: 1, width: '100%' }}>
                         <TextField
-                            id='login-user-email'
+                            id='login-email'
                             name='email'
                             margin='normal'
                             required
@@ -146,11 +157,14 @@ const Login = () => {
                                     email: e.target.value,
                                 })
                             }
-                            error={loginError}
+                            error={
+                                userInput.email !== '' &&
+                                !validateEmail(userInput.email)
+                            }
                         />
-                        {(adminWindow || passwordSent) && (
+                        {havePassword && (
                             <TextField
-                                id='login-admin-password'
+                                id='login-password'
                                 name='password'
                                 margin='normal'
                                 required
@@ -164,7 +178,6 @@ const Login = () => {
                                         password: e.target.value,
                                     })
                                 }
-                                error={loginError}
                             />
                         )}
                         {/* <FormControlLabel
@@ -176,9 +189,12 @@ const Login = () => {
                             type='submit'
                             fullWidth
                             variant='contained'
-                            disabled={disableSignInButton()}
+                            disabled={
+                                userInput.email === '' ||
+                                (havePassword && userInput.password === '')
+                            }
                             sx={{ mt: 3, mb: 2 }}>
-                            Sign In
+                            {havePassword ? 'Sign In' : 'Send Code'}
                         </Button>
                         <Grid container>
                             <Grid item xs>
@@ -186,13 +202,23 @@ const Login = () => {
                                     variant='body2'
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        setAdminWindow(!adminWindow);
+                                        setMessage(null);
+                                        setHavePassword(!havePassword);
                                     }}>
-                                    {adminWindow
-                                        ? "I'm a User"
-                                        : "I'm an Admin"}
+                                    {havePassword
+                                        ? "I don't have a password"
+                                        : 'I have a password'}
                                 </Button>
                             </Grid>
+                            {havePassword && (
+                                <Grid item>
+                                    <Button
+                                        variant='body2'
+                                        onClick={forgotPasswordButton}>
+                                        Forgot Password?
+                                    </Button>
+                                </Grid>
+                            )}
                         </Grid>
                     </Box>
                 </Box>

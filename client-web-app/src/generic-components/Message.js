@@ -4,7 +4,7 @@ import { capitalize } from 'lodash';
 import { Alert } from '@mui/material';
 
 const Message = (props) => {
-    const { text, severity } = props;
+    const { text, severity, style } = props;
 
     const renderText = () => {
         if (text && text !== '') {
@@ -13,7 +13,11 @@ const Message = (props) => {
         return capitalize(severity);
     };
 
-    return <Alert severity={severity}>{renderText()}</Alert>;
+    return (
+        <Alert style={style} severity={severity}>
+            {renderText()}
+        </Alert>
+    );
 };
 
 Message.propTypes = {
