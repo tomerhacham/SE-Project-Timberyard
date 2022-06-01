@@ -1,5 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WebService.API.Controllers.Models;
+using WebService.Domain.DataAccess.DTO;
+using WebService.Utils;
 
 namespace WebService.API.Swagger.Example.AlarmsController
 {
@@ -19,9 +21,10 @@ namespace WebService.API.Swagger.Example.AlarmsController
     {
         public object GetExamples()
         {
-            return new JWTtokenModel()
+            return new JWTtoken()
             {
-                Token = "svkuhyiuq2973nsk20snAd2b0mAskdr2Dkddloisn37dskv0vnzRo"
+                Token = "svkuhyiuq2973nsk20snAd2b0mAskdr2Dkddloisn37dskv0vnzRo",
+                Role = Role.RegularUser.ToString()
             };
         }
     }

@@ -9,9 +9,4 @@ namespace WebService.API.Controllers.Models
         [StringIsNotNullOrEmpty]
         public string Password { get; set; }
     }
-    public class JWTtokenModel
-    {
-        [StringIsNotNullOrEmpty]
-        public string Token { get; set; }
-    }
 }
