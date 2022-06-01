@@ -248,12 +248,12 @@ namespace WebService.Domain.Business.Authentication
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var strToken = tokenHandler.WriteToken(token);
-                return new JWTtoken() { Token = strToken };
+                return new JWTtoken() { Token = strToken, Role = record.Role.ToString() };
             }
             catch (Exception exception)
             {
                 Logger.Warning($"An error occurred while attempting to generate a token for {record.Email}", exception, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
-                return new JWTtoken() { Token = string.Empty };
+                return new JWTtoken() { Token = string.Empty, Role = string.Empty };
             }
         }
 
