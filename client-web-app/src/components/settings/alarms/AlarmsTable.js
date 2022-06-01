@@ -8,7 +8,6 @@ import {
     RemoveAlarm,
 } from '../../../api/Api';
 import AlarmDialog from './AlarmDialog';
-import { SUCCESS_CODE } from '../../../constants/constants';
 
 const fieldTypes = {
     0: 'Catalog',
@@ -23,7 +22,9 @@ const initialValue = {
     receivers: [],
 };
 
-const AlarmsTable = () => {
+const AlarmsTable = (props) => {
+    const { setMessage } = props;
+
     const gridRef = useRef();
     const getRowId = useCallback((params) => {
         return params.data.id;
@@ -81,26 +82,30 @@ const AlarmsTable = () => {
     const handleSubmitForm = async (newData) => {
         if (formData.id) {
             // Edit alarm
-            const response = await EditAlarm(newData);
-            if (typeof response === 'object' && response !== null) {
-                // Update edited row localy instead of fetching all alarms again
-                const rowNode = gridRef.current.api.getRowNode(newData.id);
-                rowNode.setData(newData);
+            const result = await EditAlarm(newData);
+            if (result) {
+                if (result.status) {
+                    // Update edited row localy instead of fetching all alarms again
+                    const rowNode = gridRef.current.api.getRowNode(newData.id);
+                    rowNode.setData(newData);
+                    setSelectedRows([newData]); // update current selected row data
+                }
+                setMessage({
+                    text: result.message,
+                    severity: result.status ? 'success' : 'error',
+                });
                 handleCloseDialog();
-                setSelectedRows([newData]); // update current selected row data
-            } else {
-                // TODO: Change
-                alert('Error in one or more of the entered details');
             }
         } else {
             // Add new alarm
-            const response = await AddNewAlarm(newData);
-            if (typeof response === 'object' && response !== null) {
+            const result = await AddNewAlarm(newData);
+            if (result) {
+                setMessage({
+                    text: result.message,
+                    severity: result.status ? 'success' : 'error',
+                });
                 handleCloseDialog();
                 getAlarms();
-            } else {
-                // TODO: Server should return error as statusText
-                alert('Error: could not add alarm');
             }
         }
     };
@@ -120,9 +125,12 @@ const AlarmsTable = () => {
             'Are you sure you want to remove this alarm?'
         );
         if (confirm) {
-            const response = await RemoveAlarm(id);
-            if (response !== SUCCESS_CODE) {
-                console.log('DELETE RESPONSE:', response);
+            const result = await RemoveAlarm({ id });
+            if (result) {
+                setMessage({
+                    text: result.message,
+                    severity: result.status ? 'success' : 'error',
+                });
             }
             getAlarms();
         }

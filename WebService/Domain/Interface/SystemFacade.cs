@@ -75,7 +75,7 @@ namespace WebService.Domain.Interface
                     Active = alarmResult.Data.Active,
                     Receivers = alarmResult.Data.Receivers
                 };
-                return new Result<FullAlarmModel>(true, model);
+                return new Result<FullAlarmModel>(true, model, "Alarm created successfully");
             }
             return new Result<FullAlarmModel>(alarmResult.Status, null, alarmResult.Message);
 
@@ -96,7 +96,7 @@ namespace WebService.Domain.Interface
                     Active = editAlarmResult.Data.Active,
                     Receivers = editAlarmResult.Data.Receivers
                 };
-                return new Result<FullAlarmModel>(true, model);
+                return new Result<FullAlarmModel>(true, model, "Alarm details updated successfully");
             }
             return new Result<FullAlarmModel>(editAlarmResult.Status, null, editAlarmResult.Message);
         }
