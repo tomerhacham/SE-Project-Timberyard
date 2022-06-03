@@ -46,6 +46,12 @@ const UsersSettings = (props) => {
                 severity:
                     result?.status || result ? MESSAGE.SUCCESS : MESSAGE.ERROR,
             });
+        } else if (result === false) {
+            // AddSystemAdmin returned false
+            setMessage({
+                text: 'Error in adding admin user',
+                severity: MESSAGE.ERROR,
+            });
         }
     };
 
