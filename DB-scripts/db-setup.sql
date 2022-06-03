@@ -5,9 +5,9 @@ GO
 CREATE DATABASE [Timberyard]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'Timberyard', FILENAME = N'/var/opt/mssql/data/Timberyard.mdf' , SIZE = 1056768KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'Timberyard', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\Timberyard.mdf' , SIZE = 1056768KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
  LOG ON 
-( NAME = N'Timberyard_log', FILENAME = N'/var/opt/mssql/data/Timberyard_log.ldf' , SIZE = 7413760KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+( NAME = N'Timberyard_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\Timberyard_log.ldf' , SIZE = 7413760KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 
@@ -230,7 +230,7 @@ CREATE TABLE [dbo].[Users](
 	[Email] [varchar](255) NOT NULL,
 	[Password] [varchar](255) NOT NULL,
 	[Role] [int] NOT NULL,
-	[ExpirationTimeStamp] [timestamp] NOT NULL,
+	[ExpirationTimeStamp] [datetime] NOT NULL,
  CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
 (
 	[Email] ASC

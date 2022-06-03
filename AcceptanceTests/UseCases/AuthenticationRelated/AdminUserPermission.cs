@@ -29,14 +29,14 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.Equal(expectedStatusCode, response.StatusCode);
             if (expectedStatusCode.Equals(HttpStatusCode.OK))
             {
-                var result = JsonConvert.DeserializeObject<bool>(response.Content);
+                var result = JsonConvert.DeserializeObject<Result<bool>>(response.Content).Data;
                 Assert.Equal(expectedResult, result);
 
                 //Attempt to add the same user again and expect fail
                 response = await Client.AddUser(email);
                 Assert.NotNull(response);
                 Assert.Equal(expectedStatusCode, response.StatusCode);
-                result = JsonConvert.DeserializeObject<bool>(response.Content);
+                result = JsonConvert.DeserializeObject<Result<bool>>(response.Content).Data;
                 Assert.False(result);
 
                 //Clean up
@@ -44,7 +44,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
                 var removeResponse = await Client.RemoveUser(email);
                 Assert.NotNull(removeResponse);
                 Assert.Equal(HttpStatusCode.OK, removeResponse.StatusCode);
-                var removeResult = JsonConvert.DeserializeObject<bool>(removeResponse.Content);
+                var removeResult = JsonConvert.DeserializeObject<Result<bool>>(removeResponse.Content).Data;
                 Assert.True(removeResult);
             }
         }
@@ -58,20 +58,22 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             var addResponse = await Client.AddUser(emailToAdd);
             Assert.NotNull(addResponse);
             Assert.Equal(HttpStatusCode.OK, addResponse.StatusCode);
-            var addResult = JsonConvert.DeserializeObject<bool>(addResponse.Content);
+            var addResult = JsonConvert.DeserializeObject<Result<bool>>(addResponse.Content).Data;
             Assert.True(addResult);
 
             //Removing the user
             var removeResponse = await Client.RemoveUser(emailToAdd);
             Assert.NotNull(removeResponse);
             Assert.Equal(HttpStatusCode.OK, removeResponse.StatusCode);
-            var removeResult = JsonConvert.DeserializeObject<bool>(removeResponse.Content);
+            var removeResult = JsonConvert.DeserializeObject<Result<bool>>(removeResponse.Content).Data;
             Assert.True(removeResult);
 
             //Attempt to login but should fail
             var loginResponse = await Client.Login(emailToAdd, "password!");
             Assert.NotNull(loginResponse);
-            Assert.Equal(HttpStatusCode.NoContent, loginResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+            Assert.False(JsonConvert.DeserializeObject<Result<JWTToken>>(loginResponse.Content).Status);
+            Assert.Null(JsonConvert.DeserializeObject<Result<JWTToken>>(loginResponse.Content).Data);
         }
 
         [Fact]
@@ -83,7 +85,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             var removeResponse = await Client.RemoveUser(email);
             Assert.NotNull(removeResponse);
             Assert.Equal(HttpStatusCode.OK, removeResponse.StatusCode);
-            var removeResult = JsonConvert.DeserializeObject<bool>(removeResponse.Content);
+            var removeResult = JsonConvert.DeserializeObject<Result<bool>>(removeResponse.Content).Data;
             Assert.False(removeResult);
         }
 
@@ -123,14 +125,14 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             var changeResponse = await Client.ChangeSystemAdminPassword(newPassword, client.UserCredentials.Password);
             Assert.NotNull(changeResponse);
             Assert.Equal(HttpStatusCode.OK, changeResponse.StatusCode);
-            Assert.True(JsonConvert.DeserializeObject<bool>(changeResponse.Content), "changing password failed");
+            Assert.True((JsonConvert.DeserializeObject<Result<bool>>(changeResponse.Content).Data), "changing password failed");
 
             //Attempt to login
             var loginResponse = await Client.Login(client.UserCredentials.Email, newPassword);
             Assert.NotNull(loginResponse);
             Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
 
-            var token = JsonConvert.DeserializeObject<JWTToken>(loginResponse.Content);
+            var token = JsonConvert.DeserializeObject<Result<JWTToken>>(loginResponse.Content).Data;
 
             //Verify token is not empty
             Assert.NotNull(token);
@@ -147,7 +149,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.NotNull(_loginResponse);
             Assert.Equal(HttpStatusCode.OK, _loginResponse.StatusCode);
 
-            var _token = JsonConvert.DeserializeObject<JWTToken>(_loginResponse.Content);
+            var _token = JsonConvert.DeserializeObject<Result<JWTToken>>(_loginResponse.Content).Data;
             //Verify token is not empty
             Assert.NotNull(_token);
             Assert.NotEmpty(_token.Token);
