@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\LoadTestLogs\" />
     <Folder Include="Resources\NewLogsRoot\NewLogsSubdir1\" />
   </ItemGroup>
 

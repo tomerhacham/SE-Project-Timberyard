@@ -1,11 +1,11 @@
 ﻿using Dapper;
-using ETL.Repository.DTO;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Queries;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 using WebService.Utils.Models;
 
