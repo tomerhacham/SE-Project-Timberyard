@@ -66,6 +66,7 @@ const AuthProvider = ({ children }) => {
                 severity: MESSAGE.ERROR,
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleLogout = useCallback(() => {

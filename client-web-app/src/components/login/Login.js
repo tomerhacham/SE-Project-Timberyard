@@ -107,11 +107,6 @@ const Login = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn]);
 
-    useEffect(() => {
-        console.log('have:', havePassword);
-        console.log('forgot:', forgotPassword);
-    }, [havePassword, forgotPassword]);
-
     return (
         <Grid container component='main' sx={{ height: '100vh' }}>
             <CssBaseline />
