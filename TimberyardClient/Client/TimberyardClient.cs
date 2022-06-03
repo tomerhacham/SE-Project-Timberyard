@@ -257,14 +257,14 @@ namespace TimberyardClient.Client
         public async Task Authenticate()
         {
             var response = await Login(UserCredentials.Email, UserCredentials.Password);
-            if (response.StatusCode.Equals(HttpStatusCode.OK) && JsonConvert.DeserializeObject<JWTToken>(response.Content) is { } jwtToken)
+            if (response.StatusCode.Equals(HttpStatusCode.OK) && JsonConvert.DeserializeObject<Result<JWTToken>>(response.Content) is { } resultJwtToken && resultJwtToken.Status)
             {
-                RestClient.AddDefaultHeader("Authorization", $"Bearer {jwtToken.Token}");
+                RestClient.AddDefaultHeader("Authorization", $"Bearer {resultJwtToken.Data.Token}");
 
             }
             else
             {
-                throw new Exception($"Authnetication process has failed:{response.StatusCode}");
+                throw new Exception($"Authentication process has failed:{response.StatusCode}");
             }
         }
     }
