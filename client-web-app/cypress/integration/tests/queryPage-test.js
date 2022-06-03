@@ -22,8 +22,8 @@ import {
 describe('QUERY PAGE TESTS', () => {
     beforeEach('Login to user admin', () => {
         cy.visit(Cypress.env('loginUrl'));
-        cy.get('#login-user-email').type(Cypress.env('adminEmail'));
-        cy.get('#login-admin-password').type(Cypress.env('adminPassword'));
+        cy.get('#login-email').type(Cypress.env('adminEmail'));
+        cy.get('#login-password').type(Cypress.env('adminPassword'));
         cy.get('#login-signIn-button')
             .should('be.visible')
             .and('not.be.disabled');

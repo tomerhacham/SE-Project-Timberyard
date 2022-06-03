@@ -1,11 +1,11 @@
-﻿using ETL.Repository.DTO;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Collections.Generic;
 using Timberyard_UnitTests.Stubs;
 using WebService.Domain.Business.Alarms;
 using WebService.Domain.Business.Services;
 using WebService.Domain.DataAccess;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 using Xunit;
 

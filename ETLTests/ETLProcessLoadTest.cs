@@ -1,9 +1,6 @@
 ﻿using ETL.Utils.Models;
-using ETLTests;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;

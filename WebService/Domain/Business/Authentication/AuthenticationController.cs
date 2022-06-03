@@ -66,12 +66,12 @@ namespace WebService.Domain.Business.Authentication
                 else
                 {
                     Logger.Info($"User {email} tried to login with Incorrect Password");
-                    return new Result<JWTtoken>(false, null, "Incorrect Password");
+                    return new Result<JWTtoken>(false, null, "Incorrect email address or password");
                 }
             }
 
             Logger.Warning($"The users {email} attempt to login failed. {recordResult.Message}");
-            return new Result<JWTtoken>(false, null, recordResult.Message);
+            return new Result<JWTtoken>(false, null, "Incorrect email address or password");
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace WebService.Domain.Business.Authentication
                 }
 
                 Logger.Warning($"User {email} password cannot be updated since the old password entered is incorrect");
-                return new Result<bool>(false, false, "User password don't match");
+                return new Result<bool>(false, false, "The entered password is incorrect");
             }
 
             Logger.Warning($"An error occurred while attempting to change password for user {email}. {record.Message}");
@@ -248,12 +248,12 @@ namespace WebService.Domain.Business.Authentication
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var strToken = tokenHandler.WriteToken(token);
-                return new JWTtoken() { Token = strToken };
+                return new JWTtoken() { Token = strToken, Role = record.Role.ToString() };
             }
             catch (Exception exception)
             {
                 Logger.Warning($"An error occurred while attempting to generate a token for {record.Email}", exception, new Dictionary<LogEntry, string>() { { LogEntry.Component, GetType().Name } });
-                return new JWTtoken() { Token = string.Empty };
+                return new JWTtoken() { Token = string.Empty, Role = string.Empty };
             }
         }
 

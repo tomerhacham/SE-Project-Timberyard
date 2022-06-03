@@ -147,7 +147,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(new AlarmDTO() { Id = Id }) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"There was a problem during the deletion of alarm {Id}");
+                var returnVal = await connection.DeleteAsync(new AlarmDTO() { Id = Id }) ? new Result<bool>(true, true, "Alarm deleted succesfully") : new Result<bool>(false, false, $"There was a problem during the deletion of alarm {Id}");
                 return returnVal;
             }
             catch (Exception e)
@@ -190,7 +190,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.UpdateAsync(record) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {record.Email} was not found in data base");
+                var returnVal = await connection.UpdateAsync(record) ? new Result<bool>(true, true, "Password updated successfully") : new Result<bool>(false, false, $"User with email {record.Email} was not found in data base");
                 return returnVal;
             }
             catch (Exception e)
@@ -210,7 +210,7 @@ namespace WebService.Domain.DataAccess
             {
                 using var connection = new SqlConnection(DatabaseSettings.ConnectionString);
                 await connection.OpenAsync();
-                var returnVal = await connection.DeleteAsync(new UserDTO { Email = email }) ? new Result<bool>(true, true) : new Result<bool>(false, false, $"User with email {email} was not found in data base");
+                var returnVal = await connection.DeleteAsync(new UserDTO { Email = email }) ? new Result<bool>(true, true, "User deleted successfully") : new Result<bool>(false, false, $"User with email {email} was not found in data base");
                 return returnVal;
             }
             catch (Exception e)
@@ -240,7 +240,7 @@ namespace WebService.Domain.DataAccess
                     status = true;
                 }
                 await transaction.CommitAsync();
-                return new Result<bool>(status, status, status ? "Succeed" : "User already exists");
+                return new Result<bool>(status, status, status ? "User added successfully" : "User already exists");
             }
             catch (Exception e)
             {

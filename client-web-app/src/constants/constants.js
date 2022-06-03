@@ -22,14 +22,34 @@ export const BOUNDARIES_ICON = 'FenceIcon';
 export const TESTER_LOAD_ICON = 'TimelapseIcon';
 export const CARD_TEST_DURATION_ICON = 'AvTimerIcon';
 
-// TODO: Delete if unused
-// api-urls.js
-const API_URL = 'https://localhost:5001/api';
-export const CARD_YIELD_URL = `${API_URL}/Queries/CardYield`;
-export const STATION_YIELD_URL = `${API_URL}/Queries/StationsYield`;
-export const STATION_CARD_YIELD_URL = `${API_URL}/Queries/StationAndCardYield`;
+// Api urls
+export const LOGIN_URL = '/Authentication/Login';
+export const REQUEST_VERIFICATION_CODE_URL =
+    '/Authentication/RequestVerificationCode';
+export const ADD_USER_URL = '/Authentication/AddUser';
+export const REMOVE_USER_URL = '/Authentication/RemoveUser';
+export const CHANGE_ADMIN_PASSWORD_URL =
+    '/Authentication/ChangeSystemAdminPassword';
+export const FORGET_PASSWORD_URL = '/Authentication/ForgetPassword';
+export const GET_ALL_ALARMS_URL = '/Alarms/GetAllAlarms';
+export const ADD_NEW_ALARM_URL = '/Alarms/AddNewAlarm';
+export const EDIT_ALARM_URL = '/Alarms/EditAlarm';
+export const REMOVE_ALARM_URL = '/Alarms/RemoveAlarm';
 
-// queries.js
-export const CARD_YIELD_TITLE = 'Card Yield';
-export const STATION_YIELD_TITLE = 'Station Yield';
-export const STATION_CARD_YIELD_TITLE = 'Station and Card Yield';
+// Role
+export const ROLE = {
+    UNAUTHORIZE: 'Unauthorized',
+    USER: 'RegularUser',
+    ADMIN: 'Admin',
+};
+
+// api
+export const SUCCESS_CODE = 200;
+
+// text
+export const SEND_VERIFICATION_CODE_TEXT =
+    'If a user with this email address exists, a verification code will be sent to it.';
+export const FORGOT_PASSWORD_TEXT =
+    'Please enter your email address to reset your password';
+export const FORGOT_PASSWORD_SENT_TEXT =
+    'If a user with this email address exists, an email with a new password will be sent.';

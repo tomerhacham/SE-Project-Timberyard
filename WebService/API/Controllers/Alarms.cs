@@ -40,7 +40,7 @@ namespace WebService.API.Controllers
             var response = await SystemInterface.AddNewAlarm(model.Name, model.Field, model.Objective, model.Threshold, model.Receivers);
             if (response.Status)
             {
-                return Ok(response.Data);
+                return Ok(response);
             }
             else
             {
@@ -66,7 +66,7 @@ namespace WebService.API.Controllers
             var response = await SystemInterface.EditAlarm(model.Id, model.Name, model.Field, model.Objective, model.Threshold, model.Active, model.Receivers);
             if (response.Status)
             {
-                return Ok(response.Data);
+                return Ok(response);
             }
             else
             {
@@ -90,7 +90,7 @@ namespace WebService.API.Controllers
             var response = await SystemInterface.RemoveAlarm(model.Id);
             if (response.Status)
             {
-                return Ok();
+                return Ok(response);
             }
             else
             {

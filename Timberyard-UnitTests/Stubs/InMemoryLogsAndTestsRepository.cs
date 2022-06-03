@@ -1,28 +1,27 @@
-﻿using ETL.DataObjects;
-using ETL.Repository.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebService.Domain.Business.Queries;
 using WebService.Domain.DataAccess;
+using WebService.Domain.DataAccess.DTO;
 using WebService.Utils;
 
 namespace Timberyard_UnitTests.Stubs
 {
     public class InMemoryLogsAndTestsRepository : ILogsAndTestsRepository
     {
-        public Dictionary<int, Log> Data { get; set; }
+        public Dictionary<int, LogDTO> Data { get; set; }
 
         public InMemoryLogsAndTestsRepository()
         {
-            Data = new Dictionary<int, Log>();
+            Data = new Dictionary<int, LogDTO>();
         }
 
         #region Alarms
         public async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
-            var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).Select(log => log.GetDTO()).ToList();
+            var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).ToList();
             return new Result<List<LogDTO>>(true, logs);
         }
         #endregion
