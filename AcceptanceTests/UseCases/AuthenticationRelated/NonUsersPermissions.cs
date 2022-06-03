@@ -29,8 +29,8 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
 
         [Theory]
         [InlineData("admin@timberyard.rbbn.com", "Password123!", HttpStatusCode.OK, true)]
-        [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
-        [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.NoContent, false)]
+        [InlineData("admin@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
+        [InlineData("regularUser@timberyard.rbbn.com", "NotPassword!123", HttpStatusCode.OK, false)]
         [InlineData("regularUser@timberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "asd", HttpStatusCode.BadRequest, false)]
         [InlineData("nonValidEmailTimberyard.rbbn.com", "", HttpStatusCode.BadRequest, false)]
@@ -41,8 +41,9 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
             Assert.Equal(expectedStatusCode, response.StatusCode);
             if (expectedStatusCode.Equals(HttpStatusCode.OK))
             {
-                var token = JsonConvert.DeserializeObject<JWTToken>(response.Content);
-                Assert.Equal(expectedTokenResult, !string.IsNullOrEmpty(token.Token));
+                var result = JsonConvert.DeserializeObject<Result<JWTToken>>(response.Content);
+                Assert.Equal(expectedTokenResult, result.Status);
+                Assert.Equal(expectedTokenResult, !string.IsNullOrEmpty(result.Data?.Token));
             }
         }
 
