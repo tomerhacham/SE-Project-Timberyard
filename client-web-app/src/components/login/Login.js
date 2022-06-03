@@ -21,6 +21,7 @@ import {
     FORGOT_PASSWORD_TEXT,
     FORGOT_PASSWORD_SENT_TEXT,
     SUCCESS_CODE,
+    MESSAGE,
 } from '../../constants/constants';
 
 const Login = () => {
@@ -40,6 +41,7 @@ const Login = () => {
 
         console.log(userInput);
         if (forgotPassword) {
+            console.log('here');
             return handleForgotPassword();
         } else if (!havePassword) {
             return handleSendCode();
@@ -57,7 +59,7 @@ const Login = () => {
         if (response && response.status === SUCCESS_CODE) {
             setMessage({
                 text: SEND_VERIFICATION_CODE_TEXT,
-                severity: 'info',
+                severity: MESSAGE.INFO,
             });
             setHavePassword(true);
         }
@@ -68,9 +70,18 @@ const Login = () => {
         if (result) {
             setMessage({
                 text: FORGOT_PASSWORD_SENT_TEXT,
-                severity: 'info',
+                severity: MESSAGE.INFO,
             });
         }
+    };
+
+    const havePasswordButton = (event) => {
+        event.preventDefault();
+        setMessage(null);
+        setHavePassword((prevState) => {
+            if (!prevState) setForgotPassword(false);
+            return !prevState;
+        });
     };
 
     const forgotPasswordButton = () => {
@@ -78,7 +89,7 @@ const Login = () => {
         setHavePassword(false);
         setMessage({
             text: FORGOT_PASSWORD_TEXT,
-            severity: 'info',
+            severity: MESSAGE.INFO,
         });
     };
 
@@ -95,6 +106,11 @@ const Login = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        console.log('have:', havePassword);
+        console.log('forgot:', forgotPassword);
+    }, [havePassword, forgotPassword]);
 
     return (
         <Grid container component='main' sx={{ height: '100vh' }}>
@@ -207,11 +223,7 @@ const Login = () => {
                             <Grid item xs>
                                 <Button
                                     variant='body2'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setMessage(null);
-                                        setHavePassword(!havePassword);
-                                    }}>
+                                    onClick={(e) => havePasswordButton(e)}>
                                     {havePassword
                                         ? "I don't have a password"
                                         : 'I have a password'}

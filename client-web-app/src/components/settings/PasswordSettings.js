@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import Message from '../../generic-components/Message';
 import { ChangeAdminPassword } from '../../api/Api';
+import { MESSAGE } from '../../constants/constants';
 
 const PasswordSettings = (props) => {
     const [userInput, setUserInput] = useState({
@@ -23,7 +24,7 @@ const PasswordSettings = (props) => {
         if (userInput.newPassword !== userInput.confirm) {
             setMessage({
                 text: 'Passwords do not match.',
-                severity: 'warning',
+                severity: MESSAGE.WARNING,
             });
             return;
         }
@@ -35,7 +36,7 @@ const PasswordSettings = (props) => {
         if (result) {
             setMessage({
                 text: result.message,
-                severity: result.status ? 'success' : 'error',
+                severity: result.status ? MESSAGE.SUCCESS : MESSAGE.ERROR,
             });
         }
     };

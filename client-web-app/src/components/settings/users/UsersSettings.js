@@ -10,7 +10,11 @@ import {
 } from '@mui/material';
 import Message from '../../../generic-components/Message';
 import { ManageUser } from '../../../api/Api';
-import { ADD_USER_URL, REMOVE_USER_URL } from '../../../constants/constants';
+import {
+    ADD_USER_URL,
+    REMOVE_USER_URL,
+    MESSAGE,
+} from '../../../constants/constants';
 
 const UsersSettings = (props) => {
     const [email, setEmail] = useState('');
@@ -33,7 +37,7 @@ const UsersSettings = (props) => {
         if (result) {
             setMessage({
                 text: result.message,
-                severity: result.status ? 'success' : 'error',
+                severity: result.status ? MESSAGE.SUCCESS : MESSAGE.ERROR,
             });
         }
     };

@@ -7,7 +7,7 @@ import React, {
     useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
-import { ROLE } from '../constants/constants';
+import { MESSAGE, ROLE } from '../constants/constants';
 import { Login } from '../api/Api';
 
 const initialTokenState = {
@@ -58,10 +58,13 @@ const AuthProvider = ({ children }) => {
         } else if (result && !result.status) {
             setMessage({
                 text: result.message,
-                severity: 'error',
+                severity: MESSAGE.ERROR,
             });
         } else {
-            console.log('Error in login');
+            setMessage({
+                text: result?.message || 'An error has been occured.',
+                severity: MESSAGE.ERROR,
+            });
         }
     }, []);
 

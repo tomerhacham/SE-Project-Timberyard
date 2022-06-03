@@ -43,6 +43,14 @@ export const ROLE = {
     ADMIN: 'Admin',
 };
 
+// Messages status (severity)
+export const MESSAGE = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    INFO: 'info',
+    WARNING: 'warning',
+};
+
 // api
 export const SUCCESS_CODE = 200;
 
