@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System.Collections.Generic;
 using System.Net;
+using TimberyardClient.Client;
 using Xunit;
 using Field = TimberyardClient.Client.Field;
 
@@ -29,7 +30,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
 
             if (response.StatusCode.Equals(HttpStatusCode.OK))
             {
-                FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(response.Content);
+                FullAlarmModel alarm_result = JsonConvert.DeserializeObject<Result<FullAlarmModel>>(response.Content).Data;
 
                 Assert.Equal(name, alarm_result.Name);
                 Assert.Equal((int)field, (int)alarm_result.Field);
@@ -48,7 +49,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
         {
             // Add a valid alarm to DB then try to edit it according to the scenarios 
             IRestResponse addAlarmResponse = await Client.AddNewAlarm(name, field, objective, 5, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(addAlarmResponse.Content);
+            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<Result<FullAlarmModel>>(addAlarmResponse.Content).Data;
             int alarmId = alarm_result.Id;
 
             IRestResponse editAlarmResponse = await Client.EditAlarm(alarmId, name, field, objective, threshold, active, new List<string>(receivers));
@@ -56,7 +57,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
 
             if (editAlarmResponse.StatusCode.Equals(HttpStatusCode.OK))
             {
-                alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(editAlarmResponse.Content);
+                alarm_result = JsonConvert.DeserializeObject<Result<FullAlarmModel>>(editAlarmResponse.Content).Data;
 
                 Assert.Equal(name, alarm_result.Name);
                 Assert.Equal((int)field, (int)alarm_result.Field);
@@ -73,7 +74,7 @@ namespace AcceptanceTests.UseCases.AlarmsRelated
 
             // Add a valid alarm to DB then try to remove it.
             IRestResponse addAlarmResponse = await Client.AddNewAlarm("TestRemoveAlarm", Field.Catalog, "TestCatalog", 5, new List<string>() { "tomer@tests.com", "zoe@test.com", "shaked@test.com", "raz@tests.com" });
-            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<FullAlarmModel>(addAlarmResponse.Content);
+            FullAlarmModel alarm_result = JsonConvert.DeserializeObject<Result<FullAlarmModel>>(addAlarmResponse.Content).Data;
             int alarmId = alarm_result.Id;
 
             // Notice - Removing an alarm doesn't have any bad/sad outcomes. Therefore, removing an alarm always succeeds.

@@ -6,9 +6,9 @@ namespace TimberyardClient.Client
 {
     public class Result<T>
     {
-        public bool Status { get; }
-        public string Message { get; }
-        public T Data { get; }
+        public bool Status { get; set; }
+        public string Message { get; set; }
+        public T Data { get; set; }
 
     }
 }
