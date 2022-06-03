@@ -82,6 +82,13 @@ const Login = () => {
         });
     };
 
+    const renderSubmitButtonText = () =>
+        havePassword
+            ? 'Sign In'
+            : forgotPassword
+            ? 'Send Reset Email'
+            : 'Send Code';
+
     useEffect(() => {
         if (isLoggedIn) {
             navigate('/');
@@ -194,7 +201,7 @@ const Login = () => {
                                 (havePassword && userInput.password === '')
                             }
                             sx={{ mt: 3, mb: 2 }}>
-                            {havePassword ? 'Sign In' : 'Send Code'}
+                            {renderSubmitButtonText()}
                         </Button>
                         <Grid container>
                             <Grid item xs>
