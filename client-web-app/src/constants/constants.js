@@ -27,6 +27,7 @@ export const LOGIN_URL = '/Authentication/Login';
 export const REQUEST_VERIFICATION_CODE_URL =
     '/Authentication/RequestVerificationCode';
 export const ADD_USER_URL = '/Authentication/AddUser';
+export const ADD_ADMIN_URL = '/Authentication/AddSystemAdmin';
 export const REMOVE_USER_URL = '/Authentication/RemoveUser';
 export const CHANGE_ADMIN_PASSWORD_URL =
     '/Authentication/ChangeSystemAdminPassword';
@@ -41,6 +42,14 @@ export const ROLE = {
     UNAUTHORIZE: 'Unauthorized',
     USER: 'RegularUser',
     ADMIN: 'Admin',
+};
+
+// Messages status (severity)
+export const MESSAGE = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    INFO: 'info',
+    WARNING: 'warning',
 };
 
 // api

@@ -171,7 +171,7 @@ export async function ForgotPassword(data) {
         })
         .then((response) => {
             console.log(response);
-            return response.data;
+            return response;
         })
         .catch((error) => {
             console.log('Catched error in api:', error);

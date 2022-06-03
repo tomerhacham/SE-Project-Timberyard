@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { omit } from 'lodash';
 import {
     Box,
     Button,
@@ -7,13 +8,22 @@ import {
     CardHeader,
     Divider,
     TextField,
+    MenuItem,
+    Stack,
 } from '@mui/material';
 import Message from '../../../generic-components/Message';
 import { ManageUser } from '../../../api/Api';
-import { ADD_USER_URL, REMOVE_USER_URL } from '../../../constants/constants';
+import {
+    ADD_USER_URL,
+    ADD_ADMIN_URL,
+    REMOVE_USER_URL,
+    MESSAGE,
+    ROLE,
+} from '../../../constants/constants';
 
 const UsersSettings = (props) => {
     const [email, setEmail] = useState('');
+    const [managedRole, setManagedRole] = useState(ROLE.USER);
     const [message, setMessage] = useState(null);
 
     const handleChange = (event) => {
@@ -32,8 +42,9 @@ const UsersSettings = (props) => {
         const result = await ManageUser({ data: { email }, url });
         if (result) {
             setMessage({
-                text: result.message,
-                severity: result.status ? 'success' : 'error',
+                text: result?.message,
+                severity:
+                    result?.status || result ? MESSAGE.SUCCESS : MESSAGE.ERROR,
             });
         }
     };
@@ -47,16 +58,40 @@ const UsersSettings = (props) => {
                     <Message text={message.text} severity={message.severity} />
                 )}
                 <CardContent>
-                    <TextField
-                        fullWidth
-                        label='Email'
-                        margin='normal'
-                        name='email'
-                        onChange={handleChange}
-                        type='email'
-                        value={email}
-                        variant='outlined'
-                    />
+                    <Stack direction='row' spacing={2}>
+                        <TextField
+                            fullWidth
+                            label='Email'
+                            margin='normal'
+                            name='email'
+                            onChange={handleChange}
+                            type='email'
+                            value={email}
+                            variant='outlined'
+                        />
+                        <TextField
+                            style={{
+                                width: '20%',
+                                marginTop: '16px',
+                                marginBottom: '8px',
+                            }}
+                            id='role-select'
+                            label='Role'
+                            required
+                            value={managedRole}
+                            select
+                            onChange={(e) => setManagedRole(e.target.value)}>
+                            {Object.keys(omit(ROLE, 'UNAUTHORIZE')).map(
+                                (code) => (
+                                    <MenuItem
+                                        key={`menu-item-role-${ROLE[code]}`}
+                                        value={ROLE[code]}>
+                                        {ROLE[code]}
+                                    </MenuItem>
+                                )
+                            )}
+                        </TextField>
+                    </Stack>
                 </CardContent>
                 <Divider />
                 <Box
@@ -69,9 +104,15 @@ const UsersSettings = (props) => {
                         color='primary'
                         variant='contained'
                         disabled={email === ''}
-                        onClick={() => handleSubmit(ADD_USER_URL)}
+                        onClick={() =>
+                            handleSubmit(
+                                managedRole === ROLE.ADMIN
+                                    ? ADD_ADMIN_URL
+                                    : ADD_USER_URL
+                            )
+                        }
                         style={{ margin: 10 }}>
-                        Add User
+                        {managedRole === ROLE.ADMIN ? 'Add Admin' : 'Add User'}
                     </Button>
                     <Button
                         color='primary'
@@ -79,7 +120,7 @@ const UsersSettings = (props) => {
                         disabled={email === ''}
                         onClick={() => handleSubmit(REMOVE_USER_URL)}
                         style={{ margin: 10 }}>
-                        Remove User
+                        Remove Account
                     </Button>
                 </Box>
             </Card>
