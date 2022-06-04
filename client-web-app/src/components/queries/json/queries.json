@@ -108,7 +108,7 @@
             {
                 "id": "timeInterval",
                 "required": true,
-                "label": "Time Interval",
+                "label": "Time Interval (in hours)",
                 "type": "number"
             }
         ],
