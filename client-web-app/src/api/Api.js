@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { get } from 'lodash';
-// import { useAuth } from '../contexts/AuthContext';
 import {
     ADD_NEW_ALARM_URL,
     EDIT_ALARM_URL,
@@ -16,48 +15,6 @@ import {
 const API_URL = 'https://localhost:5001/api';
 
 // TODO: Handle errors
-
-// const useApi = () => {
-//     const authContextValue = useAuth();
-
-//     const sendRequest = async (config) => {
-//         const request = {
-//             ...config,
-//             method: config.method || 'POST',
-//             headers: {
-//                 Accept: 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//         };
-//         let token = localStorage.getItem('token');
-//         console.log('TOKEN:', token);
-
-//         if (token) {
-//             token = JSON.parse(token);
-//             console.log('PARSED TOKEN:', token);
-//             request.headers = {
-//                 ...request.headers,
-//                 Authorization: `Bearer ${get(token, 'token')}`,
-//             };
-//         }
-//         const url = get(request, 'url');
-//         return axios(request)
-//             .then((response) => {
-//                 const status = get('status', response);
-//                 if (status !== SUCCESS_CODE) {
-//                     console.log('Failed response');
-//                 }
-//                 return response;
-//             })
-//             .catch((error) => {
-//                 // const errorStatus = get('response.status', error);
-//                 console.log('ERROR:', error);
-//             });
-//     };
-//     return { sendRequest };
-// };
-
-// export default useApi;
 
 const getToken = () => {
     let token = localStorage.getItem('access_token');
@@ -225,11 +182,8 @@ export async function GetAllAlarms() {
             }
             return response.data;
         })
-        .then((result) => {
-            return result;
-        })
         .catch((err) => {
-            console.log('Catched error:', err);
+            console.log('Catched error in api:', err);
         });
 }
 

@@ -23,81 +23,96 @@ import {
     TESTER_LOAD_PATH,
     CARD_TEST_DURATION_PATH,
 } from './constants/constants';
+import ErrorHandler from './components/ErrorHandler';
 
 const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <AuthProvider>
-                <Router>
-                    <Routes>
-                        {/* Private Routes */}
-                        <Route path='' element={<DashboardLayout />}>
-                            <Route element={<PrivateRoute />}>
-                                <Route
-                                    path={SETTINGS_PATH}
-                                    element={<Settings />}
-                                />
-                                <Route
-                                    path={CARD_YIELD_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.cardYield}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path={STATION_YIELD_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.stationYield}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path={STATION_CARD_YIELD_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.stationCardYield}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path={NFF_PATH}
-                                    element={
-                                        <QueryPage data={queriesJson.nff} />
-                                    }
-                                />
-                                <Route
-                                    path={BOUNDARIES_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.boundaries}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path={TESTER_LOAD_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.testerLoad}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path={CARD_TEST_DURATION_PATH}
-                                    element={
-                                        <QueryPage
-                                            data={queriesJson.cardTestDuration}
-                                        />
-                                    }
-                                />
-                                <Route exact path='/' element={<Dashboard />} />
+                <ErrorHandler>
+                    <Router>
+                        <Routes>
+                            {/* Private Routes */}
+                            <Route path='' element={<DashboardLayout />}>
+                                <Route element={<PrivateRoute />}>
+                                    <Route
+                                        path={SETTINGS_PATH}
+                                        element={<Settings />}
+                                    />
+                                    <Route
+                                        path={CARD_YIELD_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={queriesJson.cardYield}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={STATION_YIELD_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={queriesJson.stationYield}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={STATION_CARD_YIELD_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={
+                                                    queriesJson.stationCardYield
+                                                }
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={NFF_PATH}
+                                        element={
+                                            <QueryPage data={queriesJson.nff} />
+                                        }
+                                    />
+                                    <Route
+                                        path={BOUNDARIES_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={queriesJson.boundaries}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={TESTER_LOAD_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={queriesJson.testerLoad}
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        path={CARD_TEST_DURATION_PATH}
+                                        element={
+                                            <QueryPage
+                                                data={
+                                                    queriesJson.cardTestDuration
+                                                }
+                                            />
+                                        }
+                                    />
+                                    <Route
+                                        exact
+                                        path='/'
+                                        element={<Dashboard />}
+                                    />
+                                </Route>
                             </Route>
-                        </Route>
-                        {/* Public Routes */}
-                        <Route exact path={LOGIN_PATH} element={<Login />} />
-                    </Routes>
-                </Router>
+                            {/* Public Routes */}
+                            <Route
+                                exact
+                                path={LOGIN_PATH}
+                                element={<Login />}
+                            />
+                        </Routes>
+                    </Router>
+                </ErrorHandler>
             </AuthProvider>
         </ThemeProvider>
     );
