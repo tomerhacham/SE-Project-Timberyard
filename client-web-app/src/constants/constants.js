@@ -54,6 +54,7 @@ export const MESSAGE = {
 
 // api
 export const SUCCESS_CODE = 200;
+export const UNAUTHORIZED_CODE = 401;
 
 // text
 export const SEND_VERIFICATION_CODE_TEXT =
