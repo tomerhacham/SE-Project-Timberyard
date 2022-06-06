@@ -17,18 +17,21 @@ import {
     CARD_TEST_DURATION_POST,
     BOUNDARIES_API,
     BOUNDARIES_POST,
+    LOGIN_API,
+    LOGIN_ALIAS,
 } from '../constants/constants';
 
 describe('QUERY PAGE TESTS', () => {
     beforeEach('Login to user admin', () => {
-        cy.visit(Cypress.env('loginUrl'));
-        cy.get('#login-email').type(Cypress.env('adminEmail'));
-        cy.get('#login-password').type(Cypress.env('adminPassword'));
-        cy.get('#login-signIn-button')
-            .should('be.visible')
-            .and('not.be.disabled');
-        cy.get('#login-signIn-button').click();
-        validatePage(Cypress.env('dashboardUrl'));
+        cy.intercept('POST', LOGIN_API, {
+            fixture: 'authentication/admin_login_response.json',
+        }).as(LOGIN_ALIAS);
+
+        cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
+
+        cy.wait(`@${LOGIN_ALIAS}`).then(() => {
+            validatePage(Cypress.env('dashboardUrl'));
+        });
     });
 
     it('Check pages fields renders correctly', () => {
@@ -80,7 +83,7 @@ describe('QUERY PAGE TESTS', () => {
 
         cy.intercept('POST', CARD_YIELD_API, (req) => {
             return trigger.then(() => {
-                req.reply({ fixture: 'empty_query_response.json' });
+                req.reply({ fixture: 'queries/empty_query_response.json' });
             });
         });
 
@@ -105,7 +108,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('CARD YIELD - Check data renders as expected', () => {
         cy.intercept('POST', CARD_YIELD_API, {
-            fixture: 'card_yield_data.json',
+            fixture: 'queries/card_yield_response.json',
         }).as(CARD_YIELD_POST);
 
         NavigateToPage('cardYield');
@@ -144,7 +147,7 @@ describe('QUERY PAGE TESTS', () => {
 
         cy.intercept('POST', STATION_YIELD_API, (req) => {
             return trigger.then(() => {
-                req.reply({ fixture: 'empty_query_response.json' });
+                req.reply({ fixture: 'queries/empty_query_response.json' });
             });
         });
 
@@ -168,7 +171,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('STATION YIELD - Check query data renders as expected', () => {
         cy.intercept('POST', STATION_YIELD_API, {
-            fixture: 'station_yield_data.json',
+            fixture: 'queries/station_yield_response.json',
         }).as(STATION_YIELD_POST);
 
         NavigateToPage('stationYield');
@@ -196,7 +199,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('STATION CARD YIELD - Check data renders as expected', () => {
         cy.intercept('POST', STATION_CARD_YIELD_API, {
-            fixture: 'station_card_yield_data.json',
+            fixture: 'queries/station_card_yield_response.json',
         }).as(STATION_CARD_YIELD_POST);
 
         NavigateToPage('stationCardYield');
@@ -225,9 +228,9 @@ describe('QUERY PAGE TESTS', () => {
     });
 
     it('NFF - Check data renders as expected', () => {
-        cy.intercept('POST', NFF_API, { fixture: 'nff_data.json' }).as(
-            NFF_POST
-        );
+        cy.intercept('POST', NFF_API, {
+            fixture: 'queries/nff_response.json',
+        }).as(NFF_POST);
 
         NavigateToPage('nff');
 
@@ -256,7 +259,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('TESTER LOAD - Check data renders as expected', () => {
         cy.intercept('POST', TESTER_LOAD_API, {
-            fixture: 'tester_load_data.json',
+            fixture: 'queries/tester_load_response.json',
         }).as(TESTER_LOAD_POST);
 
         NavigateToPage('testerLoad');
@@ -288,7 +291,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('CARD TEST DURATION - Check data renders as expected', () => {
         cy.intercept('POST', CARD_TEST_DURATION_API, {
-            fixture: 'card_test_duration_data.json',
+            fixture: 'queries/card_test_duration_response.json',
         }).as(CARD_TEST_DURATION_POST);
 
         NavigateToPage('cardTestDuration');
@@ -321,7 +324,7 @@ describe('QUERY PAGE TESTS', () => {
 
     it('BOUNDARIES - Check data renders as expected', () => {
         cy.intercept('POST', BOUNDARIES_API, {
-            fixture: 'boundaries_data.json',
+            fixture: 'queries/boundaries_response.json',
         }).as(BOUNDARIES_POST);
 
         NavigateToPage('boundaries');

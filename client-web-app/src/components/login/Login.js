@@ -41,7 +41,6 @@ const Login = () => {
 
         console.log(userInput);
         if (forgotPassword) {
-            console.log('here');
             return handleForgotPassword();
         } else if (!havePassword) {
             return handleSendCode();
@@ -78,6 +77,8 @@ const Login = () => {
     const havePasswordButton = (event) => {
         event.preventDefault();
         setMessage(null);
+
+        // If havePwd changing to true, set forgotPwd to false also
         setHavePassword((prevState) => {
             if (!prevState) setForgotPassword(false);
             return !prevState;
@@ -150,6 +151,7 @@ const Login = () => {
                     </Typography>
                     {message && (
                         <Message
+                            id='login-page-message'
                             style={{ marginTop: '10px' }}
                             text={message.text}
                             severity={message.severity}
@@ -217,6 +219,7 @@ const Login = () => {
                         <Grid container>
                             <Grid item xs>
                                 <Button
+                                    id='password-toggle-button'
                                     variant='body2'
                                     onClick={(e) => havePasswordButton(e)}>
                                     {havePassword
@@ -227,6 +230,7 @@ const Login = () => {
                             {havePassword && (
                                 <Grid item>
                                     <Button
+                                        id='forgot-password-button'
                                         variant='body2'
                                         onClick={forgotPasswordButton}>
                                         Forgot Password?

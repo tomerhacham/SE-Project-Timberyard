@@ -42,7 +42,9 @@ const Settings = () => {
                             expanded={expanded === 'alarms'}
                             onChange={handleChange('alarms')}>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={
+                                    <ExpandMoreIcon id='alarms-settings-expand' />
+                                }
                                 aria-controls='alarms-content'
                                 id='alarms-header'>
                                 <Typography
@@ -58,7 +60,9 @@ const Settings = () => {
                             expanded={expanded === 'password'}
                             onChange={handleChange('password')}>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={
+                                    <ExpandMoreIcon id='password-settings-expand' />
+                                }
                                 aria-controls='password-content'
                                 id='password-header'>
                                 <Typography
@@ -76,7 +80,9 @@ const Settings = () => {
                             expanded={expanded === 'users'}
                             onChange={handleChange('users')}>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={
+                                    <ExpandMoreIcon id='users-settings-expand' />
+                                }
                                 aria-controls='users-content'
                                 id='users-header'>
                                 <Typography

@@ -14,3 +14,12 @@ export const assertCellValueInFirstRow = (colId, value) => {
             expect(cell).to.have.text(value);
         });
 };
+
+// Success = rgb(26, 79, 73)
+// Error = rgb(87, 41, 41)
+export const checkMessage = (id, text, color = 'rgb(26, 79, 73)') => {
+    cy.get(`#${id}`)
+        .should('be.visible')
+        .and('contain.text', text)
+        .and('have.css', 'color', color);
+};

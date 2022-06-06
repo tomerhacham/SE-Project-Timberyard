@@ -1,0 +1,8 @@
+{
+    "status": true,
+    "message": "Login success",
+    "data": {
+        "token": "svkuhyiuq2973nsk20snAd2b0mAskdr2Dkddloisn37dskv0vnzRo",
+        "role": "RegularUser"
+    }
+}

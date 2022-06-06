@@ -44,7 +44,9 @@ const UsersSettings = (props) => {
             setMessage({
                 text: result?.message,
                 severity:
-                    result?.status || result ? MESSAGE.SUCCESS : MESSAGE.ERROR,
+                    result?.status || result === true
+                        ? MESSAGE.SUCCESS
+                        : MESSAGE.ERROR,
             });
         } else if (result === false) {
             // AddSystemAdmin returned false
@@ -61,11 +63,16 @@ const UsersSettings = (props) => {
                 <CardHeader subheader='Add or Remove Users' title='Users' />
                 <Divider />
                 {message && (
-                    <Message text={message.text} severity={message.severity} />
+                    <Message
+                        id='users-settings-message'
+                        text={message.text}
+                        severity={message.severity}
+                    />
                 )}
                 <CardContent>
                     <Stack direction='row' spacing={2}>
                         <TextField
+                            id='users-settings-email-input'
                             fullWidth
                             label='Email'
                             margin='normal'
@@ -81,16 +88,17 @@ const UsersSettings = (props) => {
                                 marginTop: '16px',
                                 marginBottom: '8px',
                             }}
-                            id='role-select'
+                            id='users-settings-role-select'
                             label='Role'
                             required
                             value={managedRole}
                             select
                             onChange={(e) => setManagedRole(e.target.value)}>
                             {Object.keys(omit(ROLE, 'UNAUTHORIZE')).map(
-                                (code) => (
+                                (code, index) => (
                                     <MenuItem
-                                        key={`menu-item-role-${ROLE[code]}`}
+                                        key={index}
+                                        id={`menu-item-role-${ROLE[code]}`}
                                         value={ROLE[code]}>
                                         {ROLE[code]}
                                     </MenuItem>
@@ -107,6 +115,7 @@ const UsersSettings = (props) => {
                         p: 2,
                     }}>
                     <Button
+                        id='users-settings-add-button'
                         color='primary'
                         variant='contained'
                         disabled={email === ''}
@@ -121,6 +130,7 @@ const UsersSettings = (props) => {
                         {managedRole === ROLE.ADMIN ? 'Add Admin' : 'Add User'}
                     </Button>
                     <Button
+                        id='users-settings-remove-button'
                         color='primary'
                         variant='contained'
                         disabled={email === ''}

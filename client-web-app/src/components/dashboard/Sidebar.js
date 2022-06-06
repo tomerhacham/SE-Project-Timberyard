@@ -140,6 +140,9 @@ const Sidebar = ({ open, onClose }) => {
                                 (item.primary !== 'Settings' ||
                                     role === ROLE.ADMIN) && (
                                     <NavItem
+                                        id={`sidebar-${camelCase(
+                                            item.primary
+                                        )}`}
                                         key={item.primary}
                                         primary={item.primary}
                                         to={item.to}
