@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { validatePage } from '../commands/asserts';
-import { NavigateToPage, assertCellValueInFirstRow } from '../commands/actions';
+import { navigateToPage, assertCellValueInFirstRow } from '../commands/actions';
 import {
     CARD_YIELD_POST,
     CARD_YIELD_API,
@@ -35,41 +35,41 @@ describe('QUERY PAGE TESTS', () => {
     });
 
     it('Check pages fields renders correctly', () => {
-        NavigateToPage('cardYield');
+        navigateToPage('cardYield');
         cy.get('#cardYield-catalog').should('be.visible');
         cy.get('#cardYield-startDate').should('be.visible');
         cy.get('#cardYield-endDate').should('be.visible');
         cy.get('#cardYield-submit-button').should('be.disabled');
 
-        NavigateToPage('stationYield');
+        navigateToPage('stationYield');
         cy.get('#stationYield-startDate').should('be.visible');
         cy.get('#stationYield-endDate').should('be.visible');
         cy.get('#stationYield-submit-button').should('be.disabled');
 
-        NavigateToPage('stationCardYield');
+        navigateToPage('stationCardYield');
         cy.get('#stationCardYield-station').should('be.visible');
         cy.get('#stationCardYield-catalog').should('be.visible');
         cy.get('#stationCardYield-startDate').should('be.visible');
         cy.get('#stationCardYield-endDate').should('be.visible');
         cy.get('#stationCardYield-submit-button').should('be.disabled');
 
-        NavigateToPage('nff');
+        navigateToPage('nff');
         cy.get('#nff-cardName').should('be.visible');
         cy.get('#nff-startDate').should('be.visible');
         cy.get('#nff-endDate').should('be.visible');
         cy.get('#nff-timeInterval').should('be.visible');
         cy.get('#nff-submit-button').should('be.disabled');
 
-        NavigateToPage('boundaries');
+        navigateToPage('boundaries');
         cy.get('#boundaries-catalog').should('be.visible');
         cy.get('#boundaries-startDate').should('be.visible');
         cy.get('#boundaries-endDate').should('be.visible');
 
-        NavigateToPage('testerLoad');
+        navigateToPage('testerLoad');
         cy.get('#testerLoad-startDate').should('be.visible');
         cy.get('#testerLoad-endDate').should('be.visible');
 
-        NavigateToPage('cardTestDuration');
+        navigateToPage('cardTestDuration');
         cy.get('#cardTestDuration-catalog').should('be.visible');
         cy.get('#cardTestDuration-startDate').should('be.visible');
         cy.get('#cardTestDuration-endDate').should('be.visible');
@@ -87,7 +87,7 @@ describe('QUERY PAGE TESTS', () => {
             });
         });
 
-        NavigateToPage('cardYield');
+        navigateToPage('cardYield');
         cy.get('#cardYield-catalog').type('randomInput');
         cy.get('#cardYield-startDate').type('2021-10-15');
         cy.get('#cardYield-endDate').type('2021-10-30');
@@ -111,7 +111,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/card_yield_response.json',
         }).as(CARD_YIELD_POST);
 
-        NavigateToPage('cardYield');
+        navigateToPage('cardYield');
 
         cy.get('#cardYield-catalog').type('X56868');
         cy.get('#cardYield-startDate').type('2021-10-19');
@@ -151,7 +151,7 @@ describe('QUERY PAGE TESTS', () => {
             });
         });
 
-        NavigateToPage('stationYield');
+        navigateToPage('stationYield');
         cy.get('#stationYield-startDate').type('2021-10-15');
         cy.get('#stationYield-endDate').type('2021-10-30');
         cy.get('#stationYield-submit-button').click();
@@ -174,7 +174,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/station_yield_response.json',
         }).as(STATION_YIELD_POST);
 
-        NavigateToPage('stationYield');
+        navigateToPage('stationYield');
 
         cy.get('#stationYield-startDate').type('2021-10-19');
         cy.get('#stationYield-endDate').type('2021-10-20');
@@ -202,7 +202,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/station_card_yield_response.json',
         }).as(STATION_CARD_YIELD_POST);
 
-        NavigateToPage('stationCardYield');
+        navigateToPage('stationCardYield');
 
         cy.get('#stationCardYield-station').type('A4');
         cy.get('#stationCardYield-catalog').type('X56868');
@@ -232,7 +232,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/nff_response.json',
         }).as(NFF_POST);
 
-        NavigateToPage('nff');
+        navigateToPage('nff');
 
         cy.get('#nff-cardName').type('XMCP-B');
         cy.get('#nff-startDate').type('2020-11-29');
@@ -262,7 +262,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/tester_load_response.json',
         }).as(TESTER_LOAD_POST);
 
-        NavigateToPage('testerLoad');
+        navigateToPage('testerLoad');
 
         cy.get('#testerLoad-startDate').type('2021-01-01');
         cy.get('#testerLoad-endDate').type('2021-01-03');
@@ -294,7 +294,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/card_test_duration_response.json',
         }).as(CARD_TEST_DURATION_POST);
 
-        NavigateToPage('cardTestDuration');
+        navigateToPage('cardTestDuration');
 
         cy.get('#cardTestDuration-catalog').type('X93655');
         cy.get('#cardTestDuration-startDate').type('2021-11-11');
@@ -327,7 +327,7 @@ describe('QUERY PAGE TESTS', () => {
             fixture: 'queries/boundaries_response.json',
         }).as(BOUNDARIES_POST);
 
-        NavigateToPage('boundaries');
+        navigateToPage('boundaries');
 
         cy.get('#boundaries-catalog').type('X39337');
         cy.get('#boundaries-startDate').type('2021-12-22');

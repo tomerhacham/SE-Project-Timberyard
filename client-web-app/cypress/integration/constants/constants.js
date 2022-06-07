@@ -2,14 +2,19 @@
 export const LOGIN_API = '**/Authentication/Login';
 export const LOGIN_ALIAS = 'loginPost';
 export const UNSUCCESSFUL_LOGIN_MESSAGE = 'Incorrect email address or password';
+export const REQUEST_PASSWORD_API = '**/Authentication/RequestVerificationCode';
+export const REQUEST_PASSWORD_ALIAS = 'reqPassword';
+export const FORGOT_PASSWORD_API = '**/Authentication/ForgetPassword';
+export const FORGOT_PASSWORD_ALIAS = 'forgotPassword';
 export const ADD_USER_API = '**/Authentication/AddUser';
 export const ADD_USER_ALIAS = 'addUser';
-export const UNSUCCESSFUL_ADD_USER_MESSAGE = 'User already exists';
-export const UNSUCCESSFUL_REMOVE_USER_MESSAGE = 'No such user exists';
 export const REMOVE_USER_API = '**/Authentication/RemoveUser';
 export const REMOVE_USER_ALIAS = 'removeUser';
 export const ADD_SYSTEM_ADMIN_API = '**/Authentication/AddSystemAdmin';
 export const ADD_SYSTEM_ADMIN_ALIAS = 'addSystemAdmin';
+export const CHANGE_PASSWORD_API =
+    '**/Authentication/ChangeSystemAdminPassword';
+export const CHANGE_PASSWORD_ALIAS = 'changePassword';
 
 // Queries
 export const CARD_YIELD_API = '**/Queries/CardYield';

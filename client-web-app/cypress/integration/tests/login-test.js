@@ -1,10 +1,14 @@
 /// <reference types="cypress" />
-import { checkMessage, NavigateToPage } from '../commands/actions';
+import { checkMessage, navigateToPage } from '../commands/actions';
 import { validatePage } from '../commands/asserts';
 import {
     LOGIN_API,
     LOGIN_ALIAS,
     UNSUCCESSFUL_LOGIN_MESSAGE,
+    REQUEST_PASSWORD_API,
+    REQUEST_PASSWORD_ALIAS,
+    FORGOT_PASSWORD_API,
+    FORGOT_PASSWORD_ALIAS,
 } from '../constants/constants';
 
 describe('LOGIN TESTS', () => {
@@ -67,7 +71,7 @@ describe('LOGIN TESTS', () => {
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
         cy.wait(`@${LOGIN_ALIAS}`).then(() => {
             validatePage(Cypress.env('dashboardUrl'));
-            NavigateToPage('settings');
+            navigateToPage('settings');
         });
     });
 
@@ -104,6 +108,7 @@ describe('LOGIN TESTS', () => {
             }
         );
 
+        cy.visit(Cypress.env('loginUrl'));
         cy.login('fail@gmail.com', 'IncorrectPwd1');
         cy.wait(`@${LOGIN_ALIAS}`).then(() => {
             validatePage(Cypress.env('loginUrl'));
@@ -111,6 +116,50 @@ describe('LOGIN TESTS', () => {
                 'login-page-message',
                 UNSUCCESSFUL_LOGIN_MESSAGE,
                 'rgb(87, 41, 41)'
+            );
+        });
+    });
+
+    it('Check request verification code', () => {
+        cy.intercept('POST', REQUEST_PASSWORD_API, {
+            body: {
+                status: 200,
+            },
+        }).as(REQUEST_PASSWORD_ALIAS);
+
+        cy.visit(Cypress.env('loginUrl'));
+        cy.get('#password-toggle-button').click();
+        cy.get('#login-email').type(Cypress.env('userEmail'));
+        cy.get('#login-signIn-button').should('be.enabled');
+        cy.get('#login-signIn-button').click();
+
+        cy.wait(`@${REQUEST_PASSWORD_ALIAS}`).then(() => {
+            checkMessage(
+                'login-page-message',
+                'If a user with this email address exists, a verification code will be sent to it.',
+                'rgb(40, 72, 98)'
+            );
+        });
+    });
+
+    it('Check forgot password', () => {
+        cy.intercept('POST', FORGOT_PASSWORD_API, {
+            body: {
+                status: 200,
+            },
+        }).as(FORGOT_PASSWORD_ALIAS);
+
+        cy.visit(Cypress.env('loginUrl'));
+        cy.get('#forgot-password-button').click();
+        cy.get('#login-email').type(Cypress.env('userEmail'));
+        cy.get('#login-signIn-button').should('be.enabled');
+        cy.get('#login-signIn-button').click();
+
+        cy.wait(`@${FORGOT_PASSWORD_ALIAS}`).then(() => {
+            checkMessage(
+                'login-page-message',
+                'If a user with this email address exists, an email with a new password will be sent.',
+                'rgb(40, 72, 98)'
             );
         });
     });
