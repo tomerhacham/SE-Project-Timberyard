@@ -2,6 +2,10 @@
 export const LOGIN_API = '**/Authentication/Login';
 export const LOGIN_ALIAS = 'loginPost';
 export const UNSUCCESSFUL_LOGIN_MESSAGE = 'Incorrect email address or password';
+export const REQUEST_PASSWORD_API = '**/Authentication/RequestVerificationCode';
+export const REQUEST_PASSWORD_ALIAS = 'reqPassword';
+export const FORGOT_PASSWORD_API = '**/Authentication/ForgetPassword';
+export const FORGOT_PASSWORD_ALIAS = 'forgotPassword';
 export const ADD_USER_API = '**/Authentication/AddUser';
 export const ADD_USER_ALIAS = 'addUser';
 export const REMOVE_USER_API = '**/Authentication/RemoveUser';

@@ -18,6 +18,7 @@ export const assertCellValueInFirstRow = (colId, value) => {
 // Success = rgb(26, 79, 73)
 // Error = rgb(87, 41, 41)
 // Warning = rgb(102, 76, 30)
+// Info = rgb(40, 72, 98)
 export const checkMessage = (id, text, color = 'rgb(26, 79, 73)') => {
     cy.get(`#${id}`)
         .should('be.visible')
