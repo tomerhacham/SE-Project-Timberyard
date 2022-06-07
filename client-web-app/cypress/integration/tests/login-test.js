@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { checkMessage, NavigateToPage } from '../commands/actions';
+import { checkMessage, navigateToPage } from '../commands/actions';
 import { validatePage } from '../commands/asserts';
 import {
     LOGIN_API,
@@ -67,7 +67,7 @@ describe('LOGIN TESTS', () => {
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
         cy.wait(`@${LOGIN_ALIAS}`).then(() => {
             validatePage(Cypress.env('dashboardUrl'));
-            NavigateToPage('settings');
+            navigateToPage('settings');
         });
     });
 

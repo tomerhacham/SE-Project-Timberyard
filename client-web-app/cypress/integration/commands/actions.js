@@ -1,6 +1,6 @@
 import { validatePage } from './asserts';
 
-export const NavigateToPage = (page) => {
+export const navigateToPage = (page) => {
     cy.get('#navbar-button').click();
     cy.get(`#sidebar-${page}`).click();
     validatePage(Cypress.env(`${page}Url`));
@@ -17,6 +17,7 @@ export const assertCellValueInFirstRow = (colId, value) => {
 
 // Success = rgb(26, 79, 73)
 // Error = rgb(87, 41, 41)
+// Warning = rgb(102, 76, 30)
 export const checkMessage = (id, text, color = 'rgb(26, 79, 73)') => {
     cy.get(`#${id}`)
         .should('be.visible')

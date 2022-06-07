@@ -23,7 +23,7 @@ const PasswordSettings = (props) => {
     const handleSubmit = async () => {
         if (userInput.newPassword !== userInput.confirm) {
             setMessage({
-                text: 'Passwords do not match.',
+                text: 'Passwords do not match',
                 severity: MESSAGE.WARNING,
             });
             return;
@@ -47,10 +47,15 @@ const PasswordSettings = (props) => {
                 <CardHeader subheader='Change Password' title='Password' />
                 <Divider />
                 {message && (
-                    <Message text={message.text} severity={message.severity} />
+                    <Message
+                        id='password-settings-message'
+                        text={message.text}
+                        severity={message.severity}
+                    />
                 )}
                 <CardContent>
                     <TextField
+                        id='old-password-input'
                         fullWidth
                         label='Old Password'
                         margin='normal'
@@ -66,6 +71,7 @@ const PasswordSettings = (props) => {
                         variant='outlined'
                     />
                     <TextField
+                        id='new-password-input'
                         fullWidth
                         label='New Password'
                         margin='normal'
@@ -81,8 +87,9 @@ const PasswordSettings = (props) => {
                         variant='outlined'
                     />
                     <TextField
+                        id='confirm-password-input'
                         fullWidth
-                        label='Confirm password'
+                        label='Confirm Password'
                         margin='normal'
                         name='confirm'
                         onChange={(e) =>
@@ -104,8 +111,14 @@ const PasswordSettings = (props) => {
                         p: 2,
                     }}>
                     <Button
+                        id='update-password-button'
                         color='primary'
                         variant='contained'
+                        disabled={
+                            userInput.newPassword === '' ||
+                            userInput.oldPassword === '' ||
+                            userInput.confirm === ''
+                        }
                         onClick={() => handleSubmit()}>
                         Update
                     </Button>
