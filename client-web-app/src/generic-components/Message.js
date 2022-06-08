@@ -4,7 +4,7 @@ import { capitalize } from 'lodash';
 import { Alert } from '@mui/material';
 
 const Message = (props) => {
-    const { text, severity, style } = props;
+    const { id, text, severity, style } = props;
 
     const renderText = () => {
         if (text && text !== '') {
@@ -14,7 +14,7 @@ const Message = (props) => {
     };
 
     return (
-        <Alert style={style} severity={severity}>
+        <Alert id={id} style={style} severity={severity}>
             {renderText()}
         </Alert>
     );

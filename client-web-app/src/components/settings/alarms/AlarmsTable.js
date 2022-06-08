@@ -8,6 +8,7 @@ import {
     RemoveAlarm,
 } from '../../../api/Api';
 import AlarmDialog from './AlarmDialog';
+import { MESSAGE } from '../../../constants/constants';
 
 const fieldTypes = {
     0: 'Catalog',
@@ -92,7 +93,7 @@ const AlarmsTable = (props) => {
                 }
                 setMessage({
                     text: result.message,
-                    severity: result.status ? 'success' : 'error',
+                    severity: result.status ? MESSAGE.SUCCESS : MESSAGE.ERROR,
                 });
                 handleCloseDialog();
             }
@@ -102,7 +103,7 @@ const AlarmsTable = (props) => {
             if (result) {
                 setMessage({
                     text: result.message,
-                    severity: result.status ? 'success' : 'error',
+                    severity: result.status ? MESSAGE.SUCCESS : MESSAGE.ERROR,
                 });
                 handleCloseDialog();
                 getAlarms();
@@ -129,7 +130,7 @@ const AlarmsTable = (props) => {
             if (result) {
                 setMessage({
                     text: result.message,
-                    severity: result.status ? 'success' : 'error',
+                    severity: result.status ? MESSAGE.SUCCESS : MESSAGE.ERROR,
                 });
             }
             getAlarms();

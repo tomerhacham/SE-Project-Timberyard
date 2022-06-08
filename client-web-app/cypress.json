@@ -1,8 +1,10 @@
 {
     "baseUrl": "http://localhost:3000",
     "env": {
-        "adminEmail": "admin@ribbon.com",
-        "adminPassword": "Admin123",
+        "adminEmail": "admin@timberyard.rbbn.com",
+        "adminPassword": "Password123!",
+        "userEmail": "israel@rbbn.com",
+        "userPassword": "goRibbon123!",
         "dashboardUrl": "",
         "loginUrl": "login",
         "cardYieldUrl": "cardyield",
@@ -11,7 +13,12 @@
         "nffUrl": "nff",
         "boundariesUrl": "boundaries",
         "testerLoadUrl": "testerload",
-        "cardTestDurationUrl": "cardtestduration"
+        "cardTestDurationUrl": "cardtestduration",
+        "settingsUrl": "settings"
     },
-    "testFiles": ["tests/queryPage-test.js"]
+    "testFiles": [
+        "tests/login-test.js",
+        "tests/queryPage-test.js",
+        "tests/users-settings-test.js"
+    ]
 }

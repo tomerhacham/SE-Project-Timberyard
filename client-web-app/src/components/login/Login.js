@@ -21,6 +21,7 @@ import {
     FORGOT_PASSWORD_TEXT,
     FORGOT_PASSWORD_SENT_TEXT,
     SUCCESS_CODE,
+    MESSAGE,
 } from '../../constants/constants';
 
 const Login = () => {
@@ -57,7 +58,7 @@ const Login = () => {
         if (response && response.status === SUCCESS_CODE) {
             setMessage({
                 text: SEND_VERIFICATION_CODE_TEXT,
-                severity: 'info',
+                severity: MESSAGE.INFO,
             });
             setHavePassword(true);
         }
@@ -68,9 +69,20 @@ const Login = () => {
         if (result) {
             setMessage({
                 text: FORGOT_PASSWORD_SENT_TEXT,
-                severity: 'info',
+                severity: MESSAGE.INFO,
             });
         }
+    };
+
+    const havePasswordButton = (event) => {
+        event.preventDefault();
+        setMessage(null);
+
+        // If havePwd changing to true, set forgotPwd to false also
+        setHavePassword((prevState) => {
+            if (!prevState) setForgotPassword(false);
+            return !prevState;
+        });
     };
 
     const forgotPasswordButton = () => {
@@ -78,9 +90,16 @@ const Login = () => {
         setHavePassword(false);
         setMessage({
             text: FORGOT_PASSWORD_TEXT,
-            severity: 'info',
+            severity: MESSAGE.INFO,
         });
     };
+
+    const renderSubmitButtonText = () =>
+        havePassword
+            ? 'Sign In'
+            : forgotPassword
+            ? 'Send Reset Email'
+            : 'Send Code';
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -132,6 +151,7 @@ const Login = () => {
                     </Typography>
                     {message && (
                         <Message
+                            id='login-page-message'
                             style={{ marginTop: '10px' }}
                             text={message.text}
                             severity={message.severity}
@@ -194,17 +214,14 @@ const Login = () => {
                                 (havePassword && userInput.password === '')
                             }
                             sx={{ mt: 3, mb: 2 }}>
-                            {havePassword ? 'Sign In' : 'Send Code'}
+                            {renderSubmitButtonText()}
                         </Button>
                         <Grid container>
                             <Grid item xs>
                                 <Button
+                                    id='password-toggle-button'
                                     variant='body2'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setMessage(null);
-                                        setHavePassword(!havePassword);
-                                    }}>
+                                    onClick={(e) => havePasswordButton(e)}>
                                     {havePassword
                                         ? "I don't have a password"
                                         : 'I have a password'}
@@ -213,6 +230,7 @@ const Login = () => {
                             {havePassword && (
                                 <Grid item>
                                     <Button
+                                        id='forgot-password-button'
                                         variant='body2'
                                         onClick={forgotPasswordButton}>
                                         Forgot Password?

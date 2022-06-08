@@ -323,6 +323,37 @@ namespace Timberyard_UnitTests.IntegrationTests
             }
         }
 
+
+        [Fact]
+        public async void RequestVerificationCode_regularUser()
+        {
+            string email = "requestverificationcode_regularUser@timberyard.com";
+            bool result = UsersRepository.Users.ContainsKey(email);
+
+            if (!result)
+            {
+                var insert_regularUser = await AuthenticationController.AddUser(email);
+                Assert.True(insert_regularUser.Status);
+                Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO user));
+                Assert.Equal(Role.RegularUser, UsersRepository.Users[email].Role);
+                var initial_pass = UsersRepository.Users[email].Password;
+                var initial_time = DateTime.UtcNow.AddMinutes(5);
+                var requestCode = await AuthenticationController.RequestVerificationCode(email);
+                Assert.True(requestCode.Status);
+                Assert.NotEqual(initial_pass, UsersRepository.Users[email].Password);
+                Assert.InRange(UsersRepository.Users[email].ExpirationTimeStamp, initial_time, DateTime.UtcNow.AddMinutes(5));
+            }
+        }
+
+        [Fact]
+        public async void RequestVerificationCode_notExists()
+        {
+            string email = "requestverificationcode_noSuchUser@timberyard.com";
+            bool result = UsersRepository.Users.ContainsKey(email);
+            Assert.False(result);
+            var requestCode = await AuthenticationController.RequestVerificationCode(email);
+            Assert.False(requestCode.Status);
+        }
         #endregion
     }
 }

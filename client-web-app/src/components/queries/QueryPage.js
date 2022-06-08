@@ -106,6 +106,18 @@ const QueryPage = ({ data }) => {
         return <Icon />;
     };
 
+    const handleOnChange = (event, field) => {
+        setUserInput({
+            ...userInput,
+            [field.id]:
+                field.type === 'number'
+                    ? field.id === 'timeInterval'
+                        ? 3600 * event.target.valueAsNumber
+                        : event.target.valueAsNumber
+                    : event.target.value,
+        });
+    };
+
     const inputFields = (
         <Box id={`${id}-input-box`} sx={queriesInputBoxSx}>
             {icon && (
@@ -134,15 +146,7 @@ const QueryPage = ({ data }) => {
                             label={field.label}
                             type={field.type}
                             autoFocus={field.autoFocus || false}
-                            onChange={(e) =>
-                                setUserInput({
-                                    ...userInput,
-                                    [field.id]:
-                                        field.type === 'number'
-                                            ? e.target.valueAsNumber
-                                            : e.target.value,
-                                })
-                            }
+                            onChange={(e) => handleOnChange(e, field)}
                             InputLabelProps={{ shrink: true }}
                         />
                     ))}

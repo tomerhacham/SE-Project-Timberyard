@@ -4,6 +4,274 @@
         <name>WebService</name>
     </assembly>
     <members>
+        <member name="T:WebService.API.ActionFilters.ModelStateCheckFilter">
+            <summary>
+            Middleware for verifing model state.
+            Instead of verifing the model state explicilty the middleware will verify it implicitly.
+            Hence, not valid requests will be handeled by this middleware
+            </summary>
+        </member>
+        <member name="M:WebService.API.ActionFilters.ModelStateCheckFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            Method been called after execution of the action has been completed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:WebService.API.ActionFilters.ModelStateCheckFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Method been called in the begining of the execution of the action
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:WebService.API.ActionFilters.UnhandledExceptionCheckFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <summary>
+            Method been called after execution of the action has been completed
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:WebService.API.ActionFilters.UnhandledExceptionCheckFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            Method been called in the begining of the execution of the action
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:WebService.API.Controllers.Alarms">
+            <summary>
+            Responsible on all alarms management scenarios
+            </summary>
+        </member>
+        <member name="M:WebService.API.Controllers.Alarms.AddNewAlarm(WebService.API.Controllers.Models.PartialAlarmModel)">
+            <summary>
+            Adding new alarm to the system
+            </summary>
+            <param name="model"></param>
+            <returns>new alarm object</returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Alarms.EditAlarm(WebService.API.Controllers.Models.FullAlarmModel)">
+            <summary>
+            Editing existing alarm
+            </summary>
+            <param name="model"></param>
+            <returns>updated alarm object</returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Alarms.RemoveAlarm(WebService.API.Controllers.Models.AlarmToRemoveModel)">
+            <summary>
+            Removing alarm from the system
+            </summary>
+            <param name="Id">Id of th alarm to remove</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Alarms.GetAllAlarms">
+            <summary>
+            Get all alarms object listed in the system
+            This function should be use only to display in the UI all the alarms
+            </summary>
+            <returns>List of alarms</returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Alarms.CheckAlarmsCondition">
+            <summary>
+            End point which whill use only by the ETL process to signal that new batch of logs has been inserted
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WebService.API.Controllers.Authentication">
+            <summary>
+            Responsible on all authentication and users management scenarios
+            </summary>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.RequestVerificationCode(WebService.API.Controllers.Models.EmailModel)">
+            <summary>
+            Request verification code to be sent to the provided email.
+            This function should be use on regular user loging flow
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.Login(WebService.API.Controllers.Models.LoginModel)">
+            <summary>
+            Perform login and generated token for the user
+            </summary>
+            <param name="model"></param>
+            <returns>
+            if user logged in sccessfuly, return JWT token. else, return empty string  
+            </returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.AddUser(WebService.API.Controllers.Models.EmailModel)">
+            <summary>
+            Adding new email as regular user to the system
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.RemoveUser(WebService.API.Controllers.Models.EmailModel)">
+            <summary>
+            Remove user (system admin or regular user) from the system
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.ChangeSystemAdminPassword(WebService.API.Controllers.Models.ChangeSystemAdminPasswordModel)">
+            <summary>
+            Change system admin password
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.AddSystemAdmin(WebService.API.Controllers.Models.EmailModel)">
+            <summary>
+            Add new email as new system admin
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.ForgetPassword(WebService.API.Controllers.Models.EmailModel)">
+            <summary>
+            Reset the provided user's password and send the new password via SMTP
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.GetToken(System.String)">
+            <summary>
+            Util function - should be for test purposes only
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Authentication.GetAllUsers">
+            <summary>
+            Get all users listed in the system
+            This function should be use only to display in the UI all the users
+            </summary>
+            <returns>List of users</returns>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.DateGreaterEqualThanAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validate that the provided value is datetime object which greater that the value in the 'DateToCompareFieldName' field
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WebService.API.Controllers.ModelValidation.PositiveNumberAttribute">
+            <summary>
+            Attribute to enforce only positive values (exclude 0)
+            </summary>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.PositiveNumberAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validates that the provided value is positive integer
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.StringIsNotNullOrEmptyAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validate the the provided value is non empty string nor null
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.ValidEmailAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validate that the provided value is valid email address
+            </summary>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.ValidEmailAttribute.IsValidEmail(System.String)">
+            <summary>
+            Utility function to validate email 
+            </summary>
+            <see cref="!:https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.ModelValidation.ValidEmailsAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Validate the the provided value is list of valid emails
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WebService.API.Controllers.ModelValidation.ValidRoleNumberAttribute">
+            <summary>
+            Attribute to validate that the user Role is supported by the system.
+            </summary>
+        </member>
+        <member name="T:WebService.API.Controllers.Queries">
+            <summary>
+            Responsible on all query calculation scenarios
+            </summary>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.CardYield(WebService.API.Controllers.Models.CatalogWithDatesModel)">
+            <summary>
+            Calcuate card yield by catalog and dates range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.StationsYield(WebService.API.Controllers.Models.DatesModel)">
+            <summary>
+            Calculate Station yield for all station by dates range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.StationAndCardYield(WebService.API.Controllers.Models.CatalogStationWithDatesModel)">
+            <summary>
+            Calculate station and card yield by catalog, station and date of range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.NoFailureFound(WebService.API.Controllers.Models.CardNameDatesTimeintervalModel)">
+            <summary>
+            Calcuate no failure found details by card name, dates range and time interval between to runs on the same serial number [in seconds]
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.TesterLoad(WebService.API.Controllers.Models.DatesModel)">
+            <summary>
+            Calculate load metric for all the testers in dates range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.CardTestDuration(WebService.API.Controllers.Models.CatalogWithDatesModel)">
+            <summary>
+            Calculate test duration by catalog and dates range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Controllers.Queries.Boundaries(WebService.API.Controllers.Models.CatalogWithDatesModel)">
+            <summary>
+            Calculate boundaries metrics (Min,Max,Avg,Std..) by catalog and dates range
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Middlewares.JwtMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext,WebService.Domain.Business.Authentication.AuthenticationController)">
+            <summary>
+            util fucntion to extract token from request header if provided.
+            In case a token is provided, the embedded information will be extracted too and be assign in the HttpContext
+            </summary>
+            <param name="context"></param>
+            <param name="authController"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.API.Middlewares.JwtMiddleware.AttachUserToContext(Microsoft.AspNetCore.Http.HttpContext,WebService.Domain.Business.Authentication.AuthenticationController,System.String)">
+            <summary>
+            Extracting the relevent information from the users token if its valid.
+            In cae the token expired and boolean indicate so will be turn on
+            </summary>
+            <param name="context"></param>
+            <param name="userService"></param>
+            <param name="token"></param>
+        </member>
         <member name="T:WebService.API.Swagger.Example.WeatherForecastController.ToDoRequestExample">
             <summary>
             Example for valid request from client to API
@@ -13,6 +281,285 @@
             <summary>
             Example for valid response from the API to the client
             </summary>
+        </member>
+        <member name="M:WebService.Domain.Business.Alarms.AlarmsController.AddNewAlarm(System.String,WebService.Domain.Business.Alarms.Field,System.String,System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            Adding new alarm to the sysmten
+            </summary>
+            <param name="name">Name of the alarm</param>
+            <param name="field">The field which the alarm monitors</param>
+            <param name="objective">Name of the field instance e.g for Catalog 'x-123df' or Station 'L1'</param>
+            <param name="threshold">Threshold for the alarm to be set on</param>
+            <param name="receivers">List of email addresses to recieve the alarm notification</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Alarms.AlarmsController.EditAlarm(WebService.Domain.Business.Alarms.Alarm)">
+            <summary>
+            Editing any property of an exisitng alarm
+            </summary>
+            <param name="alarmToEdit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Alarms.AlarmsController.RemoveAlarm(System.Int32)">
+            <summary>
+            Removing alarm from the system
+            </summary>
+            <param name="alarmToRemove"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Alarms.AlarmsController.GetAllAlarms">
+            <summary>
+            Returning all the system alarms
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Alarms.AlarmsController.CheckForAlarmsCondition">
+            <summary>
+            Function to deserialize all active alarms from the DB and instate each one of them.
+            Each alarm will be check for raise condition and trigger notification if needed
+            </summary>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.Login(System.String,System.String)">
+            <summary>
+            Login to the system. the provided pasword will be validate with the persisted information regarding the user.
+            If validation succeed a JWT token will be issued for the user.
+            </summary>
+            <param name="email"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.RequestVerificationCode(System.String)">
+            <summary>
+            Sends OTP (One Time Password) to the provided user if is listed as user in the system
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.AddUser(System.String)">
+            <summary>
+            Adding the provided email as regular user to the system.
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.RemoveUser(System.String)">
+            <summary>
+            Removing the provided email address from the system's users
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.ChangeSystemAdminPassword(System.String,System.String,System.String)">
+            <summary>
+            Change users password in case the provided oldPassword matches the exisitng one
+            </summary>
+            <param name="email"></param>
+            <param name="newPassword"></param>
+            <param name="oldPassword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.AddSystemAdmin(System.String)">
+            <summary>
+            Adding new system admin user for the provided email
+            </summary>
+            <param name="newSystemAdminEmail"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.ForgetPassword(System.String)">
+            <summary>
+            Reset the provided email password and send it via SMTP
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.GenerateToken(WebService.Domain.DataAccess.DTO.UserDTO)">
+            <summary>
+            Generate JWT token with digital signature and user's claims
+            </summary>
+            <param name="record"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.GenerateAndSendPassword(System.String,System.String,System.String)">
+            <summary>
+            Util function to generate random number and sent it via email
+            </summary>
+            <param name="email"></param>
+            <param name="msg_subject"></param>
+            <param name="email_subject"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.SendPassword(System.String,System.String,System.String,System.String)">
+            <summary>
+            Util function to build email message and send it as backgorund task
+            </summary>
+            <param name="email"></param>
+            <param name="password"></param>
+            <param name="msg_subject"></param>
+            <param name="email_subject"></param>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.Boundaries.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execute Boundaries query and aggregate the raw results
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.Boundaries.AggregateResults(System.Collections.Generic.List{System.Object})">
+            <summary>
+            Util function to aggreate raw results returned from the persistance and calcualte Std, Avg and selection all tset names which related to the query
+            </summary>
+            <param name="records"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.CardTestDuration.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execute Card test duration query and return the results
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.CardYield.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execute card yield query and returns the results
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.IQuery.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Each query need to implement this interface and the 'Execute' function.
+            The function accepts the relevent repository which responsible to the database communication
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.NoFailureFound.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Executing NoFailureFound query and aggregate the raw results
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.NoFailureFound.AggregateResults(System.Collections.Generic.List{System.Object})">
+            <summary>
+            Util function to perform aggregation of the test names which yield the failure.
+            Thhe function will find all the records which return with the same LogId and makes a list of all the test names associate to it
+            </summary>
+            <param name="records"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.StationAndCardYield.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execution Station and Card Yield query and returns the result
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.StationsYield.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execute Stations yield and returns the result
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Queries.TesterLoad.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
+            <summary>
+            Execute test loader query and returns the result
+            </summary>
+            <param name="LogsAndTestsRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.Business.Services.SMTPClient.SendEmail(System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Sends email via SMTP client
+            </summary>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <param name="receivers"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.GetAllActiveAlarms">
+            <summary>
+            Query the database for all active alarms.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.GetAllAlarms">
+            <summary>
+            Query the database for all alarms
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.GetAlarmsQuery(System.String,System.Object)">
+            <summary>
+            Util function to query the databse by generic sql command and parameters
+            </summary>
+            <param name="sqlCommand"></param>
+            <param name="queryParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.InsertAlarm(WebService.Domain.Business.Alarms.Alarm)">
+            <summary>
+            Inserting new alarm record to the database
+            </summary>
+            <param name="alarm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.UpdateAlarm(WebService.Domain.Business.Alarms.Alarm)">
+            <summary>
+            Updating exisitng alarm record in the database
+            </summary>
+            <param name="alarm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.DeleteAlarm(System.Int32)">
+            <summary>
+            Deleting alarm record by its Id from the database
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.GetUserRecord(System.String)">
+            <summary>
+            Qurey the databse for the user record by Email
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.UpdateUser(WebService.Domain.DataAccess.DTO.UserDTO)">
+            <summary>
+            Updating user record in the database
+            </summary>
+            <param name="record"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.RemoveUser(System.String)">
+            <summary>
+            Removing user record by it email from the database
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.AddUser(WebService.Domain.DataAccess.DTO.UserDTO)">
+            <summary>
+            Inserting new user record to the database if not exists.
+            In case the user already exisits and result object indication failure will returns.
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.GetAllUsers">
+            <summary>
+            Query the database for all the listed users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.AlarmsAndUsersRepository.UpdateOrInsert(WebService.Domain.DataAccess.DTO.UserDTO)">
+            <summary>
+            Util function which use only to insert or update the defualt system admin on every system initialization event
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
         </member>
         <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.CardYield)">
             <summary>
@@ -24,15 +571,126 @@
                 EndDate:DateTime
             </param>
             <returns>
-                [Catalog, CardName, NumberSuccessedTests(%)]        
+                [Catalog, CardName, SuccessRatio(%)]        
             </returns>
         </member>
-        <member name="M:WebService.Utils.Result`1.ContinueWith``1(System.Action{`0},System.Action{``0})">
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.StationsYield)">
             <summary>
-            Implementation of CPS for cleaner program flow
+            Execute Stations Yield Query 
             </summary>
-            <param name="success"></param>
-            <param name="fail"></param>
+            <param name="stationsYield">
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Station, SuccessRatio(%)]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.NoFailureFound)">
+            <summary>
+            Execute No Failure Found Query 
+            </summary>
+            <param name="noFailureFound">
+                CardName:string
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Id, Date, Catalog, CardName, Station, Operator, TestName]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.StationAndCardYield)">
+            <summary>
+            Execute Station and Card Yield Query 
+            </summary>
+            <param name="stationAndCardYield">
+                Station:string
+                Catalog:string
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Catalog, CardName, SuccessRatio(%)]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.CardTestDuration)">
+            <summary>
+            Execute Card Test Duration query
+            </summary>
+            <param name="cardTestDuration">
+                Catalog:string
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Operator, NetTimeAvg, TotalTimeAvg]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.TesterLoad)">
+            <summary>
+            Execute Tester Load Query 
+            </summary>
+            <param name="testerLoad">
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Station, NumberOfRuns, TotalRunTimeHours]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery(WebService.Domain.Business.Queries.Boundaries)">
+            <summary>
+            Execute Boundaries Query 
+            </summary>
+            <param name="boundaries">
+                Catalog:string
+                StartDate:DateTime
+                EndDate:DateTime
+            </param>
+            <returns>
+                [Station, NumberOfRuns, TotalRunTimeHours]        
+            </returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.GetAllLogsInTimeInterval(System.DateTime,System.DateTime)">
+            <summary>
+            Util function to query for all the logs betwen to time intervals.
+            This function is been used by the alarm controller to check if any of the alarms needs to be raise on the returns logs
+            </summary>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Domain.DataAccess.LogsAndTestsRepository.ExecuteQuery``1(System.String,System.Object)">
+            <summary>
+            Private function to wrap and handle execptions in query execution process
+            </summary>
+            <param name="sqlCommand">string represent the SQL command, can be parameterized</param>
+            <param name="queryParams">object hold SQL query parameters</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Utils.ExtentionMethods.Extensions.IsValidEmail(System.Collections.Generic.List{System.String})">
+            <summary>
+            Utility function to validate a list of emails
+            </summary>
+            <see cref="!:https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
+            <param name="emails"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebService.Utils.ExtentionMethods.Extensions.IsValidEmail(System.String)">
+            <summary>
+            Utility function to validate email 
+            </summary>
+            <see cref="!:https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format"/>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthorizeAttribute.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            Validate the extracted information from the users token.
+            The function checks that the token is not expired that the user's role match the attribute role
+            In case the token is expired or role is not matches unauthorized response will be return
+            </summary>
+            <param name="context"></param>
         </member>
     </members>
 </doc>
