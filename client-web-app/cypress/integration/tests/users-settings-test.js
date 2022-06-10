@@ -16,7 +16,7 @@ import {
     CHANGE_PASSWORD_ALIAS,
 } from '../constants/constants';
 
-describe('LOGIN TESTS', () => {
+describe('SETTINGS TESTS', () => {
     beforeEach('Login to user admin', () => {
         cy.intercept('POST', LOGIN_API, {
             fixture: 'authentication/admin_login_response.json',
@@ -34,7 +34,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check users section fields', () => {
+    it('USERS - Check fields', () => {
         cy.get('#users-settings-expand').click();
         cy.get('#users-settings-email-input').should('be.visible');
         cy.get('#users-settings-role-select')
@@ -44,7 +44,7 @@ describe('LOGIN TESTS', () => {
         cy.get('#users-settings-remove-button').should('be.disabled');
     });
 
-    it('Check add Regular User', () => {
+    it('USERS - Check add Regular User', () => {
         cy.intercept('POST', ADD_USER_API, {
             body: {
                 status: true,
@@ -62,7 +62,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check add System Admin', () => {
+    it('USERS - Check add System Admin', () => {
         cy.intercept('POST', ADD_SYSTEM_ADMIN_API, { body: true }).as(
             ADD_SYSTEM_ADMIN_ALIAS
         );
@@ -78,7 +78,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check bad add Regular User request', () => {
+    it('USERS - Check bad add Regular User request', () => {
         cy.intercept('POST', ADD_USER_API, {
             body: {
                 status: false,
@@ -100,7 +100,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check bad add System Admin request', () => {
+    it('USERS - Check bad add System Admin request', () => {
         cy.intercept('POST', ADD_SYSTEM_ADMIN_API, { body: false }).as(
             ADD_SYSTEM_ADMIN_ALIAS
         );
@@ -120,7 +120,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check remove user', () => {
+    it('USERS - Check remove user', () => {
         cy.intercept('POST', REMOVE_USER_API, {
             body: {
                 status: true,
@@ -138,7 +138,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check bad remove user request', () => {
+    it('USERS - Check bad remove user request', () => {
         cy.intercept('POST', REMOVE_USER_API, {
             body: {
                 status: false,
@@ -160,7 +160,7 @@ describe('LOGIN TESTS', () => {
         });
     });
 
-    it('Check password section fields', () => {
+    it('PASSWORD - Check password section fields', () => {
         cy.get('#password-settings-expand').click();
         cy.get('#old-password-input').should('be.visible');
         cy.get('#new-password-input').should('be.visible');
@@ -168,7 +168,7 @@ describe('LOGIN TESTS', () => {
         cy.get('#update-password-button').should('be.disabled');
     });
 
-    it('Check unmatching passwords message', () => {
+    it('PASSWORD - Check unmatching passwords message', () => {
         cy.get('#password-settings-expand').click();
         cy.get('#old-password-input').type('oldPassword');
         cy.get('#new-password-input').type('newPassword');
@@ -182,7 +182,7 @@ describe('LOGIN TESTS', () => {
         );
     });
 
-    it('Check successful password update', () => {
+    it('PASSWORD - Check successful password update', () => {
         cy.intercept('POST', CHANGE_PASSWORD_API, {
             body: {
                 status: true,
