@@ -33,6 +33,7 @@ const ChipInput = (props) => {
     return (
         <div className='tags-input'>
             <TextField
+                id='email-chip-textfield'
                 margin='dense'
                 type='text'
                 label='Email Address'
@@ -51,6 +52,7 @@ const ChipInput = (props) => {
                     endAdornment: (
                         <InputAdornment position='end'>
                             <IconButton
+                                id='chip-add-button'
                                 aria-label='add email address'
                                 onClick={() => handleAdd(input)}
                                 edge='end'>
@@ -75,6 +77,7 @@ const ChipInput = (props) => {
                         return (
                             <ListItem key={email}>
                                 <Chip
+                                    id='chip-item'
                                     label={email}
                                     onDelete={handleDelete(email)}
                                 />
