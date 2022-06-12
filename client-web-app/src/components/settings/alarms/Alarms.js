@@ -18,7 +18,11 @@ const Alarms = () => {
                 <CardHeader subheader='Manage Alarms' title='Alarms' />
                 <Divider />
                 {message && (
-                    <Message text={message.text} severity={message.severity} />
+                    <Message
+                        id='alarms-settings-message'
+                        text={message.text}
+                        severity={message.severity}
+                    />
                 )}
                 <CardContent>
                     {/* <Grid container wrap='wrap'> */}

@@ -5,7 +5,7 @@ import {
     LOGIN_API,
     LOGIN_ALIAS,
     GET_ALL_ALARMS_API,
-    GET_ALL_ALARMS_POST,
+    GET_ALL_ALARMS_ALIAS,
     ADD_USER_API,
     ADD_USER_ALIAS,
     ADD_SYSTEM_ADMIN_ALIAS,
@@ -23,7 +23,7 @@ describe('SETTINGS TESTS', () => {
         }).as(LOGIN_ALIAS);
 
         // just to discard when visiting settings page
-        cy.intercept('POST', GET_ALL_ALARMS_API, {}).as(GET_ALL_ALARMS_POST);
+        cy.intercept('POST', GET_ALL_ALARMS_API, {}).as(GET_ALL_ALARMS_ALIAS);
 
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
 

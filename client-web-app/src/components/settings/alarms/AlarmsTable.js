@@ -86,7 +86,7 @@ const AlarmsTable = (props) => {
             const result = await EditAlarm(newData);
             if (result) {
                 if (result.status) {
-                    // Update edited row localy instead of fetching all alarms again
+                    // Update edited row locally instead of fetching all alarms again
                     const rowNode = gridRef.current.api.getRowNode(newData.id);
                     rowNode.setData(newData);
                     setSelectedRows([newData]); // update current selected row data
@@ -182,6 +182,7 @@ const AlarmsTable = (props) => {
                     p: 2,
                 }}>
                 <Button
+                    id='add-alarm-button'
                     color='primary'
                     variant='contained'
                     onClick={handleAddAlarm}
@@ -189,6 +190,7 @@ const AlarmsTable = (props) => {
                     Add Alarm
                 </Button>
                 <Button
+                    id='edit-alarm-button'
                     color='primary'
                     variant='contained'
                     onClick={handleEditAlarm}
@@ -197,6 +199,7 @@ const AlarmsTable = (props) => {
                     Edit Selected Alarm
                 </Button>
                 <Button
+                    id='remove-alarm-button'
                     color='primary'
                     variant='contained'
                     onClick={handleRemoveAlarm}

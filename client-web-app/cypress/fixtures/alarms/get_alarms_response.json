@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "Alarm 1",
+        "field": 0,
+        "objective": "X568678",
+        "threshold": 3,
+        "active": true,
+        "receivers": ["raz@ribbon.com", "tomer@ribbon.com"]
+    },
+    {
+        "id": 19,
+        "name": "Alarm 2",
+        "field": 1,
+        "objective": "XBFH123",
+        "threshold": 15,
+        "active": true,
+        "receivers": ["zoee101@ribbon.com"]
+    }
+]
