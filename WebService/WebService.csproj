@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\thacham\Documents\GitHub\SE-Project-Timberyard\WebService\WebService.xml</DocumentationFile>
+    <DocumentationFile>WebService.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\thacham\Documents\GitHub\SE-Project-Timberyard\WebService\WebService.xml</DocumentationFile>
+    <DocumentationFile>WebService.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
