@@ -11,13 +11,6 @@ import { MESSAGE, ROLE } from '../constants/constants';
 import { Login } from '../api/Api';
 
 const initialTokenState = {
-    // loginRequested: false,
-    // logoutRequested: false,
-    // isLoggedIn: false,
-    // credentials: {},
-    // errorMessage: '',
-    // apiResponse: {},
-    // openApiErrorDialog: false,
     role: ROLE.UNAUTHORIZE,
     token: '',
 };
@@ -34,7 +27,7 @@ export const useAuth = () => {
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(initialTokenState);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [apiResponse, setApiResponse] = useState({});
+    const [apiMessage, setApiMessage] = useState(null);
 
     useEffect(() => {
         const tokenFromStorage = localStorage.getItem('access_token');
@@ -62,7 +55,7 @@ const AuthProvider = ({ children }) => {
             });
         } else {
             setMessage({
-                text: result?.message || 'An error has been occured.',
+                text: result?.message || 'An error has occurred.',
                 severity: MESSAGE.ERROR,
             });
         }
@@ -79,8 +72,8 @@ const AuthProvider = ({ children }) => {
         return {
             accessToken,
             isLoggedIn,
-            apiResponse,
-            setApiResponse,
+            apiMessage,
+            setApiMessage,
             loginAction: (email, password, setMessage) =>
                 handleLogin(email, password, setMessage),
             logoutAction: () => handleLogout(),
@@ -88,8 +81,8 @@ const AuthProvider = ({ children }) => {
     }, [
         accessToken,
         isLoggedIn,
-        apiResponse,
-        setApiResponse,
+        apiMessage,
+        setApiMessage,
         handleLogin,
         handleLogout,
     ]);
