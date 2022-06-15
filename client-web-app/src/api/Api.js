@@ -12,7 +12,10 @@ import {
     SUCCESS_CODE,
 } from '../constants/constants';
 
-const API_URL = 'https://localhost:5001/api';
+const API_URL =
+    process.env.NODE_ENV === 'production'
+        ? process.env.REACT_APP_API_URL_PROD
+        : process.env.REACT_APP_API_URL_DEV;
 
 const getToken = () => {
     let token = localStorage.getItem('access_token');
