@@ -14,8 +14,6 @@ import Alarms from './alarms/Alarms';
 import { ROLE } from '../../constants/constants';
 import UsersSettings from './users/UsersSettings';
 
-// TODO: Check if this page should be rendered for regular user also
-
 const Settings = () => {
     const { accessToken } = useAuth();
     const { role } = accessToken;
