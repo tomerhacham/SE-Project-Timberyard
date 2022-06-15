@@ -21,7 +21,6 @@ const AlarmDialog = (props) => {
 
     const handleSave = (e) => {
         e.preventDefault();
-        console.log('NEW DATA:', newData);
         onSubmit(newData);
     };
 

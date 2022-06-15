@@ -40,7 +40,6 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        console.log(userInput);
         if (forgotPassword) {
             return handleForgotPassword();
         } else if (!havePassword) {
