@@ -186,8 +186,8 @@ namespace WebService.Domain.Business.Authentication
             // remove user from database if exists
             await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
 
-            // generate new passord for admin and send to given email
-            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
+            // generate new password for admin and send to given email
+            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary password as system admin", "Timberyard authentication");
 
             // create new system admin
             UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExpirationTimeStamp = DateTime.UtcNow };
