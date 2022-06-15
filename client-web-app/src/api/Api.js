@@ -105,7 +105,6 @@ export async function ManageUser(config) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
                 console.log(response);
                 throw Error('Error in response');
@@ -129,7 +128,6 @@ export async function ChangeAdminPassword(data) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
                 console.log(response);
                 throw Error('Error in response');
@@ -274,7 +272,6 @@ export async function RemoveAlarm(data) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
                 console.log(response);
                 throw Error('Error while deleting alarm');
