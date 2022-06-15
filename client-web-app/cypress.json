@@ -19,6 +19,7 @@
     "testFiles": [
         "tests/login-test.js",
         "tests/queryPage-test.js",
-        "tests/users-settings-test.js"
+        "tests/users-settings-test.js",
+        "tests/alarms-test.js"
     ]
 }

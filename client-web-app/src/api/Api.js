@@ -12,9 +12,10 @@ import {
     SUCCESS_CODE,
 } from '../constants/constants';
 
-const API_URL = 'https://localhost:5001/api';
-
-// TODO: Handle errors
+const API_URL =
+    process.env.NODE_ENV === 'production'
+        ? process.env.REACT_APP_API_URL_PROD
+        : process.env.REACT_APP_API_URL_DEV;
 
 const getToken = () => {
     let token = localStorage.getItem('access_token');
@@ -22,6 +23,25 @@ const getToken = () => {
         token = JSON.parse(token);
     }
     return token;
+};
+
+const catchError = (error) => {
+    console.log('ERROR:', error.code);
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log('Response Status:', error.response.status);
+        console.log('Response:', error.response);
+    } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log('Request:', error.request);
+    } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Message:', error.message);
+    }
+    console.log('Config:', error.config);
 };
 
 // User
@@ -38,11 +58,14 @@ export async function Login(data) {
             }
         )
         .then((response) => {
-            console.log(response);
+            if (!response.status === SUCCESS_CODE) {
+                console.log(response);
+                throw Error('Error in response');
+            }
             return response.data;
         })
         .catch((error) => {
-            console.log('LOGIN ERROR', error);
+            catchError(error);
         });
 }
 
@@ -59,11 +82,14 @@ export async function RequestVerificationCode(data) {
             }
         )
         .then((response) => {
-            console.log(response);
+            if (!response.status === SUCCESS_CODE) {
+                console.log(response);
+                throw Error('Error in response');
+            }
             return response;
         })
         .catch((error) => {
-            console.log('Request ERROR', error);
+            catchError(error);
         });
 }
 
@@ -79,15 +105,14 @@ export async function ManageUser(config) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
                 console.log(response);
-                throw Error('Response was unsuccessful');
+                throw Error('Error in response');
             }
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -103,15 +128,14 @@ export async function ChangeAdminPassword(data) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
                 console.log(response);
-                throw Error('Response was unsuccessful');
+                throw Error('Error in response');
             }
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -127,11 +151,14 @@ export async function ForgotPassword(data) {
             },
         })
         .then((response) => {
-            console.log(response);
+            if (!response.status === SUCCESS_CODE) {
+                console.log(response);
+                throw Error('Error in response');
+            }
             return response;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -155,7 +182,7 @@ export async function QueryPost(config) {
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -182,8 +209,8 @@ export async function GetAllAlarms() {
             }
             return response.data;
         })
-        .catch((err) => {
-            console.log('Catched error in api:', err);
+        .catch((error) => {
+            catchError(error);
         });
 }
 
@@ -206,7 +233,7 @@ export async function AddNewAlarm(data) {
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -229,7 +256,7 @@ export async function EditAlarm(data) {
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }
 
@@ -245,13 +272,13 @@ export async function RemoveAlarm(data) {
             },
         })
         .then((response) => {
-            console.log(response);
             if (!response.status === SUCCESS_CODE) {
+                console.log(response);
                 throw Error('Error while deleting alarm');
             }
             return response.data;
         })
         .catch((error) => {
-            console.log('Catched error in api:', error);
+            catchError(error);
         });
 }

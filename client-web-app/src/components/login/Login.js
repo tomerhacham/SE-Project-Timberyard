@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Message from '../../generic-components/Message';
+import Loader from '../../generic-components/Loader';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { ForgotPassword, RequestVerificationCode } from '../../api/Api';
@@ -26,20 +27,19 @@ import {
 
 const Login = () => {
     const navigate = useNavigate();
-    const { loginAction, isLoggedIn } = useAuth();
+    const { loginAction, isLoggedIn, apiMessage } = useAuth();
     const [userInput, setUserInput] = useState({
         email: '',
         password: '',
     });
-    // TODO: Handle error
     const [havePassword, setHavePassword] = useState(true);
     const [forgotPassword, setForgotPassword] = useState(false);
     const [message, setMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        console.log(userInput);
         if (forgotPassword) {
             return handleForgotPassword();
         } else if (!havePassword) {
@@ -47,7 +47,9 @@ const Login = () => {
         }
 
         // Admin/user with password
-        loginAction(userInput.email, userInput.password, setMessage);
+        setIsLoading(true);
+        await loginAction(userInput.email, userInput.password, setMessage);
+        setIsLoading(false);
     };
 
     const handleSendCode = async () => {
@@ -149,7 +151,7 @@ const Login = () => {
                     <Typography component='h1' variant='h5'>
                         Sign in
                     </Typography>
-                    {message && (
+                    {message && !apiMessage && (
                         <Message
                             id='login-page-message'
                             style={{ marginTop: '10px' }}
@@ -239,6 +241,7 @@ const Login = () => {
                             )}
                         </Grid>
                     </Box>
+                    {isLoading && <Loader />}
                 </Box>
             </Grid>
         </Grid>

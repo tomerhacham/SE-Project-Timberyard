@@ -21,7 +21,6 @@ const AlarmDialog = (props) => {
 
     const handleSave = (e) => {
         e.preventDefault();
-        console.log('NEW DATA:', newData);
         onSubmit(newData);
     };
 
@@ -42,9 +41,6 @@ const AlarmDialog = (props) => {
                     active: e.target.value === 'true',
                 });
             case 'receivers':
-                // const emailString = e.target.value;
-                // const emails = emailString.replace(/\s/g, '').split(',');
-                // return setNewData({ ...newData, receivers: emails });
                 return setNewData({ ...newData, receivers: e });
             default:
                 return setNewData({
@@ -62,7 +58,7 @@ const AlarmDialog = (props) => {
             <Fragment>
                 <TextField
                     margin='dense'
-                    id='name'
+                    id='name-textfield-dialog'
                     label='Name'
                     type='text'
                     required
@@ -73,15 +69,16 @@ const AlarmDialog = (props) => {
                 />
                 <TextField
                     margin='dense'
-                    id='field'
+                    id='field-select-dialog'
                     label='Field'
                     required
                     value={fieldTypes[newData.field]}
                     select
                     onChange={(e) => handleOnChange('field', e)}>
-                    {Object.keys(fieldTypes).map((option) => (
+                    {Object.keys(fieldTypes).map((option, index) => (
                         <MenuItem
-                            key={`menu-item-field-${fieldTypes[option]}`}
+                            key={index}
+                            id={`menu-item-field-${fieldTypes[option]}`}
                             value={fieldTypes[option]}>
                             {fieldTypes[option]}
                         </MenuItem>
@@ -89,7 +86,7 @@ const AlarmDialog = (props) => {
                 </TextField>
                 <TextField
                     margin='dense'
-                    id='objective'
+                    id='objective-textfield-dialog'
                     label='Objective'
                     type='text'
                     required
@@ -100,7 +97,7 @@ const AlarmDialog = (props) => {
                 />
                 <TextField
                     margin='dense'
-                    id='threshold'
+                    id='threshold-textfield-dialog'
                     label='Threshold'
                     type='number'
                     required
@@ -112,15 +109,16 @@ const AlarmDialog = (props) => {
                 {formData.active && (
                     <TextField
                         margin='dense'
-                        id='active'
+                        id='active-textfield-dialog'
                         label='Active'
                         required
                         value={newData.active}
                         select
                         onChange={(e) => handleOnChange('active', e)}>
-                        {['true', 'false'].map((option) => (
+                        {['true', 'false'].map((option, index) => (
                             <MenuItem
-                                key={`menu-item-active-${option}`}
+                                key={index}
+                                id={`menu-item-active-${option}`}
                                 value={option}>
                                 {option}
                             </MenuItem>
@@ -141,7 +139,9 @@ const AlarmDialog = (props) => {
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Edit Alarm Details</DialogTitle>
+            <DialogTitle>
+                {formData.id ? 'Edit Alarm Details' : 'Add New Alarm'}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText style={{ marginBottom: 16 }}>
                     {formData.id
@@ -156,8 +156,13 @@ const AlarmDialog = (props) => {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button type='submit' form='edit-alarm-form'>
+                <Button id='cancel-dialog-button' onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button
+                    id='submit-dialog-button'
+                    type='submit'
+                    form='edit-alarm-form'>
                     {formData.id ? 'Save' : 'Submit'}
                 </Button>
             </DialogActions>
