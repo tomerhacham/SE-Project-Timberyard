@@ -41,7 +41,7 @@ namespace WebService
         public async Task SendEmail(object model)
         {
             List<string> recivers = new List<string>();
-            recivers.Add("Shaked@test.com");
+            recivers.Add("thacham@rbbn.com");
 
             await SMTPclient.SendEmail("Test SMTP mock server", "Hello, I'm Testing", recivers);
         }
