@@ -3,7 +3,6 @@ import { Box, Container, Grid, Typography } from '@mui/material';
 import logo from '../../main_logo.png';
 import '../../App.css';
 
-// TODO
 const DashboardApp = () => {
     return (
         <Box component='main' sx={{ flexGrow: 1, py: 8 }}>

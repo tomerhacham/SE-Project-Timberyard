@@ -62,7 +62,6 @@ const QueryPage = ({ data }) => {
         const request = { url, data: userInput };
         const result = await QueryPost(request);
         if (result) {
-            console.log(result);
             setTableData(dataToTable(result));
             showChart() && setChartData(result.records);
         }
