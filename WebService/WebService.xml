@@ -379,24 +379,6 @@
             <param name="record"></param>
             <returns></returns>
         </member>
-        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.GenerateAndSendPassword(System.String,System.String,System.String)">
-            <summary>
-            Util function to generate random number and sent it via email
-            </summary>
-            <param name="email"></param>
-            <param name="msg_subject"></param>
-            <param name="email_subject"></param>
-            <returns></returns>
-        </member>
-        <member name="M:WebService.Domain.Business.Authentication.AuthenticationController.SendPassword(System.String,System.String,System.String,System.String)">
-            <summary>
-            Util function to build email message and send it as backgorund task
-            </summary>
-            <param name="email"></param>
-            <param name="password"></param>
-            <param name="msg_subject"></param>
-            <param name="email_subject"></param>
-        </member>
         <member name="M:WebService.Domain.Business.Queries.Boundaries.Execute(WebService.Domain.DataAccess.ILogsAndTestsRepository)">
             <summary>
             Execute Boundaries query and aggregate the raw results

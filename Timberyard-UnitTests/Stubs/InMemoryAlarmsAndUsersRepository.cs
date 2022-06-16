@@ -21,68 +21,68 @@ namespace Timberyard_UnitTests.Stubs
 
         #region Alarms
 
-        public async Task<Result<List<Alarm>>> GetAllActiveAlarms()
+        public Task<Result<List<Alarm>>> GetAllActiveAlarms()
         {
             var activeAlarms = Alarms.Values.Where(alarm => alarm.Active == true).ToList();
-            return new Result<List<Alarm>>(true, activeAlarms);
+            return Task.FromResult(new Result<List<Alarm>>(true, activeAlarms));
         }
 
-        public async Task<Result<List<Alarm>>> GetAllAlarms()
+        public Task<Result<List<Alarm>>> GetAllAlarms()
         {
             var allAlarms = Alarms.Values.ToList();
-            return new Result<List<Alarm>>(true, allAlarms);
+            return Task.FromResult(new Result<List<Alarm>>(true, allAlarms));
         }
 
-        public async Task<Result<Alarm>> InsertAlarm(Alarm alarm)
+        public Task<Result<Alarm>> InsertAlarm(Alarm alarm)
         {
             var result = Alarms.TryAdd(alarm.Id, alarm);
-            return new Result<Alarm>(result, alarm);
+            return Task.FromResult(new Result<Alarm>(result, alarm));
         }
 
-        public async Task<Result<Alarm>> UpdateAlarm(Alarm alarm)
+        public Task<Result<Alarm>> UpdateAlarm(Alarm alarm)
         {
             Alarms[alarm.Id] = alarm;
-            return new Result<Alarm>(true, alarm);
+            return Task.FromResult(new Result<Alarm>(true, alarm));
 
         }
 
-        public async Task<Result<bool>> DeleteAlarm(int Id)
+        public Task<Result<bool>> DeleteAlarm(int Id)
         {
             var result = Alarms.Remove(Id);
-            return new Result<bool>(result, result);
+            return Task.FromResult(new Result<bool>(result, result));
 
         }
         #endregion
 
         #region Authentication
-        public async Task<Result<UserDTO>> GetUserRecord(string email)
+        public Task<Result<UserDTO>> GetUserRecord(string email)
         {
             var record = Users.TryGetValue(email, out UserDTO user);
-            return new Result<UserDTO>(record, user);
+            return Task.FromResult(new Result<UserDTO>(record, user));
         }
 
-        public async Task<Result<bool>> UpdateUser(UserDTO record)
+        public Task<Result<bool>> UpdateUser(UserDTO record)
         {
             Users[record.Email] = record;
-            return new Result<bool>(true, true);
+            return Task.FromResult(new Result<bool>(true, true));
         }
 
-        public async Task<Result<bool>> AddUser(UserDTO record)
+        public Task<Result<bool>> AddUser(UserDTO record)
         {
             var result = Users.TryAdd(record.Email, record);
-            return new Result<bool>(result, result);
+            return Task.FromResult(new Result<bool>(result, result));
         }
 
-        public async Task<Result<bool>> RemoveUser(string email)
+        public Task<Result<bool>> RemoveUser(string email)
         {
             var result = Users.Remove(email);
-            return new Result<bool>(result, result);
+            return Task.FromResult(new Result<bool>(result, result));
         }
 
-        public async Task<Result<List<UserDTO>>> GetAllUsers()
+        public Task<Result<List<UserDTO>>> GetAllUsers()
         {
             var result = Users.Values.ToList();
-            return new Result<List<UserDTO>>(true, result);
+            return Task.FromResult(new Result<List<UserDTO>>(true, result));
         }
 
         public async Task<Result<bool>> UpdateOrInsert(UserDTO user)

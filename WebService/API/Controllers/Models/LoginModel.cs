@@ -5,8 +5,8 @@ namespace WebService.API.Controllers.Models
     public class LoginModel
     {
         [ValidEmail]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [StringIsNotNullOrEmpty]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }

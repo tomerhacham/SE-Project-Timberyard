@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TimberyardClient.Client
+﻿namespace TimberyardClient.Client
 {
     public class Result<T>
     {

@@ -7,9 +7,9 @@ namespace WebService.API.Controllers.Models
     public class CatalogStationWithDatesModel
     {
         [StringIsNotNullOrEmpty]
-        public string Station { get; set; }
+        public string? Station { get; set; }
         [StringIsNotNullOrEmpty]
-        public string Catalog { get; set; }
+        public string? Catalog { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
