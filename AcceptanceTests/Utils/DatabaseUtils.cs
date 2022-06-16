@@ -52,7 +52,7 @@ namespace AcceptanceTests.Utils
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

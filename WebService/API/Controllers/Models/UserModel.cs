@@ -5,7 +5,7 @@ namespace WebService.API.Controllers.Models
     public class UserModel
     {
         [ValidEmail]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [ValidRoleNumber]
         public int Role { get; set; }
     }

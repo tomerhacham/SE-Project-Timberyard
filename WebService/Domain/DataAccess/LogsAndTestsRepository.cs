@@ -45,7 +45,7 @@ namespace WebService.Domain.DataAccess
             DatabaseSettings.ConnectionString = builder.ToString();
         }
 
-        public async Task<List<dynamic>> DynamicReturnTypeExampleQuery()
+        public async Task<List<dynamic>?> DynamicReturnTypeExampleQuery()
         {
             try
             {
@@ -55,7 +55,7 @@ namespace WebService.Domain.DataAccess
                 var objects = await connection.QueryAsync<dynamic>(sqlCommand, new { Catalog = "X56868" });
                 return objects.AsList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

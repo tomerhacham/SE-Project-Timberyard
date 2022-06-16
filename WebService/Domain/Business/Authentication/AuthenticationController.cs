@@ -85,8 +85,10 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status)
             {
                 var record = recordResult.Data;
-                string verification_code = GenerateAndSendPassword(email, "verification code", "Timberyard authentication");
-                record.Password = verification_code;
+                string verification_code = new Random().Next(100000, 999999).ToString();
+                var message = $"Your verification code is {verification_code}.\n The code valid for the next {Settings.Value.Minutes} minutes.";
+                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { email }));
+                record.Password = verification_code.HashString();
                 record.ExpirationTimeStamp = DateTime.UtcNow.AddMinutes(Settings.Value.Minutes);
 
                 Result<bool> updateResult = await AlarmsAndUsersRepository.UpdateUser(record);
@@ -186,11 +188,13 @@ namespace WebService.Domain.Business.Authentication
             // remove user from database if exists
             await AlarmsAndUsersRepository.RemoveUser(newSystemAdminEmail);
 
-            // generate new passord for admin and send to given email
-            string tempPassword = GenerateAndSendPassword(newSystemAdminEmail, "temporary passord as system admin", "Timberyard system admin authentication");
+            // generate new password for admin and send to given email
+            string tempPassword = new Random().Next(100000, 999999).ToString();
+            var message = $"Your temporary password is {tempPassword}.\nPlease change your password on your first login";
+            Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { newSystemAdminEmail }));
 
             // create new system admin
-            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword, Role = Role.Admin, ExpirationTimeStamp = DateTime.UtcNow };
+            UserDTO user = new UserDTO() { Email = newSystemAdminEmail, Password = tempPassword.HashString(), Role = Role.Admin, ExpirationTimeStamp = DateTime.UtcNow };
             Result<bool> result = await AlarmsAndUsersRepository.AddUser(user);
             if (!result.Status)
             {
@@ -211,8 +215,10 @@ namespace WebService.Domain.Business.Authentication
             if (recordResult.Status && recordResult.Data.Role == Role.Admin)
             {
                 UserDTO user = recordResult.Data;
-                string tempPassword = GenerateAndSendPassword(email, "temporary password", "Timberyard forget password authentication");
-                user.Password = tempPassword;
+                string tempPassword = new Random().Next(100000, 999999).ToString();
+                var message = $"Your temporary password is {tempPassword}.\nPlease change your password on your first login";
+                Task.Run(async () => await SMTPClient.SendEmail("Timberyard authentication", message, new List<string>() { email }));
+                user.Password = tempPassword.HashString();
                 return await AlarmsAndUsersRepository.UpdateUser(user);
             }
 
@@ -261,33 +267,6 @@ namespace WebService.Domain.Business.Authentication
         {
             return await AlarmsAndUsersRepository.GetAllUsers();
         }
-
-        /// <summary>
-        /// Util function to generate random number and sent it via email
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="msg_subject"></param>
-        /// <param name="email_subject"></param>
-        /// <returns></returns>
-        private string GenerateAndSendPassword(string email, string msg_subject, string email_subject)
-        {
-            var random_number = new Random().Next(100000, 999999).ToString();
-            SendPassword(email, random_number, msg_subject, email_subject);
-            return random_number.HashString();
-        }
-        /// <summary>
-        /// Util function to build email message and send it as backgorund task
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="msg_subject"></param>
-        /// <param name="email_subject"></param>
-        private void SendPassword(string email, string password, string msg_subject, string email_subject)
-        {
-            var message = $"Your {msg_subject} is {password} for Timberyard authentication.";
-            Task.Run(async () => await SMTPClient.SendEmail(email_subject, message, new List<string>() { email }));
-        }
-
 
         private Result<bool> IsValidInputs(string email)
         {

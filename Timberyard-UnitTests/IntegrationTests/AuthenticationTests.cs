@@ -178,11 +178,10 @@ namespace Timberyard_UnitTests.IntegrationTests
         #region Login and Password
 
         [Fact]
-        public async void Login()
+        public async void Login_SystemAdmin()
         {
-            string email = "login@timberyard.com";
+            string email = "loginAdmin@timberyard.com";
             string password = "testPassword";
-            // TODO on resular User timeStamp
             var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password.HashString(), Role = Role.Admin });
             Assert.True(insert_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
@@ -212,17 +211,65 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        public async void Login_worngPass()
+        public async void Login_RegularUser()
         {
-            string email = "loginWorngPass@timberyard.com";
+            string email = "loginReularUser@timberyard.com";
+            string password = "testPassword";
+            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password.HashString(), Role = Role.RegularUser, ExpirationTimeStamp = DateTime.UtcNow.AddMinutes(5) });
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
+
+            var result = await AuthenticationController.Login(email, password);
+            Assert.True(result.Status);
+            Assert.NotNull(result.Data);
+
+            // Validate token
+            JWTtoken token = result.Data;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(Secret);
+            tokenHandler.ValidateToken(token.Token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var emailFromToken = jwtToken.Claims.First(x => x.Type == "Email").Value;
+            var role = Enum.Parse(typeof(Role), jwtToken.Claims.First(x => x.Type == "Role").Value);
+            Assert.Equal(email, emailFromToken);
+            Assert.Equal(Role.RegularUser, role);
+        }
+
+        [Fact]
+        public async void Login_RegularUserExpired()
+        {
+            string email = "loginExpire@timberyard.com";
+            string password = "testPassword";
+            // TODO on resular User timeStamp
+            var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password.HashString(), Role = Role.RegularUser, ExpirationTimeStamp = new DateTime(2022, 01, 01, 0, 0, 0, 1) }); // 1 mean Utc time 
+            Assert.True(insert_result.Status);
+            Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
+
+            var result = await AuthenticationController.Login(email, password);
+            Assert.False(result.Status);
+            Assert.Null(result.Data);
+        }
+
+        [Fact]
+        public async void Login_wrongPass()
+        {
+            string email = "loginWrongPass@timberyard.com";
             string password = "testPass";
             var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password });
             Assert.True(insert_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
             Assert.Equal(password, newUser.Password);
 
-            string worng_password = "worngPass";
-            var result = await AuthenticationController.Login(email, worng_password);
+            string wrong_password = "wrongPass";
+            var result = await AuthenticationController.Login(email, wrong_password);
             Assert.False(result.Status);
             Assert.Null(result.Data);
             Assert.Equal(password, UsersRepository.Users[email].Password);

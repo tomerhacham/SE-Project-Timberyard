@@ -19,10 +19,10 @@ namespace Timberyard_UnitTests.Stubs
         }
 
         #region Alarms
-        public async Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
+        public Task<Result<List<LogDTO>>> GetAllLogsInTimeInterval(DateTime startTime, DateTime endTime)
         {
             var logs = Data.Values.Where(log => log.Date <= endTime && log.Date >= startTime).ToList();
-            return new Result<List<LogDTO>>(true, logs);
+            return Task.FromResult(new Result<List<LogDTO>>(true, logs));
         }
         #endregion
 
