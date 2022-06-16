@@ -10,7 +10,7 @@ namespace WebService.Utils
 {
     public class Logger : ILogger
     {
-        private readonly NLog.Logger _logger = null;
+        private readonly NLog.Logger? _logger = null;
 
         public Logger(string loggerName)
         {
@@ -42,7 +42,7 @@ namespace WebService.Utils
                 return string.Empty;
             }
         }
-        private void WriteCustomLog(LogLevel logLevel, string methodName, string message, Dictionary<LogEntry, string> userExtraInfo = null, Exception ex = null)
+        private void WriteCustomLog(LogLevel logLevel, string methodName, string message, Dictionary<LogEntry, string>? userExtraInfo = null, Exception? ex = null)
         {
             try
             {
@@ -81,13 +81,13 @@ namespace WebService.Utils
             return message.Replace(']', '}');
         }
         //Info       
-        public void Info(string message, Dictionary<LogEntry, string> extraInfo = null, string methodName = null)
+        public void Info(string message, Dictionary<LogEntry, string>? extraInfo = null, string? methodName = null)
         {
             methodName = string.IsNullOrEmpty(methodName) ? GetMethodName() : methodName;
             WriteCustomLog(LogLevel.Info, methodName, message, extraInfo);
         }
         //Warning
-        public void Warning(string message, Exception ex = null, Dictionary<LogEntry, string> extraInfo = null)
+        public void Warning(string message, Exception? ex = null, Dictionary<LogEntry, string>? extraInfo = null)
         {
             var methodName = GetMethodName();
             WriteCustomLog(LogLevel.Warn, methodName, message, extraInfo, ex);

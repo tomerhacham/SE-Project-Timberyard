@@ -11,9 +11,9 @@ namespace WebService.Utils
     public interface ILogger
     {
         //Info
-        void Info(string message, Dictionary<LogEntry, string> extraInfo = null, string methodName = default(string));
+        void Info(string message, Dictionary<LogEntry, string>? extraInfo = null, string? methodName = default(string));
 
         //Warning
-        void Warning(string message, Exception ex = null, Dictionary<LogEntry, string> extraInfo = null);
+        void Warning(string message, Exception? ex = null, Dictionary<LogEntry, string>? extraInfo = null);
     }
 }

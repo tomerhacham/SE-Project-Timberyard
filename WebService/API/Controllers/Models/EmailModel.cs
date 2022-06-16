@@ -5,14 +5,14 @@ namespace WebService.API.Controllers.Models
     public class EmailModel
     {
         [ValidEmail]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 
     public class UserChangeSystemAdminPasswordModel
     {
         [StringIsNotNullOrEmpty]
-        public string OldPassword { get; set; }
+        public string? OldPassword { get; set; }
         [StringIsNotNullOrEmpty]
-        public string NewPassword { get; set; }
+        public string? NewPassword { get; set; }
     }
 }

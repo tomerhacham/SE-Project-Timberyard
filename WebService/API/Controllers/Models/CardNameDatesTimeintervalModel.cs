@@ -7,7 +7,7 @@ namespace WebService.API.Controllers.Models
     public class CardNameDatesTimeintervalModel
     {
         [StringIsNotNullOrEmpty]
-        public string CardName { get; set; }
+        public string? CardName { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]

@@ -8,7 +8,7 @@ namespace WebService.API.Controllers.Models
     {
         [Required]
         [StringIsNotNullOrEmpty]
-        public string Catalog { get; set; }
+        public string? Catalog { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]

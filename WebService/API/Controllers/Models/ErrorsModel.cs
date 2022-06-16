@@ -4,7 +4,7 @@ namespace WebService.API.Controllers.Models
 {
     public class ErrorsModel
     {
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; }
     }
 
 }
