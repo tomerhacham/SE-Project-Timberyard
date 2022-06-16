@@ -259,17 +259,17 @@ namespace Timberyard_UnitTests.IntegrationTests
         }
 
         [Fact]
-        public async void Login_worngPass()
+        public async void Login_wrongPass()
         {
-            string email = "loginWorngPass@timberyard.com";
+            string email = "loginWrongPass@timberyard.com";
             string password = "testPass";
             var insert_result = await UsersRepository.AddUser(new UserDTO() { Email = email, Password = password });
             Assert.True(insert_result.Status);
             Assert.True(UsersRepository.Users.TryGetValue(email, out UserDTO newUser));
             Assert.Equal(password, newUser.Password);
 
-            string worng_password = "worngPass";
-            var result = await AuthenticationController.Login(email, worng_password);
+            string wrong_password = "wrongPass";
+            var result = await AuthenticationController.Login(email, wrong_password);
             Assert.False(result.Status);
             Assert.Null(result.Data);
             Assert.Equal(password, UsersRepository.Users[email].Password);
