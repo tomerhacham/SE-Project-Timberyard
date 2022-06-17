@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -59,9 +60,9 @@ namespace WebService.Domain.Business.Queries
             }
             try
             {
-                var logIds = records.Select(record => record.Id).Distinct().ToList();
-                var aggregatedData = new List<dynamic>();
-                foreach (var logId in logIds)
+                var logIds = records.AsParallel().Select(record => record.Id).Distinct().ToList();
+                var aggregatedData = new ConcurrentBag<dynamic>();
+                Parallel.ForEach(logIds, logId =>
                 {
                     var sampleRecord = records.Where(record => record.Id == logId).First();
                     var date = sampleRecord.Date;
@@ -71,8 +72,8 @@ namespace WebService.Domain.Business.Queries
                     var @operator = sampleRecord.Operator;
                     var failedTestNames = records.Where(record => record.Id == logId).Select(record => record.TestName).ToList(); //might be not distinct results
                     aggregatedData.Add(InstanceExpandoObject(date, cardName, catalog, station, @operator, failedTestNames));
-                }
-                return new Result<QueryResult>(true, new QueryResult(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, aggregatedData), "\n");
+                });
+                return new Result<QueryResult>(true, new QueryResult(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, aggregatedData.ToList()), "\n");
             }
             catch (Exception exception)
             {
