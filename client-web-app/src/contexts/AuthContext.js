@@ -26,14 +26,17 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(initialTokenState);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(undefined);
     const [apiMessage, setApiMessage] = useState(null);
 
+    // On startup, check if token exists and set log in state
     useEffect(() => {
         const tokenFromStorage = localStorage.getItem('access_token');
         if (tokenFromStorage) {
             setAccessToken(JSON.parse(tokenFromStorage));
             setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
         }
     }, []);
 
