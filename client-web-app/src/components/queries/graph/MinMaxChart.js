@@ -9,6 +9,7 @@ import {
     LineElement,
     Legend,
     Tooltip,
+    ScatterController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 
@@ -19,7 +20,8 @@ ChartJS.register(
     PointElement,
     LineElement,
     Legend,
-    Tooltip
+    Tooltip,
+    ScatterController
 );
 
 const MinMaxChart = ({ data }) => {
@@ -31,7 +33,7 @@ const MinMaxChart = ({ data }) => {
 
     return (
         <Chart
-            type='scatter'
+            type='line'
             data={{
                 labels,
                 datasets: [
