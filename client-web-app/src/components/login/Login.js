@@ -225,7 +225,7 @@ const Login = () => {
                                     variant='body2'
                                     onClick={(e) => havePasswordButton(e)}>
                                     {havePassword
-                                        ? "I don't have a password"
+                                        ? "Request One-Time Password"
                                         : 'I have a password'}
                                 </Button>
                             </Grid>
