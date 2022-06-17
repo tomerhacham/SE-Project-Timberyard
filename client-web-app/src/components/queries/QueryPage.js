@@ -227,6 +227,7 @@ QueryPage.propTypes = {
                 autoFocus: PropTypes.bool,
             })
         ),
+        icon: PropTypes.string.isRequired,
     }),
 };
 
