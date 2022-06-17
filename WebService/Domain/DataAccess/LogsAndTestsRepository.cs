@@ -319,10 +319,22 @@ namespace WebService.Domain.DataAccess
         {
             var sqlCommand =
                 @"
-                SELECT Tests.TestName, Tests.Min, Tests.Max, Tests.Received
-                From Logs Join Tests
-                On Tests.Type='Boundaries'
-                Where Catalog=@Catalog AND Date BETWEEN @StartDate AND @EndDate
+                select TestName,Min, Max, Received from
+                (select LogId,TestName,Min, Max, Received from Tests
+	                Where Type='Boundaries' AND
+		                Result = 'OK'
+                ) as t1
+                join 
+                (select * from Logs 
+	                Where Catalog=@Catalog AND
+	                Date BETWEEN @StartDate AND @EndDate AND
+	                FinalResult = 'PASS' AND
+	                ContinueOnFail = 'FALSE' AND
+	                TECHMode = 'FALSE' AND
+	                ABORT = 'FALSE' AND
+	                DBMode != 'BYPASS'
+                ) as t2
+                on t1.LogId=t2.Id
                 ";
             var queryParams = new { Catalog = boundaries.Catalog, StartDate = boundaries.StartDate, EndDate = boundaries.EndDate };
             return await ExecuteQuery<dynamic>(sqlCommand, queryParams);
