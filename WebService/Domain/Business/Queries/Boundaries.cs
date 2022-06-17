@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -55,18 +56,19 @@ namespace WebService.Domain.Business.Queries
             }
             try
             {
-                var testNames = records.Select(record => record.TestName).Distinct().ToList();
-                var aggregatedData = new List<dynamic>();
-                foreach (var test in testNames)
-                {
-                    var min = records.Where(record => record.TestName == test).Select(record => record.Min).First();
-                    var max = records.Where(record => record.TestName == test).Select(record => record.Max).First();
-                    List<double> receivedValues = records.Where(record => record.TestName == test).Select(record => double.Parse(record.Received)).Cast<double>().ToList();
-                    var stdDev = receivedValues.StdDev();
-                    var avg = receivedValues.Average();
-                    aggregatedData.Add(InstanceExpandoObject(test, min, max, avg, stdDev, receivedValues));
-                }
-                return new Result<QueryResult>(true, new QueryResult(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, aggregatedData), "\n");
+                var testNames = records.AsParallel().Select(record => record.TestName).Distinct().ToList();
+                var aggregatedData = new ConcurrentBag<dynamic>();
+                Parallel.ForEach(testNames, test =>
+                 {
+                     var min = records.Where(record => record.TestName == test).Select(record => record.Min).First();
+                     var max = records.Where(record => record.TestName == test).Select(record => record.Max).First();
+                     List<double> receivedValues = records.Where(record => record.TestName == test).Select(record => double.Parse(record.Received)).Cast<double>().ToList();
+                     var stdDev = receivedValues.StdDev();
+                     var avg = receivedValues.Average();
+                     aggregatedData.Add(InstanceExpandoObject(test, min, max, avg, stdDev, receivedValues));
+
+                 });
+                return new Result<QueryResult>(true, new QueryResult(new string[] { "TestName", "Min", "Max", "Average", "StandardDeviation", "Received" }, aggregatedData.ToList()), "\n");
             }
             catch (Exception exception)
             {
