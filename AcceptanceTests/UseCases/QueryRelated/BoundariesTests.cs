@@ -18,7 +18,7 @@ namespace AcceptanceTests.UseCases.QueryRelated
         }
 
         [Theory]
-        [InlineData("X39337", 2021, 2022, HttpStatusCode.OK, new string[] { "Boundaries_Test2", "Boundaries_Test1" }, new double[] { 2, 1 }, new double[] { 6, 4 }, new double[] { 4, 2.24 }, new double[] { 1.41421, 0.749577 })]          // Happy : There are X records of the inputs out of Y records
+        [InlineData("X39337", 2020, 2021, HttpStatusCode.OK, new string[] { "Boundaries_Test1", "Boundaries_Test2" }, new double[] { 1, 2 }, new double[] { 4, 6 }, new double[] { 2.24, 4.5 }, new double[] { 0.749577, 1.11803 })]          // Happy : There are X records of the inputs out of Y records
         [InlineData("X12345", 2021, 2022, HttpStatusCode.OK, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                             // Happy: No records for the given catalog                                                                                                                          
         [InlineData("X39337", 2020, 2019, HttpStatusCode.BadRequest, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                     // Bad: invalid dates
         [InlineData("", 2021, 2022, HttpStatusCode.BadRequest, new string[] { }, new double[] { }, new double[] { }, new double[] { }, new double[] { })]                           // Bad: empty catalog
