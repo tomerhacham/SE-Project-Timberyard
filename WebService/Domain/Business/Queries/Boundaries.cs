@@ -60,10 +60,10 @@ namespace WebService.Domain.Business.Queries
                 var aggregatedData = new ConcurrentBag<dynamic>();
                 Parallel.ForEach(testNames, test =>
                  {
-                     var matchingRecords = records.AsParallel().Where(record => record.TestName == test);
+                     var matchingRecords = records.Where(record => record.TestName == test);
                      var min = matchingRecords.First().Min;
                      var max = matchingRecords.First().Max;
-                     List<double> receivedValues = matchingRecords.AsParallel().Select(record => record.Received).Cast<double>().ToList();
+                     List<double> receivedValues = matchingRecords.Select(record => double.Parse(record.Received)).Cast<double>().ToList();
                      var stdDev = receivedValues.StdDev();
                      var avg = receivedValues.Average();
                      aggregatedData.Add(InstanceExpandoObject(test, min, max, avg, stdDev, receivedValues));
