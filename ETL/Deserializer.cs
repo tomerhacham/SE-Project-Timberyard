@@ -32,6 +32,11 @@ namespace ETL
                     NullValueHandling = NullValueHandling.Ignore,
                     Converters = JsonConverters.ToArray()
                 });
+                if (!ValidateLog(log))
+                {
+                    return new Result<Log>(false, null, "Error in log validation");
+
+                }
                 return new Result<Log>(true, log);
             }
             catch (Exception e)
@@ -40,6 +45,16 @@ namespace ETL
                 return new Result<Log>(false, null, e.Message);
             }
 
+        }
+
+        private bool ValidateLog(Log log)
+        {
+            //Verify Nettime is in bounds
+            if (log.NetTime.TotalDays >= 1)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
