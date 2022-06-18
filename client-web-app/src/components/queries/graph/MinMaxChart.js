@@ -31,41 +31,64 @@ const MinMaxChart = ({ data }) => {
 
     const labels = points.map(() => '');
 
+    // Graph config for trying to handle large datasets as much as possible
+    const options = points.length > 100 && {
+        maintainAspectRatio: false,
+        parsing: false,
+        normalized: true,
+        animation: false,
+        scales: {
+            x: {
+                type: 'linear',
+                min: 0,
+                max: points.length,
+            },
+            y: {
+                type: 'linear',
+                min: min,
+                max: max,
+            },
+        },
+    };
+
     return (
-        <Chart
-            type='line'
-            data={{
-                labels,
-                datasets: [
-                    {
-                        type: 'scatter',
-                        label: 'Received',
-                        radius: 5,
-                        hoverRadius: 7,
-                        backgroundColor: 'rgba(80, 72, 229, 0.8)',
-                        data: points.map((p, i) => ({ x: i, y: p })),
-                        borderColor: 'white',
-                        borderWidth: 2,
-                    },
-                    {
-                        type: 'line',
-                        label: `Min = ${min}`,
-                        borderColor: 'rgb(255, 99, 132)',
-                        borderWidth: 2,
-                        data: points.map((p, i) => ({ x: i, y: min })),
-                        pointRadius: 0,
-                    },
-                    {
-                        type: 'line',
-                        label: `Max = ${max}`,
-                        borderColor: 'rgb(255, 99, 132)',
-                        borderWidth: 2,
-                        data: points.map((p, i) => ({ x: i, y: max })),
-                        pointRadius: 0,
-                    },
-                ],
-            }}
-        />
+        <div style={{ height: '500px' }}>
+            <Chart
+                type='line'
+                options={options || { maintainAspectRatio: false }}
+                data={{
+                    labels,
+                    datasets: [
+                        {
+                            type: 'scatter',
+                            label: 'Received',
+                            radius: points.length > 100 ? 3 : 5,
+                            hoverRadius: 7,
+                            backgroundColor: 'rgba(80, 72, 229, 0.8)',
+                            data: points.map((p, i) => ({ x: i, y: p })),
+                            borderColor: 'white',
+                            borderWidth: 2,
+                        },
+                        {
+                            type: 'line',
+                            label: `Min = ${min}`,
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 2,
+                            data: points.map((p, i) => ({ x: i, y: min })),
+                            pointRadius: 0,
+                        },
+                        {
+                            type: 'line',
+                            label: `Max = ${max}`,
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 2,
+                            data: points.map((p, i) => ({ x: i, y: max })),
+                            pointRadius: 0,
+                        },
+                    ],
+                }}
+            />
+        </div>
     );
 };
 
