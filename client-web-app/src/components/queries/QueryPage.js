@@ -63,31 +63,28 @@ const QueryPage = ({ data }) => {
     const extractChartData = (records)=>{
         let labelProperty
         let datasets = []
-        let graphs = []
+        let chartData
         switch (id){
             case CARD_YIELD_ID:
                 labelProperty='CardName'
                 datasets.push({ data:records.map((record) => record['SuccessRatio']),
                                 labelString:'Success Ratio'})
                 var labels = records.map((record) => record[labelProperty]);
-                var graph = {datasets,labels};
-                graphs.push(graph)
+                chartData = {datasets,labels};
                 break;
             case STATION_YIELD_ID:
                 labelProperty='Station'
                  datasets.push({ data:records.map((record) => record['SuccessRatio']),
                                 labelString:'Success Ratio'})
                 var labels = records.map((record) => record[labelProperty]);
-                var graph = {datasets,labels};
-                graphs.push(graph)
+                chartData = {datasets,labels};
                 break;
             case STATION_AND_CARD_YIELD_ID:
                 labelProperty='CardName'
                 datasets.push({ data:records.map((record) => record['SuccessRatio']),
                                 labelString:'Success Ratio'})
                 var labels = records.map((record) => record[labelProperty]);
-                var graph = {datasets,labels};
-                graphs.push(graph)
+                chartData = {datasets,labels};
                 break;
             case TESTER_LOADER_ID:
                 labelProperty='Station'
@@ -96,8 +93,7 @@ const QueryPage = ({ data }) => {
                 datasets.push({ data:records.map((record) => record['NumberOfRuns']),
                                 labelString:'Number of Runs'})
                 var labels = records.map((record) => record[labelProperty]);
-                var graph = {datasets,labels};
-                graphs.push(graph)
+                chartData = {datasets,labels};
                 break;
             case CARD_TEST_DURATION_ID:
                 labelProperty='Operator'
@@ -106,16 +102,25 @@ const QueryPage = ({ data }) => {
                 datasets.push({ data:records.map((record) => record['TotalTimeAvg']),
                                 labelString:'Total Time Avg'})
                 var labels = records.map((record) => record[labelProperty]);
-                var graph = {datasets,labels};
-                graphs.push(graph)
+                chartData = {datasets,labels};
+                break;
+
+            case NFF_ID:
+                //Graph for false negative by operator
+                labelProperty='Operator'
+                var labels = records.map((record) => record[labelProperty]);
+                var data = labels.map(
+                                    (operator)=> (records.filter((record)=>record.Operator === operator)).length
+                                    )
+                datasets.push({ data:data,
+                                labelString:'Number of negative failures'})
+
+                chartData = {datasets,labels};
                 break;
             default:
                 break;
         }
-
-        // const labels = records.map((record) => record[labelProperty]);
-        // return [{datasets,labels}];
-        return graphs;
+        return chartData;
 
     }
 
@@ -166,7 +171,6 @@ const QueryPage = ({ data }) => {
     const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,
                             STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID,
                             CARD_TEST_DURATION_ID,NFF_ID].includes(id);
-    const isNFF = () => NFF_ID === id;
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];
@@ -270,13 +274,8 @@ const QueryPage = ({ data }) => {
                                 <Grid item lg={8} md={12} xl={9} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
                                         <BarChart 
-                                            datasets={(chartData[0]).datasets}
-                                            labels={(chartData[0]).labels} />
-                                    )}
-                                    {isNFF() && chartData && tableData.rows.length > 0 && (
-                                        <BarChart 
-                                            datasets={(chartData[1]).datasets}
-                                            labels={(chartData[1]).labels} />
+                                            datasets={(chartData).datasets}
+                                            labels={(chartData).labels} />
                                     )}
                                 </Grid>
                             )}
