@@ -25,6 +25,11 @@ import Loader from '../../generic-components/Loader';
 import { queriesInputBoxSx } from '../../theme';
 import {
     CARD_YIELD_ID,
+    STATION_YIELD_ID,
+    STATION_AND_CARD_YIELD_ID,
+    TESTER_LOADER_ID,
+    CARD_TEST_DURATION_ID,
+    NFF_ID,
     CARD_YIELD_ICON,
     STATION_YIELD_ICON,
     STATION_CARD_YIELD_ICON,
@@ -55,6 +60,70 @@ const QueryPage = ({ data }) => {
     const [tableData, setTableData] = useState(null);
     const [chartData, setChartData] = useState(null);
 
+    const extractChartData = (records)=>{
+        let labelProperty
+        let datasets = []
+        let chartData
+        switch (id){
+            case CARD_YIELD_ID:
+                labelProperty='CardName'
+                datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
+                var labels = records.map((record) => record[labelProperty]);
+                chartData = {datasets,labels};
+                break;
+            case STATION_YIELD_ID:
+                labelProperty='Station'
+                 datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
+                var labels = records.map((record) => record[labelProperty]);
+                chartData = {datasets,labels};
+                break;
+            case STATION_AND_CARD_YIELD_ID:
+                labelProperty='CardName'
+                datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
+                var labels = records.map((record) => record[labelProperty]);
+                chartData = {datasets,labels};
+                break;
+            case TESTER_LOADER_ID:
+                labelProperty='Station'
+                datasets.push({ data:records.map((record) => record['TotalRunTimeHours']),
+                                labelString:'Total Runtime [Hours]'})
+                datasets.push({ data:records.map((record) => record['NumberOfRuns']),
+                                labelString:'Number of Runs'})
+                var labels = records.map((record) => record[labelProperty]);
+                chartData = {datasets,labels};
+                break;
+            case CARD_TEST_DURATION_ID:
+                labelProperty='Operator'
+                datasets.push({ data:records.map((record) => record['NetTimeAvg']),
+                                labelString:'Net Time Avg'})
+                datasets.push({ data:records.map((record) => record['TotalTimeAvg']),
+                                labelString:'Total Time Avg'})
+                var labels = records.map((record) => record[labelProperty]);
+                chartData = {datasets,labels};
+                break;
+
+            case NFF_ID:
+                //Graph for false negative by operator
+                labelProperty='Operator'
+                var labels = records.map((record) => record[labelProperty]);
+                var data = labels.map(
+                                    (operator)=> (records.filter((record)=>record.Operator === operator)).length
+                                    )
+                datasets.push({ data:data,
+                                labelString:'Number of negative failures'})
+
+                chartData = {datasets,labels};
+                break;
+            default:
+                break;
+        }
+        return chartData;
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -63,7 +132,8 @@ const QueryPage = ({ data }) => {
         const result = await QueryPost(request);
         if (result) {
             setTableData(dataToTable(result));
-            showChart() && setChartData(result.records);
+            extractChartData(result.records);
+            showChart() && setChartData(extractChartData(result.records));
         }
     };
 
@@ -98,7 +168,9 @@ const QueryPage = ({ data }) => {
         return some(userInput, (field) => field === '');
     };
 
-    const showChart = () => id === CARD_YIELD_ID;
+    const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,
+                            STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID,
+                            CARD_TEST_DURATION_ID,NFF_ID].includes(id);
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];
@@ -201,7 +273,9 @@ const QueryPage = ({ data }) => {
                             {showChart() && (
                                 <Grid item lg={8} md={12} xl={9} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
-                                        <BarChart data={chartData} />
+                                        <BarChart 
+                                            datasets={(chartData).datasets}
+                                            labels={(chartData).labels} />
                                     )}
                                 </Grid>
                             )}
