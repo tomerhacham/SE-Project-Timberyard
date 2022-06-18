@@ -37,6 +37,8 @@ namespace Timberyard_UnitTests.IntegrationTests
 
                 Assert.Equal(testNames.Length, queryResult.Data.Records.Count);
                 var data = queryResult.Data;
+                data.Records.Sort((r1, r2) => r1.TestName.CompareTo(r2.TestName));
+
                 for (int i = 0; i < testNames.Length; i++)
                 {
                     Assert.Equal(testNames[i], data.Records[i].TestName);

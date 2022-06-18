@@ -39,10 +39,12 @@ namespace AcceptanceTests.UseCases.QueryRelated
                 }
 
                 Assert.Equal(testNames.Length, records.Count);
+                records = queryResult.Records.ConvertAll(s => JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(s)));
+                records.Sort((r1, r2) => r1.TestName.CompareTo(r2.TestName));
                 for (int i = 0; i < records.Count; i++)
                 {
-                    string json = JsonConvert.SerializeObject(records[i]);
-                    dynamic record = JsonConvert.DeserializeObject<ExpandoObject>(json);
+                    dynamic record = records[i];
+
                     Assert.Equal(testNames[i], record.TestName);
                     Assert.Equal(minValue[i], record.Min);
                     Assert.Equal(maxValue[i], record.Max);

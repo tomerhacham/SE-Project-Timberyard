@@ -52,9 +52,6 @@ namespace AcceptanceTests.UseCases.QueryRelated
             QueryResult queryResult = JsonConvert.DeserializeObject<QueryResult>(response.Content);
             string[] columnNames = queryResult.ColumnNames;
             List<dynamic> records = queryResult.Records;
-            /*            List<dynamic> records = queryResult.Records.ConvertAll(s => JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(s)));
-                        records.Sort((r1, r2) => r2.Operator.CompareTo(r1.Operator));*/
-
 
             if (response.StatusCode.Equals(HttpStatusCode.OK))
             {
