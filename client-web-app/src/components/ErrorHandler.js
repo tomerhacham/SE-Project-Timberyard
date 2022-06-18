@@ -80,7 +80,10 @@ const ErrorHandler = ({ children }) => {
                     } else if (status >= BAD_REQUEST_CODE) {
                         // 400, 402...
                         setApiMessage({
-                            text: error.response.message || error.message,
+                            text:
+                                error.response?.data?.title ||
+                                error.response.message ||
+                                error.message,
                             severity: MESSAGE.ERROR,
                         });
                         setOpen(true);
