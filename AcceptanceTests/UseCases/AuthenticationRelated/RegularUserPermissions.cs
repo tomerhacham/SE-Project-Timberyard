@@ -19,7 +19,7 @@ namespace AcceptanceTests.UseCases.AuthenticationRelated
         }
         #region Queries
         [Theory]
-        [InlineData("X39337", 2021, 2022, HttpStatusCode.OK)]                              // Happy : There are X records of the inputs out of Y records
+        [InlineData("X39337", 2020, 2021, HttpStatusCode.OK)]                              // Happy : There are X records of the inputs out of Y records
         [InlineData("X39337", 2020, 2019, HttpStatusCode.BadRequest)]                     // Bad: invalid dates
         [InlineData("", 2021, 2022, HttpStatusCode.BadRequest)]                           // Bad: empty catalog
 
