@@ -25,8 +25,10 @@ import Loader from '../../generic-components/Loader';
 import { queriesInputBoxSx } from '../../theme';
 import {
     CARD_YIELD_ID,
-    CARD_YIELD_ICON,
     STATION_YIELD_ID,
+    STATION_AND_CARD_YIELD_ID,
+    TESTER_LOADER_ID,
+    CARD_YIELD_ICON,
     STATION_YIELD_ICON,
     STATION_CARD_YIELD_ICON,
     NFF_ICON,
@@ -68,6 +70,16 @@ const QueryPage = ({ data }) => {
                 dataProperty='SuccessRatio'
                 labelProperty='Station'
                 labelString='Success Ratio'
+                break;
+            case STATION_AND_CARD_YIELD_ID:
+                dataProperty='SuccessRatio'
+                labelProperty='CardName'
+                labelString='Success Ratio'
+                break;
+            case TESTER_LOADER_ID:
+                dataProperty='TotalRunTimeHours'
+                labelProperty='Station'
+                labelString='Total Runtime [Hours]'
                 break;
             default:
                 break;
@@ -123,7 +135,7 @@ const QueryPage = ({ data }) => {
         return some(userInput, (field) => field === '');
     };
 
-    const showChart = () => id === CARD_YIELD_ID || id === STATION_YIELD_ID;
+    const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID].includes(id);
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];
