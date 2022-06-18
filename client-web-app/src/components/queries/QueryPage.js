@@ -55,6 +55,23 @@ const QueryPage = ({ data }) => {
     const [tableData, setTableData] = useState(null);
     const [chartData, setChartData] = useState(null);
 
+    const extractChartData = (records)=>{
+        let dataProperty,labelProperty,labelString 
+        if (id === CARD_YIELD_ID)
+        {
+            //labels = records.map((record) => record.CardName);
+            //data = records.map((record) => record.SuccessRatio);
+            dataProperty='SuccessRatio'
+            labelProperty='CardName'
+            labelString='Success Ratio'
+            
+        }
+        const data = records.map((record) => record[dataProperty]);
+        const labels = records.map((record) => record[labelProperty]);
+        return {data,labels,labelString};
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -63,7 +80,8 @@ const QueryPage = ({ data }) => {
         const result = await QueryPost(request);
         if (result) {
             setTableData(dataToTable(result));
-            showChart() && setChartData(result.records);
+            extractChartData(result.records);
+            showChart() && setChartData(extractChartData(result.records));
         }
     };
 
@@ -201,7 +219,10 @@ const QueryPage = ({ data }) => {
                             {showChart() && (
                                 <Grid item lg={8} md={12} xl={9} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
-                                        <BarChart data={chartData} />
+                                        <BarChart 
+                                            data={chartData.data}
+                                            labels={chartData.labels}
+                                            labelString={chartData.labelString} />
                                     )}
                                 </Grid>
                             )}

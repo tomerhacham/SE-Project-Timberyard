@@ -20,9 +20,12 @@ ChartJS.register(
     Legend
 );
 
-const BarChart = ({ data }) => {
-    const cardsNames = data.map((record) => record.CardName);
-    const SuccessRatios = data.map((record) => record.SuccessRatio);
+const BarChart = ({data,labels,labelString}) => {
+    //const cardsNames = data.map((record) => record.CardName);
+    //const SuccessRatios = data.map((record) => record.SuccessRatio);
+    // const data = chartData.data
+    // const labels = chartData.labels
+    // const labelString = chartData.labelString
     return (
         <Bar
             data={{
@@ -33,12 +36,12 @@ const BarChart = ({ data }) => {
                         barThickness: 30,
                         borderRadius: 6,
                         categoryPercentage: 0.5,
-                        data: SuccessRatios,
-                        label: 'Success ratio',
+                        data: data,
+                        label: labelString,
                         maxBarThickness: 50,
                     },
                 ],
-                labels: cardsNames,
+                labels: labels,
             }}
             height={400}
             width={600}
