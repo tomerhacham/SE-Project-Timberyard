@@ -28,6 +28,7 @@ import {
     STATION_YIELD_ID,
     STATION_AND_CARD_YIELD_ID,
     TESTER_LOADER_ID,
+    CARD_TEST_DURATION_ID,
     CARD_YIELD_ICON,
     STATION_YIELD_ICON,
     STATION_CARD_YIELD_ICON,
@@ -84,6 +85,13 @@ const QueryPage = ({ data }) => {
                 datasets.push({ data:records.map((record) => record['NumberOfRuns']),
                                 labelString:'Number of Runs'})
                 break;
+            case CARD_TEST_DURATION_ID:
+                labelProperty='Operator'
+                datasets.push({ data:records.map((record) => record['NetTimeAvg']),
+                                labelString:'Net Time Avg'})
+                datasets.push({ data:records.map((record) => record['TotalTimeAvg']),
+                                labelString:'Total Time Avg'})
+                break;
             default:
                 break;
         }
@@ -137,7 +145,7 @@ const QueryPage = ({ data }) => {
         return some(userInput, (field) => field === '');
     };
 
-    const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID].includes(id);
+    const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID,CARD_TEST_DURATION_ID].includes(id);
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];

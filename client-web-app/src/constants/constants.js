@@ -15,6 +15,7 @@ export const STATION_YIELD_ID = 'stationYield';
 export const STATION_AND_CARD_YIELD_ID = 'stationCardYield';
 export const TESTER_LOADER_ID = 'testerLoad';
 export const BOUNDARIES_ID = 'boundaries';
+export const CARD_TEST_DURATION_ID = 'cardTestDuration';
 
 // Icons
 export const CARD_YIELD_ICON = 'SdCardIcon';
