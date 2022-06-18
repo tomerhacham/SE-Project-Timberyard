@@ -17,6 +17,8 @@ import {
     EDIT_ALARM_ALIAS,
     REMOVE_ALARM_API,
     REMOVE_ALARM_ALIAS,
+    GET_USERS_API,
+    GET_USERS_ALIAS,
 } from '../constants/constants';
 
 describe('ALARMS TESTS', () => {
@@ -25,11 +27,12 @@ describe('ALARMS TESTS', () => {
             fixture: 'authentication/admin_login_response.json',
         }).as(LOGIN_ALIAS);
 
+        // just to discard when visiting settings page
+        cy.intercept('GET', GET_USERS_API, {}).as(GET_USERS_ALIAS);
+
         cy.intercept('POST', GET_ALL_ALARMS_API, {
             fixture: 'alarms/get_alarms_response.json',
         }).as(GET_ALL_ALARMS_ALIAS);
-
-        // cy.intercept('POST', GET_ALL_ALARMS_API, {}).as(GET_ALL_ALARMS_ALIAS);
 
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
 
