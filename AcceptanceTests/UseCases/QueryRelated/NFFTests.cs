@@ -52,6 +52,9 @@ namespace AcceptanceTests.UseCases.QueryRelated
             QueryResult queryResult = JsonConvert.DeserializeObject<QueryResult>(response.Content);
             string[] columnNames = queryResult.ColumnNames;
             List<dynamic> records = queryResult.Records;
+            /*            List<dynamic> records = queryResult.Records.ConvertAll(s => JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(s)));
+                        records.Sort((r1, r2) => r2.Operator.CompareTo(r1.Operator));*/
+
 
             if (response.StatusCode.Equals(HttpStatusCode.OK))
             {
@@ -60,11 +63,12 @@ namespace AcceptanceTests.UseCases.QueryRelated
                     Assert.Equal(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, columnNames);
                 }
                 Assert.Equal(expectedNumOfRecords, records.Count);
-
+                records = queryResult.Records.ConvertAll(s => JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(s)));
+                records.Sort((r1, r2) => r2.Operator.CompareTo(r1.Operator));
                 for (int i = 0; i < records.Count; i++)
                 {
-                    string json = JsonConvert.SerializeObject(records[i]);
-                    dynamic record = JsonConvert.DeserializeObject<ExpandoObject>(json);
+                    dynamic record = records[i];
+
                     Assert.Equal(stationNames[i], record.Station);
                     Assert.Equal(operators[i], record.Operator);
                     foreach (var testName in failedTestNames)

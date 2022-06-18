@@ -58,6 +58,7 @@ namespace Timberyard_UnitTests.IntegrationTests
                     Assert.Equal(new string[] { "Date", "CardName", "Catalog", "Station", "Operator", "FailedTests" }, queryResult.Data.ColumnNames);
                 }
                 Assert.Equal(expectedNumOfRecords, queryResult.Data.Records.Count);
+                queryResult.Data.Records.Sort((r1, r2) => r2.Operator.CompareTo(r1.Operator));
                 for (int i = 0; i < expectedNumOfRecords; i++)
                 {
                     Assert.Equal(stationNames[i], queryResult.Data.Records[i].Station);
