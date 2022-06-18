@@ -59,35 +59,43 @@ const QueryPage = ({ data }) => {
     const [chartData, setChartData] = useState(null);
 
     const extractChartData = (records)=>{
-        let dataProperty,labelProperty,labelString 
+        let dataProperty,labelProperty,labelString,dataset
+        let datasets = []
         switch (id){
             case CARD_YIELD_ID:
-                dataProperty='SuccessRatio'
                 labelProperty='CardName'
-                labelString='Success Ratio'
+                dataset = { data:records.map((record) => record['SuccessRatio']),
+                            labelString:'Success Ratio'};
+                datasets.push(dataset)
                 break;
             case STATION_YIELD_ID:
-                dataProperty='SuccessRatio'
                 labelProperty='Station'
-                labelString='Success Ratio'
+                dataset = { data:records.map((record) => record['SuccessRatio']),
+                                    labelString:'Success Ratio'};
+                 datasets.push(dataset)
                 break;
             case STATION_AND_CARD_YIELD_ID:
-                dataProperty='SuccessRatio'
                 labelProperty='CardName'
-                labelString='Success Ratio'
+                dataset = { data:records.map((record) => record['SuccessRatio']),
+                            labelString:'Success Ratio'};
+                datasets.push(dataset)
                 break;
             case TESTER_LOADER_ID:
-                dataProperty='TotalRunTimeHours'
                 labelProperty='Station'
-                labelString='Total Runtime [Hours]'
+                dataset = { data:records.map((record) => record['TotalRunTimeHours']),
+                    labelString:'Total Runtime [Hours]'};
+                datasets.push(dataset)
+                dataset = { data:records.map((record) => record['NumberOfRuns']),
+                    labelString:'Number of Runs'};
+                datasets.push(dataset)
+
                 break;
             default:
                 break;
         }
 
-        const data = records.map((record) => record[dataProperty]);
         const labels = records.map((record) => record[labelProperty]);
-        return {data,labels,labelString};
+        return {datasets,labels};
 
     }
 
@@ -239,9 +247,8 @@ const QueryPage = ({ data }) => {
                                 <Grid item lg={8} md={12} xl={9} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
                                         <BarChart 
-                                            data={chartData.data}
-                                            labels={chartData.labels}
-                                            labelString={chartData.labelString} />
+                                            datasets={chartData.datasets}
+                                            labels={chartData.labels} />
                                     )}
                                 </Grid>
                             )}
