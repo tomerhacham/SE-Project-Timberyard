@@ -26,6 +26,7 @@ import { queriesInputBoxSx } from '../../theme';
 import {
     CARD_YIELD_ID,
     CARD_YIELD_ICON,
+    STATION_YIELD_ID,
     STATION_YIELD_ICON,
     STATION_CARD_YIELD_ICON,
     NFF_ICON,
@@ -57,15 +58,21 @@ const QueryPage = ({ data }) => {
 
     const extractChartData = (records)=>{
         let dataProperty,labelProperty,labelString 
-        if (id === CARD_YIELD_ID)
-        {
-            //labels = records.map((record) => record.CardName);
-            //data = records.map((record) => record.SuccessRatio);
-            dataProperty='SuccessRatio'
-            labelProperty='CardName'
-            labelString='Success Ratio'
-            
+        switch (id){
+            case CARD_YIELD_ID:
+                dataProperty='SuccessRatio'
+                labelProperty='CardName'
+                labelString='Success Ratio'
+                break;
+            case STATION_YIELD_ID:
+                dataProperty='SuccessRatio'
+                labelProperty='Station'
+                labelString='Success Ratio'
+                break;
+            default:
+                break;
         }
+
         const data = records.map((record) => record[dataProperty]);
         const labels = records.map((record) => record[labelProperty]);
         return {data,labels,labelString};
@@ -116,7 +123,7 @@ const QueryPage = ({ data }) => {
         return some(userInput, (field) => field === '');
     };
 
-    const showChart = () => id === CARD_YIELD_ID;
+    const showChart = () => id === CARD_YIELD_ID || id === STATION_YIELD_ID;
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];

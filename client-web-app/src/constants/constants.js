@@ -11,6 +11,7 @@ export const CARD_TEST_DURATION_PATH = '/cardtestduration';
 
 // IDs
 export const CARD_YIELD_ID = 'cardYield';
+export const STATION_YIELD_ID = 'stationYield';
 export const BOUNDARIES_ID = 'boundaries';
 
 // Icons
