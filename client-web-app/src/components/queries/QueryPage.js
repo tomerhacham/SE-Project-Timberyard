@@ -64,31 +64,25 @@ const QueryPage = ({ data }) => {
         switch (id){
             case CARD_YIELD_ID:
                 labelProperty='CardName'
-                dataset = { data:records.map((record) => record['SuccessRatio']),
-                            labelString:'Success Ratio'};
-                datasets.push(dataset)
+                datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
                 break;
             case STATION_YIELD_ID:
                 labelProperty='Station'
-                dataset = { data:records.map((record) => record['SuccessRatio']),
-                                    labelString:'Success Ratio'};
-                 datasets.push(dataset)
+                 datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
                 break;
             case STATION_AND_CARD_YIELD_ID:
                 labelProperty='CardName'
-                dataset = { data:records.map((record) => record['SuccessRatio']),
-                            labelString:'Success Ratio'};
-                datasets.push(dataset)
+                datasets.push({ data:records.map((record) => record['SuccessRatio']),
+                                labelString:'Success Ratio'})
                 break;
             case TESTER_LOADER_ID:
                 labelProperty='Station'
-                dataset = { data:records.map((record) => record['TotalRunTimeHours']),
-                    labelString:'Total Runtime [Hours]'};
-                datasets.push(dataset)
-                dataset = { data:records.map((record) => record['NumberOfRuns']),
-                    labelString:'Number of Runs'};
-                datasets.push(dataset)
-
+                datasets.push({ data:records.map((record) => record['TotalRunTimeHours']),
+                                labelString:'Total Runtime [Hours]'})
+                datasets.push({ data:records.map((record) => record['NumberOfRuns']),
+                                labelString:'Number of Runs'})
                 break;
             default:
                 break;
