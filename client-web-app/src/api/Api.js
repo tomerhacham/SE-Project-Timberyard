@@ -9,6 +9,7 @@ import {
     CHANGE_ADMIN_PASSWORD_URL,
     REQUEST_VERIFICATION_CODE_URL,
     FORGET_PASSWORD_URL,
+    GET_ALL_USERS_URL,
     SUCCESS_CODE,
 } from '../constants/constants';
 
@@ -87,6 +88,29 @@ export async function RequestVerificationCode(data) {
                 throw Error('Error in response');
             }
             return response;
+        })
+        .catch((error) => {
+            catchError(error);
+        });
+}
+
+export async function GetAllUsers() {
+    const token = getToken();
+
+    return await axios
+        .get(`${API_URL}${GET_ALL_USERS_URL}`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: token && `Bearer ${get(token, 'token')}`,
+            },
+        })
+        .then((response) => {
+            if (!response.status === SUCCESS_CODE) {
+                console.log(response);
+                throw Error('Could not fetch alarms data from the server.');
+            }
+            return response.data;
         })
         .catch((error) => {
             catchError(error);

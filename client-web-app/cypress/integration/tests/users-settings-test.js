@@ -1,11 +1,17 @@
 /// <reference types="cypress" />
-import { checkMessage, navigateToPage } from '../commands/actions';
+import {
+    checkMessage,
+    navigateToPage,
+    assertCellValueInFirstRow,
+} from '../commands/actions';
 import { validatePage } from '../commands/asserts';
 import {
     LOGIN_API,
     LOGIN_ALIAS,
     GET_ALL_ALARMS_API,
     GET_ALL_ALARMS_ALIAS,
+    GET_USERS_API,
+    GET_USERS_ALIAS,
     ADD_USER_API,
     ADD_USER_ALIAS,
     ADD_SYSTEM_ADMIN_ALIAS,
@@ -14,6 +20,7 @@ import {
     REMOVE_USER_ALIAS,
     CHANGE_PASSWORD_API,
     CHANGE_PASSWORD_ALIAS,
+    SUCCESS_CODE,
 } from '../constants/constants';
 
 describe('SETTINGS TESTS', () => {
@@ -25,13 +32,35 @@ describe('SETTINGS TESTS', () => {
         // just to discard when visiting settings page
         cy.intercept('POST', GET_ALL_ALARMS_API, {}).as(GET_ALL_ALARMS_ALIAS);
 
+        cy.intercept('GET', GET_USERS_API, {
+            fixture: 'authentication/get_users_response.json',
+        }).as(GET_USERS_ALIAS);
+
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
 
         cy.wait(`@${LOGIN_ALIAS}`).then(() => {
             validatePage(Cypress.env('dashboardUrl'));
-
             navigateToPage('settings');
         });
+    });
+
+    it('Check data fetched correctly', () => {
+        cy.wait(`@${GET_USERS_ALIAS}`)
+            .its('response')
+            .should('deep.include', {
+                statusCode: SUCCESS_CODE,
+            })
+            .and('have.property', 'body')
+            .then((body) => {
+                expect(body).to.be.an('array');
+                // Check that number of rows in table equals response length
+                cy.get('.ag-center-cols-container .ag-row')
+                    .its('length')
+                    .should('equal', body.length);
+
+                assertCellValueInFirstRow('email', 'admin@timberyard.rbbn.com');
+                assertCellValueInFirstRow('role', 'System Admin');
+            });
     });
 
     it('USERS - Check fields', () => {
@@ -130,7 +159,7 @@ describe('SETTINGS TESTS', () => {
         }).as(REMOVE_USER_ALIAS);
 
         cy.get('#users-settings-expand').click();
-        cy.get('#users-settings-email-input').type('oldUser@ribbon.com');
+        cy.get('[class=ag-selection-checkbox]').first().click();
         cy.get('#users-settings-remove-button').click();
 
         cy.wait(`@${REMOVE_USER_ALIAS}`).then(() => {
@@ -148,7 +177,7 @@ describe('SETTINGS TESTS', () => {
         }).as(REMOVE_USER_ALIAS);
 
         cy.get('#users-settings-expand').click();
-        cy.get('#users-settings-email-input').type('oldUser@ribbon.com');
+        cy.get('[class=ag-selection-checkbox]').first().click();
         cy.get('#users-settings-remove-button').click();
 
         cy.wait(`@${REMOVE_USER_ALIAS}`).then(() => {

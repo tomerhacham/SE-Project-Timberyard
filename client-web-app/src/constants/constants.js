@@ -11,7 +11,12 @@ export const CARD_TEST_DURATION_PATH = '/cardtestduration';
 
 // IDs
 export const CARD_YIELD_ID = 'cardYield';
+export const STATION_YIELD_ID = 'stationYield';
+export const STATION_AND_CARD_YIELD_ID = 'stationCardYield';
+export const TESTER_LOADER_ID = 'testerLoad';
 export const BOUNDARIES_ID = 'boundaries';
+export const CARD_TEST_DURATION_ID = 'cardTestDuration';
+export const NFF_ID = 'nff';
 
 // Icons
 export const CARD_YIELD_ICON = 'SdCardIcon';
@@ -26,6 +31,7 @@ export const CARD_TEST_DURATION_ICON = 'AvTimerIcon';
 export const LOGIN_URL = '/Authentication/Login';
 export const REQUEST_VERIFICATION_CODE_URL =
     '/Authentication/RequestVerificationCode';
+export const GET_ALL_USERS_URL = '/Authentication/GetAllUsers';
 export const ADD_USER_URL = '/Authentication/AddUser';
 export const ADD_ADMIN_URL = '/Authentication/AddSystemAdmin';
 export const REMOVE_USER_URL = '/Authentication/RemoveUser';

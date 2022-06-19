@@ -1,7 +1,5 @@
 import React from 'react';
-import Button from '@mui/material/Button';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
+import { Button, Dialog, DialogTitle } from '@mui/material';
 import MinMaxChart from './graph/MinMaxChart';
 
 const DialogScreen = (props) => {
@@ -12,7 +10,12 @@ const DialogScreen = (props) => {
     };
 
     return (
-        <Dialog id='dialog-box' fullWidth onClose={handleClose} open={open}>
+        <Dialog
+            id='dialog-box'
+            fullWidth
+            maxWidth='xl'
+            onClose={handleClose}
+            open={open}>
             <DialogTitle>{data.TestName}</DialogTitle>
             <MinMaxChart data={data} />
         </Dialog>

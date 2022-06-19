@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { omit } from 'lodash';
 import {
     Box,
@@ -10,6 +10,7 @@ import {
     TextField,
     MenuItem,
     Stack,
+    Grid,
 } from '@mui/material';
 import Message from '../../../generic-components/Message';
 import { ManageUser } from '../../../api/Api';
@@ -20,15 +21,13 @@ import {
     MESSAGE,
     ROLE,
 } from '../../../constants/constants';
+import UsersTable from './UsersTable';
 
-const UsersSettings = (props) => {
-    const [email, setEmail] = useState('');
-    const [managedRole, setManagedRole] = useState(ROLE.USER);
+const UsersSettings = () => {
+    const [selectedData, setSelectedData] = useState(undefined);
+    const [inputData, setInputData] = useState({ email: '', role: ROLE.USER });
     const [message, setMessage] = useState(null);
-
-    const handleChange = (event) => {
-        setEmail(event.target.value);
-    };
+    const [updateTable, setUpdateTable] = useState(0);
 
     const handleSubmit = async (url) => {
         if (url === REMOVE_USER_URL) {
@@ -39,7 +38,10 @@ const UsersSettings = (props) => {
                 return;
             }
         }
-        const result = await ManageUser({ data: { email }, url });
+        const result = await ManageUser({
+            data: { email: inputData.email },
+            url,
+        });
         if (result) {
             setMessage({
                 text: result?.message,
@@ -48,6 +50,8 @@ const UsersSettings = (props) => {
                         ? MESSAGE.SUCCESS
                         : MESSAGE.ERROR,
             });
+            setUpdateTable((prevState) => prevState + 1);
+            setSelectedData(undefined);
         } else if (result === false) {
             // AddSystemAdmin returned false
             setMessage({
@@ -57,8 +61,16 @@ const UsersSettings = (props) => {
         }
     };
 
+    useEffect(() => {
+        if (selectedData) {
+            setInputData(selectedData);
+        } else {
+            setInputData({ email: '', role: ROLE.USER });
+        }
+    }, [selectedData]);
+
     return (
-        <form {...props}>
+        <form>
             <Card>
                 <CardHeader subheader='Add or Remove Users' title='Users' />
                 <Divider />
@@ -70,6 +82,12 @@ const UsersSettings = (props) => {
                     />
                 )}
                 <CardContent>
+                    <Grid item md={12} sm={12} xs={12}>
+                        <UsersTable
+                            update={updateTable}
+                            setData={setSelectedData}
+                        />
+                    </Grid>
                     <Stack direction='row' spacing={2}>
                         <TextField
                             id='users-settings-email-input'
@@ -77,9 +95,15 @@ const UsersSettings = (props) => {
                             label='Email'
                             margin='normal'
                             name='email'
-                            onChange={handleChange}
+                            value={inputData.email}
+                            disabled={selectedData !== undefined}
+                            onChange={(e) =>
+                                setInputData({
+                                    ...inputData,
+                                    email: e.target.value,
+                                })
+                            }
                             type='email'
-                            value={email}
                             variant='outlined'
                         />
                         <TextField
@@ -91,9 +115,17 @@ const UsersSettings = (props) => {
                             id='users-settings-role-select'
                             label='Role'
                             required
-                            value={managedRole}
+                            value={inputData.role}
                             select
-                            onChange={(e) => setManagedRole(e.target.value)}>
+                            disabled={
+                                selectedData && selectedData.role === ROLE.ADMIN
+                            }
+                            onChange={(e) =>
+                                setInputData({
+                                    ...inputData,
+                                    role: e.target.value,
+                                })
+                            }>
                             {Object.keys(omit(ROLE, 'UNAUTHORIZE')).map(
                                 (code, index) => (
                                     <MenuItem
@@ -118,22 +150,29 @@ const UsersSettings = (props) => {
                         id='users-settings-add-button'
                         color='primary'
                         variant='contained'
-                        disabled={email === ''}
+                        disabled={
+                            inputData.email === '' ||
+                            (selectedData && selectedData.role === ROLE.ADMIN)
+                        }
                         onClick={() =>
                             handleSubmit(
-                                managedRole === ROLE.ADMIN
+                                inputData.role === ROLE.ADMIN
                                     ? ADD_ADMIN_URL
                                     : ADD_USER_URL
                             )
                         }
                         style={{ margin: 10 }}>
-                        {managedRole === ROLE.ADMIN ? 'Add Admin' : 'Add User'}
+                        {inputData.role === ROLE.ADMIN
+                            ? 'Add Admin'
+                            : 'Add User'}
                     </Button>
                     <Button
                         id='users-settings-remove-button'
                         color='primary'
                         variant='contained'
-                        disabled={email === ''}
+                        disabled={
+                            inputData.email === '' || selectedData === undefined
+                        }
                         onClick={() => handleSubmit(REMOVE_USER_URL)}
                         style={{ margin: 10 }}>
                         Remove Account
