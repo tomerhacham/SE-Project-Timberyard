@@ -20,7 +20,9 @@ ChartJS.register(
     Legend
 );
 
-const BarChart = ({ datasets, labels }) => {
+const BarChart = (props) => {
+    const { datasets, labels } = props;
+
     const colors = [
         'rgba(80, 72, 229, 0.7)',
         'rgba(237, 16, 245, 0.7)',
@@ -31,6 +33,7 @@ const BarChart = ({ datasets, labels }) => {
         'rgba(201, 203, 207, 0.7)',
         'rgba(255, 99, 132, 0.7)',
     ];
+
     const generateDatasetStruct = (dataset, color) => {
         return {
             backgroundColor: color,
@@ -47,6 +50,7 @@ const BarChart = ({ datasets, labels }) => {
     const _datasets = datasets.map((dataset, i) =>
         generateDatasetStruct(dataset, colors[i])
     );
+
     return (
         <Bar
             data={{
@@ -63,12 +67,13 @@ const BarChart = ({ datasets, labels }) => {
 };
 
 BarChart.propTypes = {
-    data: PropTypes.arrayOf(
+    datasets: PropTypes.arrayOf(
         PropTypes.shape({
-            CardName: PropTypes.string.isRequired,
-            SuccessRatio: PropTypes.number.isRequired,
+            data: PropTypes.arrayOf(PropTypes.number),
+            labelString: PropTypes.string,
         })
     ),
+    labels: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default BarChart;
