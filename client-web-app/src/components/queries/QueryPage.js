@@ -9,6 +9,7 @@ import {
     Button,
     Grid,
     Box,
+    Stack,
 } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
@@ -220,40 +221,50 @@ const QueryPage = ({ data }) => {
                     {renderIcon()}
                 </Avatar>
             )}
-            <Typography component='h1' variant='h5'>
+            <Typography
+                style={{ whiteSpace: 'nowrap' }}
+                component='h1'
+                variant='h5'>
                 {title}
             </Typography>
+
             <Box
                 key={id}
                 component='form'
                 noValidate
                 onSubmit={handleSubmit}
                 sx={{ mt: 1 }}>
-                {fields &&
-                    fields.map((field, index) => (
-                        <TextField
-                            key={index}
-                            id={`${id}-${field.id}`}
-                            required={field.required || false}
-                            variant='outlined'
-                            margin='normal'
-                            fullWidth
-                            label={field.label}
-                            type={field.type}
-                            autoFocus={field.autoFocus || false}
-                            onChange={(e) => handleOnChange(e, field)}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    ))}
-                <Button
-                    id={`${id}-submit-button`}
-                    type='submit'
-                    fullWidth
-                    variant='contained'
-                    disabled={isButtonDisabled()}
-                    sx={{ mt: 3, mb: 2 }}>
-                    OK
-                </Button>
+                {fields && (
+                    <Stack
+                        style={{ alignItems: 'baseline' }}
+                        direction='row'
+                        spacing={2}>
+                        {fields.map((field, index) => (
+                            <TextField
+                                size='small'
+                                key={index}
+                                id={`${id}-${field.id}`}
+                                required={field.required || false}
+                                variant='outlined'
+                                margin='normal'
+                                fullWidth
+                                label={field.label}
+                                type={field.type}
+                                autoFocus={field.autoFocus || false}
+                                onChange={(e) => handleOnChange(e, field)}
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        ))}
+                        <Button
+                            id={`${id}-submit-button`}
+                            type='submit'
+                            variant='contained'
+                            disabled={isButtonDisabled()}
+                            sx={{ mt: 3, mb: 2 }}>
+                            OK
+                        </Button>
+                    </Stack>
+                )}
             </Box>
         </Box>
     );
@@ -279,23 +290,30 @@ const QueryPage = ({ data }) => {
     }, [queryElement]);
 
     return (
-        <Box id='query-page-box' component='main' sx={{ flexGrow: 1, py: 8 }}>
+        <Box id='query-page-box' component='main' sx={{ flexGrow: 1, py: 4 }}>
             <Container maxWidth={false}>
-                <Grid container spacing={3}>
-                    <Grid item lg={4} md={6} xl={3} xs={12}>
+                <Grid id='main-grid' container spacing={3}>
+                    <Grid id='input-grid' item lg={12} md={12} xl={12} xs={12}>
                         {inputFields}
                     </Grid>
                     {loading && <Loader />}
                     {showQuery && (
                         <Fragment>
-                            <Grid item lg={8} md={12} xl={9} xs={12}>
+                            <Grid
+                                id='table-grid'
+                                item
+                                lg={12}
+                                md={12}
+                                xl={12}
+                                xs={12}
+                                sx={{ pb: 5 }}>
                                 <QueryTable
                                     rows={tableData.rows}
                                     columns={tableData.columns}
                                 />
                             </Grid>
                             {showChart() && (
-                                <Grid item lg={8} md={12} xl={9} xs={12}>
+                                <Grid item lg={12} md={12} xl={12} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
                                         <BarChart
                                             datasets={chartData.datasets}
