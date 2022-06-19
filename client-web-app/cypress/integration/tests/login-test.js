@@ -9,6 +9,10 @@ import {
     REQUEST_PASSWORD_ALIAS,
     FORGOT_PASSWORD_API,
     FORGOT_PASSWORD_ALIAS,
+    GET_USERS_API,
+    GET_USERS_ALIAS,
+    GET_ALL_ALARMS_API,
+    GET_ALL_ALARMS_ALIAS,
 } from '../constants/constants';
 
 describe('LOGIN TESTS', () => {
@@ -67,6 +71,10 @@ describe('LOGIN TESTS', () => {
         cy.intercept('POST', LOGIN_API, {
             fixture: 'authentication/admin_login_response.json',
         }).as(LOGIN_ALIAS);
+
+        // just to discard when visiting settings page
+        cy.intercept('GET', GET_USERS_API, {}).as(GET_USERS_ALIAS);
+        cy.intercept('POST', GET_ALL_ALARMS_API, {}).as(GET_ALL_ALARMS_ALIAS);
 
         cy.login(Cypress.env('adminEmail'), Cypress.env('adminPassword'));
         cy.wait(`@${LOGIN_ALIAS}`).then(() => {

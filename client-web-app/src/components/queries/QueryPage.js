@@ -9,6 +9,7 @@ import {
     Button,
     Grid,
     Box,
+    Stack,
 } from '@mui/material';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
@@ -60,69 +61,87 @@ const QueryPage = ({ data }) => {
     const [tableData, setTableData] = useState(null);
     const [chartData, setChartData] = useState(null);
 
-    const extractChartData = (records)=>{
-        let labelProperty
-        let datasets = []
-        let chartData
-        switch (id){
+    const extractChartData = (records) => {
+        let labelProperty;
+        let datasets = [];
+        let chartData;
+        let labels;
+        switch (id) {
             case CARD_YIELD_ID:
-                labelProperty='CardName'
-                datasets.push({ data:records.map((record) => record['SuccessRatio']),
-                                labelString:'Success Ratio'})
-                var labels = records.map((record) => record[labelProperty]);
-                chartData = {datasets,labels};
+                labelProperty = 'CardName';
+                datasets.push({
+                    data: records.map((record) => record['SuccessRatio']),
+                    labelString: 'Success Ratio',
+                });
+                labels = records.map((record) => record[labelProperty]);
+                chartData = { datasets, labels };
                 break;
             case STATION_YIELD_ID:
-                labelProperty='Station'
-                 datasets.push({ data:records.map((record) => record['SuccessRatio']),
-                                labelString:'Success Ratio'})
-                var labels = records.map((record) => record[labelProperty]);
-                chartData = {datasets,labels};
+                labelProperty = 'Station';
+                datasets.push({
+                    data: records.map((record) => record['SuccessRatio']),
+                    labelString: 'Success Ratio',
+                });
+                labels = records.map((record) => record[labelProperty]);
+                chartData = { datasets, labels };
                 break;
             case STATION_AND_CARD_YIELD_ID:
-                labelProperty='CardName'
-                datasets.push({ data:records.map((record) => record['SuccessRatio']),
-                                labelString:'Success Ratio'})
-                var labels = records.map((record) => record[labelProperty]);
-                chartData = {datasets,labels};
+                labelProperty = 'CardName';
+                datasets.push({
+                    data: records.map((record) => record['SuccessRatio']),
+                    labelString: 'Success Ratio',
+                });
+                labels = records.map((record) => record[labelProperty]);
+                chartData = { datasets, labels };
                 break;
             case TESTER_LOADER_ID:
-                labelProperty='Station'
-                datasets.push({ data:records.map((record) => record['TotalRunTimeHours']),
-                                labelString:'Total Runtime [Hours]'})
-                datasets.push({ data:records.map((record) => record['NumberOfRuns']),
-                                labelString:'Number of Runs'})
-                var labels = records.map((record) => record[labelProperty]);
-                chartData = {datasets,labels};
+                labelProperty = 'Station';
+                datasets.push({
+                    data: records.map((record) => record['TotalRunTimeHours']),
+                    labelString: 'Total Runtime [Hours]',
+                });
+                datasets.push({
+                    data: records.map((record) => record['NumberOfRuns']),
+                    labelString: 'Number of Runs',
+                });
+                labels = records.map((record) => record[labelProperty]);
+                chartData = { datasets, labels };
                 break;
             case CARD_TEST_DURATION_ID:
-                labelProperty='Operator'
-                datasets.push({ data:records.map((record) => record['NetTimeAvg']),
-                                labelString:'Net Time Avg'})
-                datasets.push({ data:records.map((record) => record['TotalTimeAvg']),
-                                labelString:'Total Time Avg'})
-                var labels = records.map((record) => record[labelProperty]);
-                chartData = {datasets,labels};
+                labelProperty = 'Operator';
+                datasets.push({
+                    data: records.map((record) => record['NetTimeAvg']),
+                    labelString: 'Net Time Avg',
+                });
+                datasets.push({
+                    data: records.map((record) => record['TotalTimeAvg']),
+                    labelString: 'Total Time Avg',
+                });
+                labels = records.map((record) => record[labelProperty]);
+                chartData = { datasets, labels };
                 break;
 
             case NFF_ID:
                 //Graph for false negative by operator
-                labelProperty='Operator'
-                var labels = records.map((record) => record[labelProperty]);
+                labelProperty = 'Operator';
+                labels = records.map((record) => record[labelProperty]);
                 var data = labels.map(
-                                    (operator)=> (records.filter((record)=>record.Operator === operator)).length
-                                    )
-                datasets.push({ data:data,
-                                labelString:'Number of negative failures'})
+                    (operator) =>
+                        records.filter((record) => record.Operator === operator)
+                            .length
+                );
+                datasets.push({
+                    data: data,
+                    labelString: 'Number of negative failures',
+                });
 
-                chartData = {datasets,labels};
+                chartData = { datasets, labels };
                 break;
             default:
                 break;
         }
         return chartData;
-
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -168,9 +187,15 @@ const QueryPage = ({ data }) => {
         return some(userInput, (field) => field === '');
     };
 
-    const showChart = () => [CARD_YIELD_ID,STATION_YIELD_ID,
-                            STATION_AND_CARD_YIELD_ID,TESTER_LOADER_ID,
-                            CARD_TEST_DURATION_ID,NFF_ID].includes(id);
+    const showChart = () =>
+        [
+            CARD_YIELD_ID,
+            STATION_YIELD_ID,
+            STATION_AND_CARD_YIELD_ID,
+            TESTER_LOADER_ID,
+            CARD_TEST_DURATION_ID,
+            NFF_ID,
+        ].includes(id);
 
     const renderIcon = () => {
         const Icon = iconsList[icon || 'SdCard'];
@@ -196,40 +221,50 @@ const QueryPage = ({ data }) => {
                     {renderIcon()}
                 </Avatar>
             )}
-            <Typography component='h1' variant='h5'>
+            <Typography
+                style={{ whiteSpace: 'nowrap' }}
+                component='h1'
+                variant='h5'>
                 {title}
             </Typography>
+
             <Box
                 key={id}
                 component='form'
                 noValidate
                 onSubmit={handleSubmit}
                 sx={{ mt: 1 }}>
-                {fields &&
-                    fields.map((field, index) => (
-                        <TextField
-                            key={index}
-                            id={`${id}-${field.id}`}
-                            required={field.required || false}
-                            variant='outlined'
-                            margin='normal'
-                            fullWidth
-                            label={field.label}
-                            type={field.type}
-                            autoFocus={field.autoFocus || false}
-                            onChange={(e) => handleOnChange(e, field)}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    ))}
-                <Button
-                    id={`${id}-submit-button`}
-                    type='submit'
-                    fullWidth
-                    variant='contained'
-                    disabled={isButtonDisabled()}
-                    sx={{ mt: 3, mb: 2 }}>
-                    OK
-                </Button>
+                {fields && (
+                    <Stack
+                        style={{ alignItems: 'baseline' }}
+                        direction='row'
+                        spacing={2}>
+                        {fields.map((field, index) => (
+                            <TextField
+                                size='small'
+                                key={index}
+                                id={`${id}-${field.id}`}
+                                required={field.required || false}
+                                variant='outlined'
+                                margin='normal'
+                                fullWidth
+                                label={field.label}
+                                type={field.type}
+                                autoFocus={field.autoFocus || false}
+                                onChange={(e) => handleOnChange(e, field)}
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        ))}
+                        <Button
+                            id={`${id}-submit-button`}
+                            type='submit'
+                            variant='contained'
+                            disabled={isButtonDisabled()}
+                            sx={{ mt: 3, mb: 2 }}>
+                            OK
+                        </Button>
+                    </Stack>
+                )}
             </Box>
         </Box>
     );
@@ -255,27 +290,35 @@ const QueryPage = ({ data }) => {
     }, [queryElement]);
 
     return (
-        <Box id='query-page-box' component='main' sx={{ flexGrow: 1, py: 8 }}>
+        <Box id='query-page-box' component='main' sx={{ flexGrow: 1, py: 4 }}>
             <Container maxWidth={false}>
-                <Grid container spacing={3}>
-                    <Grid item lg={4} md={6} xl={3} xs={12}>
+                <Grid id='main-grid' container spacing={3}>
+                    <Grid id='input-grid' item lg={12} md={12} xl={12} xs={12}>
                         {inputFields}
                     </Grid>
                     {loading && <Loader />}
                     {showQuery && (
                         <Fragment>
-                            <Grid item lg={8} md={12} xl={9} xs={12}>
+                            <Grid
+                                id='table-grid'
+                                item
+                                lg={12}
+                                md={12}
+                                xl={12}
+                                xs={12}
+                                sx={{ pb: 5 }}>
                                 <QueryTable
                                     rows={tableData.rows}
                                     columns={tableData.columns}
                                 />
                             </Grid>
                             {showChart() && (
-                                <Grid item lg={8} md={12} xl={9} xs={12}>
+                                <Grid item lg={12} md={12} xl={12} xs={12}>
                                     {chartData && tableData.rows.length > 0 && (
-                                        <BarChart 
-                                            datasets={(chartData).datasets}
-                                            labels={(chartData).labels} />
+                                        <BarChart
+                                            datasets={chartData.datasets}
+                                            labels={chartData.labels}
+                                        />
                                     )}
                                 </Grid>
                             )}

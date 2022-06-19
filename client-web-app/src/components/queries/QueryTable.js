@@ -15,12 +15,17 @@ const QueryTable = ({ rows, columns }) => {
         filter: true,
     };
 
+    const isFixedHeight = () => rows.length > 10;
+
     const onBtnExport = useCallback(() => {
         gridRef.current.api.exportDataAsCsv();
     }, []);
 
     return (
-        <div className='ag-theme-alpine' style={{ height: 345, width: '100%' }}>
+        <div
+            id='query-table'
+            className='ag-theme-alpine'
+            style={{ height: isFixedHeight() ? 400 : '', width: '100%' }}>
             <Button onClick={onBtnExport} startIcon={<FileDownloadIcon />}>
                 Export to CSV
             </Button>
@@ -28,6 +33,7 @@ const QueryTable = ({ rows, columns }) => {
                 ref={gridRef}
                 rowData={rows}
                 columnDefs={columns}
+                domLayout={isFixedHeight() ? 'normal' : 'autoHeight'}
                 defaultColDef={defaultColDef}></AgGridReact>
         </div>
     );
